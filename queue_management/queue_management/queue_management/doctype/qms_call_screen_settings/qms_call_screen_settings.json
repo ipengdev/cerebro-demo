@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "autoname": "QCSS-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "settings_name",
+  "location",
+  "counter",
+  "column_break_css1",
+  "language",
+  "features_section",
+  "show_patient_info",
+  "show_queue_length",
+  "show_wait_time",
+  "column_break_css2",
+  "enable_hold",
+  "enable_transfer",
+  "enable_recall",
+  "enable_no_show",
+  "automation_section",
+  "auto_call_next",
+  "call_sound_enabled",
+  "custom_section",
+  "custom_css"
+ ],
+ "fields": [
+  {
+   "fieldname": "settings_name",
+   "fieldtype": "Data",
+   "label": "Settings Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location"
+  },
+  {
+   "fieldname": "counter",
+   "fieldtype": "Link",
+   "label": "Counter",
+   "options": "QMS Counter"
+  },
+  {
+   "fieldname": "column_break_css1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Select",
+   "label": "Language",
+   "options": "English\nArabic\nBoth",
+   "default": "Both"
+  },
+  {
+   "fieldname": "features_section",
+   "fieldtype": "Section Break",
+   "label": "Features"
+  },
+  {
+   "fieldname": "show_patient_info",
+   "fieldtype": "Check",
+   "label": "Show Patient Info",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_queue_length",
+   "fieldtype": "Check",
+   "label": "Show Queue Length",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_wait_time",
+   "fieldtype": "Check",
+   "label": "Show Wait Time",
+   "default": "1"
+  },
+  {
+   "fieldname": "column_break_css2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enable_hold",
+   "fieldtype": "Check",
+   "label": "Enable Hold",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_transfer",
+   "fieldtype": "Check",
+   "label": "Enable Transfer",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_recall",
+   "fieldtype": "Check",
+   "label": "Enable Recall",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_no_show",
+   "fieldtype": "Check",
+   "label": "Enable No Show",
+   "default": "1"
+  },
+  {
+   "fieldname": "automation_section",
+   "fieldtype": "Section Break",
+   "label": "Automation"
+  },
+  {
+   "fieldname": "auto_call_next",
+   "fieldtype": "Check",
+   "label": "Auto-call Next Patient",
+   "description": "Automatically call next patient when current is completed"
+  },
+  {
+   "fieldname": "call_sound_enabled",
+   "fieldtype": "Check",
+   "label": "Call Sound Enabled",
+   "default": "1"
+  },
+  {
+   "fieldname": "custom_section",
+   "fieldtype": "Section Break",
+   "label": "Custom CSS",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "custom_css",
+   "fieldtype": "Code",
+   "label": "Custom CSS",
+   "options": "CSS"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Call Screen Settings",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,65 @@
+{
+ "actions": [],
+ "autoname": "",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "trigger_condition",
+  "threshold_value",
+  "action_type",
+  "action_target",
+  "action_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "trigger_condition",
+   "fieldtype": "Select",
+   "label": "Trigger Condition",
+   "options": "Rating Below Threshold\nSpecific Answer\nAny Submission",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "threshold_value",
+   "fieldtype": "Int",
+   "label": "Threshold Value",
+   "in_list_view": 1,
+   "description": "For Rating Below Threshold: trigger when rating < this value"
+  },
+  {
+   "fieldname": "action_type",
+   "fieldtype": "Select",
+   "label": "Action Type",
+   "options": "Send Email\nCreate ToDo\nNotify Manager\nSend WhatsApp",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "action_target",
+   "fieldtype": "Data",
+   "label": "Action Target",
+   "in_list_view": 1,
+   "description": "Email address, user ID, or phone number"
+  },
+  {
+   "fieldname": "action_message",
+   "fieldtype": "Small Text",
+   "label": "Action Message"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Feedback Action",
+ "naming_rule": "",
+ "owner": "Administrator",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

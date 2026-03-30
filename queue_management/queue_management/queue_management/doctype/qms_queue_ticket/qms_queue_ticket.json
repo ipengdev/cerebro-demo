@@ -1,0 +1,387 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "ticket_number",
+  "token_date",
+  "column_break_tkt1",
+  "status",
+  "priority",
+  "source",
+  "patient_section",
+  "patient_name",
+  "patient_phone",
+  "column_break_tkt2",
+  "patient_email",
+  "blood_type",
+  "patient_form_data",
+  "queue_section",
+  "service",
+  "location",
+  "column_break_tkt3",
+  "counter",
+  "served_by",
+  "served_by_name",
+  "timing_section",
+  "check_in_time",
+  "called_time",
+  "service_start_time",
+  "column_break_tkt4",
+  "service_end_time",
+  "wait_time_mins",
+  "service_duration_mins",
+  "transfer_section",
+  "transferred_from_counter",
+  "transferred_from_ticket",
+  "column_break_tkt5",
+  "transfer_reason",
+  "transfer_count",
+  "transferred_from_location",
+  "transfer_back",
+  "return_to_counter",
+  "recall_section",
+  "recall_count",
+  "no_show_count",
+  "qr_section",
+  "qr_code_image"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "QT-.YYYY.-.#####",
+   "default": "QT-.YYYY.-.#####",
+   "hidden": 1
+  },
+  {
+   "fieldname": "ticket_number",
+   "fieldtype": "Data",
+   "label": "Ticket Number",
+   "read_only": 1,
+   "in_list_view": 1,
+   "bold": 1,
+   "description": "Display number shown to patient (e.g., T001, LAB042)"
+  },
+  {
+   "fieldname": "token_date",
+   "fieldtype": "Date",
+   "label": "Token Date",
+   "default": "Today",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_tkt1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Waiting\nCalled\nServing\nOn Hold\nCompleted\nCancelled\nNo Show\nTransferred",
+   "default": "Waiting",
+   "in_list_view": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Normal\nHigh\nVIP",
+   "default": "Normal"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "Walk-in\nQR Code\nOnline Booking\nKiosk",
+   "default": "Walk-in"
+  },
+  {
+   "fieldname": "patient_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Information"
+  },
+  {
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name"
+  },
+  {
+   "fieldname": "patient_phone",
+   "fieldtype": "Data",
+   "label": "Patient Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "column_break_tkt2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "patient_email",
+   "fieldtype": "Data",
+   "label": "Patient Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "blood_type",
+   "fieldtype": "Select",
+   "label": "Blood Type",
+   "options": "\nA+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
+  },
+  {
+   "fieldname": "patient_form_data",
+   "fieldtype": "JSON",
+   "label": "Form Data",
+   "hidden": 1,
+   "description": "Dynamic form responses stored as JSON"
+  },
+  {
+   "fieldname": "queue_section",
+   "fieldtype": "Section Break",
+   "label": "Queue Details"
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Link",
+   "label": "Service",
+   "options": "QMS Service",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_tkt3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "counter",
+   "fieldtype": "Link",
+   "label": "Counter",
+   "options": "QMS Counter",
+   "description": "Assigned when called",
+   "search_index": 1
+  },
+  {
+   "fieldname": "served_by",
+   "fieldtype": "Link",
+   "label": "Served By",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "served_by_name",
+   "fieldtype": "Data",
+   "label": "Served By Name",
+   "fetch_from": "served_by.employee_name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "timing_section",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "check_in_time",
+   "fieldtype": "Datetime",
+   "label": "Check-in Time",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "called_time",
+   "fieldtype": "Datetime",
+   "label": "Called Time",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "service_start_time",
+   "fieldtype": "Datetime",
+   "label": "Service Start Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tkt4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service_end_time",
+   "fieldtype": "Datetime",
+   "label": "Service End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wait_time_mins",
+   "fieldtype": "Float",
+   "label": "Wait Time (min)",
+   "read_only": 1,
+   "precision": 1
+  },
+  {
+   "fieldname": "service_duration_mins",
+   "fieldtype": "Float",
+   "label": "Service Duration (min)",
+   "read_only": 1,
+   "precision": 1
+  },
+  {
+   "fieldname": "transfer_section",
+   "fieldtype": "Section Break",
+   "label": "Transfer Details",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "transferred_from_counter",
+   "fieldtype": "Link",
+   "label": "Transferred From Counter",
+   "options": "QMS Counter",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transferred_from_ticket",
+   "fieldtype": "Link",
+   "label": "Transferred From Ticket",
+   "options": "QMS Queue Ticket",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tkt5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transfer_reason",
+   "fieldtype": "Small Text",
+   "label": "Transfer Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transfer_count",
+   "fieldtype": "Int",
+   "label": "Transfer Count",
+   "default": "0",
+   "read_only": 1,
+   "description": "Number of times this ticket has been transferred. Transferred tickets get queue priority."
+  },
+  {
+   "fieldname": "transferred_from_location",
+   "fieldtype": "Link",
+   "label": "Transferred From Location",
+   "options": "QMS Location",
+   "read_only": 1,
+   "description": "Original location before cross-kiosk transfer"
+  },
+  {
+   "fieldname": "transfer_back",
+   "fieldtype": "Check",
+   "label": "Transfer Back",
+   "default": "0",
+   "read_only": 1,
+   "description": "If set, ticket auto-returns to original counter after service"
+  },
+  {
+   "fieldname": "return_to_counter",
+   "fieldtype": "Link",
+   "label": "Return To Counter",
+   "options": "QMS Counter",
+   "read_only": 1,
+   "description": "Counter to auto-return to when service is complete"
+  },
+  {
+   "fieldname": "recall_section",
+   "fieldtype": "Section Break",
+   "label": "Recall Info",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "recall_count",
+   "fieldtype": "Int",
+   "label": "Recall Count",
+   "default": "0",
+   "read_only": 1,
+   "description": "Number of times this ticket has been recalled"
+  },
+  {
+   "fieldname": "no_show_count",
+   "fieldtype": "Int",
+   "label": "No Show Count",
+   "default": "0",
+   "read_only": 1,
+   "description": "Number of times this ticket was marked as no-show and requeued"
+  },
+  {
+   "fieldname": "qr_section",
+   "fieldtype": "Section Break",
+   "label": "QR Code",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "qr_code_image",
+   "fieldtype": "Attach Image",
+   "label": "QR Code",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Queue Ticket",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "share": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "share": 1
+  },
+  {
+   "role": "All",
+   "read": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "search_fields": "ticket_number,patient_name,status"
+}

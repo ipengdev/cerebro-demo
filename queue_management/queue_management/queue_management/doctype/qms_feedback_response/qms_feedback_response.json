@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "autoname": "QFBR-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "ticket",
+  "feedback_form",
+  "column_break_fbr1",
+  "service",
+  "location",
+  "counter",
+  "patient_section",
+  "patient_name",
+  "column_break_fbr2",
+  "patient_email",
+  "rating_section",
+  "overall_rating",
+  "comments",
+  "column_break_fbr3",
+  "response_data",
+  "submission_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "ticket",
+   "fieldtype": "Link",
+   "label": "Ticket",
+   "options": "QMS Queue Ticket",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "feedback_form",
+   "fieldtype": "Link",
+   "label": "Feedback Form",
+   "options": "QMS Feedback Form Template"
+  },
+  {
+   "fieldname": "column_break_fbr1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Link",
+   "label": "Service",
+   "options": "QMS Service",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location"
+  },
+  {
+   "fieldname": "counter",
+   "fieldtype": "Link",
+   "label": "Counter",
+   "options": "QMS Counter"
+  },
+  {
+   "fieldname": "patient_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Info"
+  },
+  {
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name"
+  },
+  {
+   "fieldname": "column_break_fbr2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "patient_email",
+   "fieldtype": "Data",
+   "label": "Patient Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "rating_section",
+   "fieldtype": "Section Break",
+   "label": "Rating & Comments"
+  },
+  {
+   "fieldname": "overall_rating",
+   "fieldtype": "Rating",
+   "label": "Overall Rating",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Text",
+   "label": "Comments"
+  },
+  {
+   "fieldname": "column_break_fbr3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "response_data",
+   "fieldtype": "JSON",
+   "label": "Response Data",
+   "description": "All field responses stored as JSON"
+  },
+  {
+   "fieldname": "submission_time",
+   "fieldtype": "Datetime",
+   "label": "Submission Time",
+   "default": "Now",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Feedback Response",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "share": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "share": 1
+  },
+  {
+   "role": "All",
+   "read": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

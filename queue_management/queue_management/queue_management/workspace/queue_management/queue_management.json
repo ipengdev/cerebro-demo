@@ -1,0 +1,317 @@
+{
+ "app": "queue_management",
+ "charts": [],
+ "content": "[{\"id\": \"qms_hero\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Queue Management</b></span>\", \"col\": 12}}, {\"id\": \"qms_spacer_1\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"id\": \"qms_card_setup\", \"type\": \"card\", \"data\": {\"card_name\": \"Setup\", \"col\": 4}}, {\"id\": \"qms_card_operations\", \"type\": \"card\", \"data\": {\"card_name\": \"Queue Operations\", \"col\": 4}}, {\"id\": \"qms_card_screens\", \"type\": \"card\", \"data\": {\"card_name\": \"Screens & Display\", \"col\": 4}}, {\"id\": \"qms_card_feedback\", \"type\": \"card\", \"data\": {\"card_name\": \"Feedback\", \"col\": 4}}, {\"id\": \"qms_card_pages\", \"type\": \"card\", \"data\": {\"card_name\": \"Pages\", \"col\": 4}}, {\"id\": \"qms_card_reports\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-03-12 10:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "users",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Queue Management",
+ "links": [
+  {
+   "type": "Card Break",
+   "label": "Setup",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Settings",
+   "label": "QMS Settings",
+   "onboard": 1,
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Location",
+   "label": "Locations",
+   "onboard": 1,
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Service",
+   "label": "Services",
+   "onboard": 1,
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Counter",
+   "label": "Counters",
+   "onboard": 1,
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Staff Assignment",
+   "label": "Staff Assignments",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Patient Form Template",
+   "label": "Patient Form Templates",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Queue Operations",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Queue Ticket",
+   "label": "Queue Tickets",
+   "onboard": 1,
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Appointment",
+   "label": "Appointments",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Screens & Display",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Ticket Screen Settings",
+   "label": "Ticket Screen Settings",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Display Screen Template",
+   "label": "Display Templates",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Call Screen Settings",
+   "label": "Call Screen Settings",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Feedback",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Feedback Form Template",
+   "label": "Feedback Forms",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "QMS Feedback Response",
+   "label": "Feedback Responses",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Pages",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "qms-dashboard",
+   "label": "Dashboard",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "qms-kiosk",
+   "label": "Kiosk Screen",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "qms-display",
+   "label": "Display Screen",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Page",
+   "link_to": "qms-call-screen",
+   "label": "Call Screen",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Card Break",
+   "label": "Reports",
+   "hidden": 0,
+   "is_query_report": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Daily Visit Report",
+   "label": "Daily Visit Report",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Service Performance",
+   "label": "Service Performance",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Staff Performance",
+   "label": "Staff Performance",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Wait Time Analysis",
+   "label": "Wait Time Analysis",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Feedback Summary",
+   "label": "Feedback Summary",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Counter Utilization",
+   "label": "Counter Utilization",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  },
+  {
+   "type": "Link",
+   "link_type": "Report",
+   "link_to": "QMS Peak Hours Analysis",
+   "label": "Peak Hours Analysis",
+   "is_query_report": 1,
+   "hidden": 0,
+   "link_count": 0,
+   "onboard": 0
+  }
+ ],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "Queue Management",
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 30,
+ "shortcuts": [],
+ "title": "Queue Management"
+}

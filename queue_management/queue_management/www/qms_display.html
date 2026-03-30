@@ -1,0 +1,1843 @@
+{% extends "templates/web.html" %}
+
+{% block title %}QMS Display Portal{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+{% endblock %}
+
+{% block style %}
+<style>
+header.web-header, .web-footer, .page-breadcrumbs,
+.page-header-wrapper, .page-footer,
+.navbar, footer, .web-sidebar { display: none !important; }
+body { padding-top: 0 !important; }
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+.page-content-wrapper, .page_content, main.container {
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: 100% !important;
+	height: 100vh;
+	overflow: hidden;
+}
+
+:root {
+	--qms-bg: linear-gradient(160deg, #f3fbfa 0%, #edf8f7 48%, #e6f3f1 100%);
+	--qms-surface: rgba(255, 255, 255, .95);
+	--qms-surface-strong: rgba(255, 255, 255, .98);
+	--qms-border: rgba(13, 148, 136, .14);
+	--qms-primary: #0f766e;
+	--qms-primary-strong: #0b5f59;
+	--qms-secondary: #0f172a;
+	--qms-muted: #64748b;
+	--qms-shadow: 0 22px 60px rgba(15, 23, 42, .14);
+	--qms-header: linear-gradient(135deg, #0f766e 0%, #0d9488 55%, #14b8a6 100%);
+}
+
+.qms-display-portal[data-theme="dark"] {
+	--qms-bg: linear-gradient(160deg, #08131d 0%, #0d1e2c 100%);
+	--qms-surface: rgba(15, 23, 42, .92);
+	--qms-surface-strong: rgba(11, 18, 32, .96);
+	--qms-border: rgba(148, 163, 184, .16);
+	--qms-primary: #5eead4;
+	--qms-primary-strong: #99f6e4;
+	--qms-secondary: #f8fafc;
+	--qms-muted: #94a3b8;
+	--qms-shadow: 0 24px 60px rgba(0, 0, 0, .32);
+	--qms-header: #020617;
+}
+
+.qms-display-portal {
+	height: 100vh;
+	max-height: 100vh;
+	background: var(--qms-bg);
+	color: var(--qms-secondary);
+	font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+	padding: 0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.qms-display-shell {
+	flex: 1;
+	min-height: 0;
+	max-width: 100%;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.qms-loading,
+.qms-center-screen {
+	min-height: calc(100vh - 48px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.qms-card {
+	width: min(560px, 100%);
+	background: var(--qms-surface-strong);
+	border: 1px solid var(--qms-border);
+	border-radius: 28px;
+	box-shadow: var(--qms-shadow);
+	padding: 36px;
+	backdrop-filter: blur(10px);
+}
+
+.qms-brand-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 24px;
+}
+
+.qms-brand-logo,
+.qms-brand-logo img {
+	width: 64px;
+	height: 64px;
+	border-radius: 18px;
+	object-fit: contain;
+	background: rgba(15, 118, 110, .08);
+	border: 1px solid rgba(15, 118, 110, .12);
+	padding: 8px;
+	flex-shrink: 0;
+}
+
+.qms-brand-fallback {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 28px;
+	font-weight: 900;
+	color: var(--qms-primary);
+	background: rgba(15, 118, 110, .1);
+	width: 64px;
+	height: 64px;
+	border-radius: 18px;
+	border: 1px solid rgba(15, 118, 110, .14);
+	flex-shrink: 0;
+}
+
+.qms-brand-copy h1,
+.qms-brand-copy h2,
+.qms-brand-copy h3,
+.qms-brand-copy p {
+	margin: 0;
+}
+
+.qms-brand-copy h1 {
+	font-size: clamp(30px, 4vw, 42px);
+	font-weight: 900;
+	letter-spacing: -.03em;
+	color: var(--qms-secondary);
+}
+
+.qms-brand-copy p {
+	margin-top: 6px;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--qms-muted);
+}
+
+.qms-form-stack {
+	display: grid;
+	gap: 16px;
+	margin-top: 24px;
+}
+
+.qms-field label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 14px;
+	font-weight: 800;
+	color: var(--qms-muted);
+	text-transform: uppercase;
+	letter-spacing: .08em;
+}
+
+.qms-input,
+.qms-button,
+.qms-choice {
+	border-radius: 16px;
+	font: inherit;
+}
+
+.qms-input {
+	width: 100%;
+	padding: 16px 18px;
+	border: 1px solid var(--qms-border);
+	background: rgba(255, 255, 255, .82);
+	color: #0f172a;
+	outline: none;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-input {
+	background: rgba(15, 23, 42, .78);
+	color: #f8fafc;
+}
+
+.qms-input:focus {
+	border-color: rgba(15, 118, 110, .45);
+	box-shadow: 0 0 0 4px rgba(20, 184, 166, .14);
+}
+
+.qms-button {
+	border: 0;
+	padding: 15px 18px;
+	font-weight: 800;
+	cursor: pointer;
+	transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+.qms-button:hover { transform: translateY(-1px); }
+.qms-button:active { transform: translateY(0); }
+
+.qms-button-primary {
+	background: linear-gradient(135deg, #0f766e, #14b8a6);
+	color: #fff;
+	box-shadow: 0 14px 30px rgba(15, 118, 110, .24);
+}
+
+.qms-button-secondary {
+	background: rgba(255, 255, 255, .75);
+	color: var(--qms-secondary);
+	border: 1px solid var(--qms-border);
+}
+
+.qms-display-portal[data-theme="dark"] .qms-button-secondary {
+	background: rgba(15, 23, 42, .72);
+	color: #f8fafc;
+}
+
+.qms-error,
+.qms-info-banner {
+	margin-top: 16px;
+	padding: 14px 16px;
+	border-radius: 14px;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.5;
+}
+
+.qms-error {
+	background: rgba(254, 226, 226, .9);
+	color: #b91c1c;
+	border: 1px solid rgba(239, 68, 68, .2);
+}
+
+.qms-info-banner {
+	background: rgba(240, 253, 250, .9);
+	color: var(--qms-primary);
+	border: 1px solid rgba(20, 184, 166, .16);
+}
+
+.qms-choice-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+	margin-top: 26px;
+}
+
+.qms-choice {
+	border: 1px solid var(--qms-border);
+	background: var(--qms-surface);
+	padding: 22px 20px;
+	text-align: left;
+	box-shadow: 0 16px 32px rgba(15, 118, 110, .08);
+	cursor: pointer;
+	transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.qms-choice:hover {
+	transform: translateY(-2px);
+	border-color: rgba(20, 184, 166, .3);
+	box-shadow: 0 18px 34px rgba(15, 118, 110, .14);
+}
+
+.qms-choice strong {
+	display: block;
+	font-size: 22px;
+	font-weight: 900;
+	color: var(--qms-secondary);
+}
+
+.qms-choice span {
+	display: block;
+	margin-top: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--qms-muted);
+}
+
+.qms-board {
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
+	border-radius: 28px;
+	box-shadow: var(--qms-shadow);
+	border: 1px solid var(--qms-border);
+	background: var(--qms-surface-strong);
+	backdrop-filter: blur(10px);
+	display: flex;
+	flex-direction: column;
+}
+
+.qms-board-header {
+	background: var(--qms-header);
+	color: #fff;
+	padding: 16px 22px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+
+.qms-board-header h2,
+.qms-board-header p {
+	margin: 0;
+}
+
+.qms-board-header h2 {
+	font-size: clamp(22px, 2.6vw, 34px);
+	font-weight: 900;
+	letter-spacing: -.02em;
+	color: #fff;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, .16);
+}
+
+.qms-board-header p {
+	margin-top: 4px;
+	font-size: 14px;
+	font-weight: 700;
+	color: rgba(255, 255, 255, .86);
+	text-shadow: 0 1px 8px rgba(0, 0, 0, .14);
+}
+
+.qms-board-controls {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.qms-chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 38px;
+	padding: 0 14px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, .14);
+	border: 1px solid rgba(255, 255, 255, .22);
+	color: #fff;
+	font-size: 13px;
+	font-weight: 800;
+	letter-spacing: .02em;
+	cursor: pointer;
+}
+
+.qms-chip:disabled {
+	opacity: .6;
+	cursor: not-allowed;
+}
+
+.qms-board-announcement {
+	padding: 12px 22px;
+	background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(240,253,250,.95));
+	color: var(--qms-primary);
+	font-size: 16px;
+	font-weight: 800;
+	border-bottom: 1px solid var(--qms-border);
+}
+
+.qms-display-portal[data-theme="dark"] .qms-board-announcement {
+	background: rgba(17, 24, 39, .92);
+	color: var(--qms-primary-strong);
+}
+
+.qms-board-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(340px, 1fr);
+	gap: 18px;
+	padding: 18px;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.qms-panel {
+	background: var(--qms-surface);
+	border: 1px solid var(--qms-border);
+	border-radius: 24px;
+	padding: 18px;
+	min-width: 0;
+}
+
+.qms-panel-visual {
+	display: flex;
+	align-items: stretch;
+	justify-content: stretch;
+	min-height: 100%;
+	background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(244,251,249,.9));
+}
+
+.qms-display-portal[data-theme="dark"] .qms-panel-visual {
+	background: linear-gradient(180deg, rgba(15,23,42,.94), rgba(12,27,40,.98));
+}
+
+.qms-media-stage,
+.qms-visual-fallback {
+	width: 100%;
+	min-height: 100%;
+	border-radius: 20px;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid var(--qms-border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-media-stage,
+.qms-display-portal[data-theme="dark"] .qms-visual-fallback {
+	background: #111827;
+}
+
+.qms-media-stage img,
+.qms-media-stage video,
+.qms-media-stage iframe,
+.qms-visual-fallback img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	border: 0;
+	display: block;
+}
+
+.qms-visual-fallback {
+	padding: 28px;
+	display: flex;
+	justify-content: space-between;
+	gap: 24px;
+}
+
+.qms-visual-copy {
+	flex: 0 1 50%;
+	min-width: 0;
+}
+
+.qms-visual-kicker {
+	font-size: 14px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: .12em;
+	color: var(--qms-muted);
+}
+
+.qms-visual-title {
+	margin-top: 10px;
+	font-size: clamp(30px, 3vw, 52px);
+	font-weight: 900;
+	line-height: 1.08;
+}
+
+.qms-visual-subtitle {
+	margin-top: 12px;
+	font-size: clamp(20px, 1.8vw, 30px);
+	font-weight: 800;
+	color: var(--qms-primary);
+	line-height: 1.2;
+}
+
+.qms-visual-mark {
+	width: clamp(120px, 16vw, 200px);
+	height: clamp(120px, 16vw, 200px);
+	border-radius: 999px;
+	background: linear-gradient(135deg, #0f766e, #22c55e);
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: clamp(56px, 5vw, 92px);
+	font-weight: 900;
+	box-shadow: 0 24px 44px rgba(15, 118, 110, .28);
+	align-self: center;
+	flex-shrink: 0;
+}
+
+.qms-panel-list {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.qms-list-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: end;
+	gap: 12px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--qms-border);
+}
+
+.qms-list-head small,
+.qms-list-head strong,
+.qms-list-head span {
+	display: block;
+}
+
+.qms-list-head small {
+	font-size: 14px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: var(--qms-muted);
+}
+
+.qms-list-head strong {
+	font-size: 44px;
+	line-height: 1;
+	font-weight: 900;
+	color: var(--qms-secondary);
+}
+
+.qms-list-head span {
+	font-size: 14px;
+	font-weight: 800;
+	color: var(--qms-primary);
+}
+
+.qms-board-table-head,
+.qms-board-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 12px;
+	align-items: center;
+}
+
+.qms-board-table-head {
+	padding: 0 8px 10px;
+	border-bottom: 1px solid var(--qms-border);
+	font-size: 14px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: var(--qms-primary);
+	text-align: center;
+}
+
+.qms-board-list {
+	display: grid;
+	gap: 8px;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.qms-board-row {
+	min-height: 68px;
+	padding: 12px;
+	border-radius: 18px;
+	border: 1px solid var(--qms-border);
+	background: rgba(255, 255, 255, .84);
+	text-align: center;
+	font-weight: 900;
+	font-size: clamp(20px, 1.8vw, 34px);
+	line-height: 1.05;
+	color: var(--qms-secondary);
+	box-shadow: 0 12px 24px rgba(15, 118, 110, .06);
+	transition: box-shadow .2s ease, background .2s ease;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-board-row {
+	background: rgba(15, 23, 42, .76);
+	box-shadow: none;
+}
+
+.qms-board-row.is-called {
+	background: linear-gradient(90deg, rgba(254,243,199,.8), rgba(255,255,255,.98));
+	box-shadow: inset -4px 0 0 #f59e0b;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-board-row.is-called {
+	background: linear-gradient(90deg, rgba(245,158,11,.18), rgba(15,23,42,.92));
+	box-shadow: inset -4px 0 0 #f59e0b;
+}
+
+.qms-board-row.is-empty,
+.qms-board-row.is-placeholder {
+	grid-template-columns: 1fr;
+}
+
+.qms-board-row.is-empty {
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--qms-muted);
+}
+
+.qms-board-row.is-placeholder {
+	min-height: 56px;
+	background: rgba(240, 253, 250, .72);
+	box-shadow: none;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-board-row.is-placeholder {
+	background: rgba(15, 23, 42, .42);
+}
+
+.qms-placeholder-line {
+	height: 5px;
+	border-radius: 999px;
+	background: rgba(13, 148, 136, .22);
+	width: 100%;
+}
+
+.qms-waiting-wrap {
+	margin-top: auto;
+	padding-top: 8px;
+}
+
+.qms-onhold-wrap {
+	padding-top: 8px;
+}
+
+.qms-onhold-label {
+	font-size: 13px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: #e65100;
+	margin-bottom: 8px;
+}
+
+.qms-onhold-chip {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border-radius: 14px;
+	border: 1px solid #ffcc80;
+	background: #fff3e0;
+	margin-bottom: 6px;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-onhold-chip {
+	background: rgba(230, 81, 0, .15);
+	border-color: rgba(230, 81, 0, .3);
+}
+
+.qms-onhold-icon {
+	width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #e65100, #fb8c00);
+	color: #fff;
+	font-size: 14px;
+	flex-shrink: 0;
+}
+
+.qms-onhold-ticket {
+	font-size: 18px;
+	font-weight: 800;
+	color: #e65100;
+}
+
+.qms-waiting-label {
+	font-size: 13px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: var(--qms-muted);
+	margin-bottom: 8px;
+}
+
+.qms-waiting-chip {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border-radius: 14px;
+	border: 1px solid var(--qms-border);
+	background: rgba(255, 255, 255, .9);
+	margin-bottom: 6px;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-waiting-chip {
+	background: rgba(17, 24, 39, .92);
+}
+
+.qms-waiting-order {
+	width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #0f766e, #14b8a6);
+	color: #fff;
+	font-size: 13px;
+	font-weight: 900;
+	flex-shrink: 0;
+}
+
+.qms-waiting-ticket {
+	font-size: 18px;
+	font-weight: 800;
+	color: var(--qms-secondary);
+}
+
+.qms-empty-state {
+	padding: 52px 24px;
+	text-align: center;
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--qms-muted);
+}
+
+.qms-board-footer {
+	position: relative;
+	height: 52px;
+	padding: 0;
+	background: var(--qms-header);
+	color: #fff;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.qms-board-footer-track {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+}
+
+.qms-board-footer-text {
+	white-space: nowrap;
+	padding-inline: 28px;
+	font-size: 15px;
+	font-weight: 900;
+	letter-spacing: .02em;
+	will-change: transform;
+	animation-name: qmsFooterMarqueeLtr;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+.qms-board-footer-text.is-static {
+	width: 100%;
+	padding-inline: 18px;
+	text-align: center;
+	white-space: normal;
+	animation: none;
+}
+
+.qms-popup {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: rgba(15, 23, 42, .48);
+	z-index: 1000;
+	pointer-events: none;
+}
+
+.qms-popup-card {
+	width: min(720px, calc(100vw - 32px));
+	padding: 34px 40px;
+	border-radius: 30px;
+	background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(236,253,245,.95));
+	border: 1px solid rgba(20,184,166,.2);
+	box-shadow: 0 30px 80px rgba(15,23,42,.32);
+	text-align: center;
+	animation: qmsPopupIn .22s ease;
+}
+
+.qms-display-portal[data-theme="dark"] .qms-popup-card {
+	background: linear-gradient(145deg, rgba(15,23,42,.98), rgba(15,118,110,.16));
+	border-color: rgba(45,212,191,.22);
+	color: #f8fafc;
+}
+
+.qms-popup-kicker {
+	font-size: 18px;
+	font-weight: 900;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+	color: var(--qms-primary);
+	margin-bottom: 10px;
+}
+
+.qms-popup-ticket {
+	font-size: clamp(72px, 12vw, 140px);
+	line-height: .96;
+	font-weight: 900;
+	margin-bottom: 14px;
+}
+
+.qms-popup-counter {
+	font-size: clamp(28px, 4vw, 48px);
+	font-weight: 900;
+	color: var(--qms-primary-strong);
+	margin-bottom: 10px;
+}
+
+.qms-popup-service {
+	font-size: 22px;
+	font-weight: 700;
+	color: var(--qms-muted);
+}
+@keyframes qmsPopupIn {
+	from { opacity: 0; transform: scale(.93) translateY(10px); }
+	to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes qmsFooterMarqueeLtr {
+	from { transform: translateX(calc(-100% - 32px)); }
+	to { transform: translateX(100vw); }
+}
+
+@media (max-width: 960px) {
+	.qms-display-portal { padding: 16px; }
+	.qms-loading,
+	.qms-center-screen { min-height: calc(100vh - 32px); padding: 16px; }
+	.qms-board-grid { grid-template-columns: 1fr; }
+	.qms-panel-visual { min-height: 42vh; }
+	.qms-visual-fallback { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 640px) {
+	.qms-display-portal { padding: 12px; }
+	.qms-card { padding: 26px 20px; border-radius: 22px; }
+	.qms-brand-row { gap: 12px; }
+	.qms-brand-logo,
+	.qms-brand-logo img,
+	.qms-brand-fallback { width: 54px; height: 54px; border-radius: 16px; }
+	.qms-brand-copy h1 { font-size: 28px; }
+	.qms-choice-grid { grid-template-columns: 1fr; }
+	.qms-board-header { padding: 14px 16px; }
+	.qms-board-controls { width: 100%; justify-content: space-between; }
+	.qms-board-grid { padding: 12px; gap: 12px; }
+	.qms-panel { padding: 14px; border-radius: 20px; }
+	.qms-list-head strong { font-size: 34px; }
+	.qms-board-row { font-size: 24px; min-height: 60px; }
+	.qms-board-footer { height: 46px; }
+	.qms-board-footer-text { font-size: 13px; padding-inline: 18px; }
+	.qms-popup-card { padding: 26px 18px; border-radius: 24px; }
+}
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="qms-display-portal" id="qms-display-portal" data-theme="light">
+	<div class="qms-display-shell" id="qms-display-root" aria-live="polite"></div>
+</div>
+
+<script>
+(function() {
+	var DISPLAY_TOKEN_KEY = 'qms_display_portal_token';
+	var DISPLAY_LOCATION_KEY = 'qms_display_portal_location';
+	var DISPLAY_COUNTER_KEY = 'qms_display_portal_counter';
+	var DISPLAY_LANGUAGE_KEY = 'qms_display_portal_language';
+	var DEFAULT_YOUTUBE_VIDEO = {
+		media_type: 'Embed',
+		media_file: 'https://www.youtube-nocookie.com/embed/Bo5vJzOJvE4?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=Bo5vJzOJvE4&modestbranding=1&playsinline=1&fs=1&iv_load_policy=3',
+		display_duration: 45,
+		sort_order: 9999,
+		title: 'Queue Display Video'
+	};
+
+	var state = {
+		token: localStorage.getItem(DISPLAY_TOKEN_KEY) || '',
+		hospitalName: {{ hospital_name | tojson }},
+		hospitalLogo: {{ hospital_logo | tojson }},
+		authRequired: false,
+		authenticated: false,
+		location: localStorage.getItem(DISPLAY_LOCATION_KEY) || '',
+		counterSelection: localStorage.getItem(DISPLAY_COUNTER_KEY),
+		language: localStorage.getItem(DISPLAY_LANGUAGE_KEY) || 'English',
+		heartbeatTimer: null,
+		clockTimer: null,
+		mediaTimer: null,
+		mediaState: null,
+		popupTimer: null,
+		activePopup: null,
+		lastCalledTicket: '',
+		realtimeBound: false,
+		realtimeRetryTimer: null,
+		currentData: null,
+		currentTemplate: null,
+		latestLocations: [],
+		latestCounters: []
+	};
+
+	var root = document.getElementById('qms-display-root');
+	var portal = document.getElementById('qms-display-portal');
+
+	function esc(value) {
+		return String(value == null ? '' : value)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	function t(english, arabic) {
+		return state.language === 'Arabic' ? (arabic || english) : english;
+	}
+
+	function getLangToggleLabel() {
+		return state.language === 'Arabic' ? 'English' : 'عربي';
+	}
+
+	function getBrandMarkup() {
+		if (state.hospitalLogo) {
+			return '<span class="qms-brand-logo"><img src="' + esc(state.hospitalLogo) + '" alt="' + esc(state.hospitalName) + '"></span>';
+		}
+		return '<span class="qms-brand-fallback">' + esc((state.hospitalName || 'Q').charAt(0).toUpperCase()) + '</span>';
+	}
+
+	function getCsrfToken() {
+		var token = window.csrf_token
+			|| window.frappe && frappe.csrf_token
+			|| (document.querySelector('meta[name="csrf-token"]') || {}).content
+			|| '';
+		return (token && token !== 'None') ? token : '';
+	}
+
+	function getQuerySelection() {
+		var params = new URLSearchParams(window.location.search || '');
+		var queryLocation = params.get('location');
+		var queryCounter = params.get('counter');
+		if (queryLocation) {
+			state.location = queryLocation;
+			localStorage.setItem(DISPLAY_LOCATION_KEY, queryLocation);
+		}
+		if (queryCounter !== null) {
+			state.counterSelection = queryCounter || '__all__';
+			localStorage.setItem(DISPLAY_COUNTER_KEY, state.counterSelection);
+		}
+	}
+
+	function updateUrl() {
+		var params = new URLSearchParams();
+		if (state.location) params.set('location', state.location);
+		if (state.counterSelection && state.counterSelection !== '__all__') params.set('counter', state.counterSelection);
+		if (state.counterSelection === '__all__') params.set('counter', '');
+		var query = params.toString();
+		var nextUrl = window.location.pathname + (query ? '?' + query : '');
+		window.history.replaceState({}, '', nextUrl);
+	}
+
+	function setLanguage(language) {
+		state.language = language === 'Arabic' ? 'Arabic' : 'English';
+		localStorage.setItem(DISPLAY_LANGUAGE_KEY, state.language);
+		var langToggle = document.getElementById('qms-lang-toggle');
+		if (langToggle) langToggle.textContent = getLangToggleLabel();
+	}
+
+	function clearTimers() {
+		if (state.heartbeatTimer) {
+			clearInterval(state.heartbeatTimer);
+			state.heartbeatTimer = null;
+		}
+		if (state.clockTimer) {
+			clearInterval(state.clockTimer);
+			state.clockTimer = null;
+		}
+		if (state.mediaTimer) {
+			clearTimeout(state.mediaTimer);
+			state.mediaTimer = null;
+		}
+		if (state.popupTimer) {
+			clearTimeout(state.popupTimer);
+			state.popupTimer = null;
+		}
+		if (state.realtimeRetryTimer) {
+			clearTimeout(state.realtimeRetryTimer);
+			state.realtimeRetryTimer = null;
+		}
+	}
+
+	function showLoading(message) {
+		clearTimers();
+		root.innerHTML = ''
+			+ '<div class="qms-loading">'
+			+ '  <div class="qms-card">'
+			+ '    <div class="qms-brand-row">'
+			+        getBrandMarkup()
+			+ '      <div class="qms-brand-copy">'
+			+ '        <h1>' + esc(state.hospitalName) + '</h1>'
+			+ '        <p>' + esc(message || t('Loading display portal...', 'جاري تحميل بوابة عرض قائمة الانتظار...')) + '</p>'
+			+ '      </div>'
+			+ '    </div>'
+			+ '  </div>'
+			+ '</div>';
+	}
+
+	function extractErrorMessage(payload) {
+		if (!payload) return t('Unexpected server response.', 'استجابة غير متوقعة من الخادم.');
+		if (payload.message && typeof payload.message === 'string') return payload.message;
+		if (payload._server_messages) {
+			try {
+				var messages = JSON.parse(payload._server_messages);
+				if (messages && messages[0]) {
+					var first = JSON.parse(messages[0]);
+					if (first && first.message) return first.message;
+				}
+			} catch (error) {}
+		}
+		if (payload.exc_type === 'AuthenticationError') {
+			return t('Authentication failed.', 'فشل التحقق من الدخول.');
+		}
+		if (payload.exception) return payload.exception;
+		return t('Something went wrong.', 'حدث خطأ ما.');
+	}
+
+	async function refreshCsrfToken() {
+		try {
+			var resp = await fetch('/api/method/frappe.auth.get_csrf_token', {
+				method: 'GET',
+				credentials: 'same-origin',
+				headers: { 'Accept': 'application/json' }
+			});
+			if (resp.ok) {
+				var data = await resp.json();
+				if (data && data.message) {
+					window.csrf_token = data.message;
+					if (window.frappe) frappe.csrf_token = data.message;
+					var meta = document.querySelector('meta[name="csrf-token"]');
+					if (meta) meta.setAttribute('content', data.message);
+				}
+			}
+		} catch (e) {}
+	}
+
+	async function callPortalApi(method, args, _isRetry) {
+		var csrfToken = getCsrfToken();
+		var headers = {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		};
+		if (csrfToken) {
+			headers['X-Frappe-CSRF-Token'] = csrfToken;
+		}
+		var response = await fetch('/api/method/queue_management.qms_display_api.' + method, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: headers,
+			body: JSON.stringify(args || {})
+		});
+		var payload = {};
+		try {
+			payload = await response.json();
+		} catch (error) {}
+		if (!response.ok || payload.exc || payload.exception) {
+			var excType = payload.exc_type || '';
+			// 403 without AuthenticationError is likely a stale CSRF token — refresh and retry once
+			if (response.status === 403 && excType !== 'AuthenticationError' && !_isRetry) {
+				await refreshCsrfToken();
+				return callPortalApi(method, args, true);
+			}
+			var message = extractErrorMessage(payload);
+			var err = new Error(message);
+			err.statusCode = response.status;
+			err.excType = excType;
+			err.isDisplayAuthError = (excType === 'AuthenticationError');
+			throw err;
+		}
+		return payload.message;
+	}
+
+	function buildPlaylist(items) {
+		var playlist = Array.isArray(items) ? items.slice() : [];
+		playlist.push(DEFAULT_YOUTUBE_VIDEO);
+		return playlist;
+	}
+
+	function getMediaItemKey(item) {
+		return [
+			item && item.media_type || '',
+			item && item.media_file || '',
+			parseInt(item && item.display_duration, 10) || 0,
+			parseInt(item && item.sort_order, 10) || 0
+		].join('::');
+	}
+
+	function getMediaSignature(items) {
+		return (items || []).map(getMediaItemKey).join('|');
+	}
+
+	function rememberMediaState(signature, index, item, startedAt, currentTime) {
+		state.mediaState = {
+			signature: signature,
+			index: index,
+			media_type: item && item.media_type || '',
+			media_file: item && item.media_file || '',
+			startedAt: startedAt || Date.now(),
+			currentTime: currentTime || 0
+		};
+	}
+
+	function getResumeMediaState(signature, items) {
+		if (!state.mediaState || state.mediaState.signature !== signature) return null;
+		if (state.mediaState.index >= items.length) return null;
+		var item = items[state.mediaState.index];
+		if (!item) return null;
+		if ((item.media_type || '') !== (state.mediaState.media_type || '')) return null;
+		if ((item.media_file || '') !== (state.mediaState.media_file || '')) return null;
+		return state.mediaState;
+	}
+
+	function captureMediaProgress() {
+		var stage = document.getElementById('qms-media-stage');
+		var video = stage && stage.querySelector('video');
+		if (!video || !state.mediaState) return;
+		state.mediaState.currentTime = video.currentTime || 0;
+	}
+
+	function renderMedia(items) {
+		if (state.mediaTimer) {
+			clearTimeout(state.mediaTimer);
+			state.mediaTimer = null;
+		}
+		var stage = document.getElementById('qms-media-stage');
+		if (!stage || !items || !items.length) {
+			state.mediaState = null;
+			return;
+		}
+
+		function markStageMedia(signature, index, item) {
+			stage.setAttribute('data-media-signature', signature || '');
+			stage.setAttribute('data-media-index', String(index));
+			stage.setAttribute('data-media-type', item && item.media_type || '');
+			stage.setAttribute('data-media-file', item && item.media_file || '');
+		}
+
+		function stageMatchesMedia(signature, index, item) {
+			return stage.getAttribute('data-media-signature') === (signature || '')
+				&& stage.getAttribute('data-media-index') === String(index)
+				&& stage.getAttribute('data-media-type') === (item && item.media_type || '')
+				&& stage.getAttribute('data-media-file') === (item && item.media_file || '');
+		}
+
+		var ordered = items.slice().sort(function(left, right) {
+			var leftVideo = left.media_type === 'Video';
+			var rightVideo = right.media_type === 'Video';
+			if (leftVideo !== rightVideo) return leftVideo ? 1 : -1;
+			return (parseInt(left.sort_order, 10) || 0) - (parseInt(right.sort_order, 10) || 0);
+		});
+		var signature = getMediaSignature(ordered);
+		var resumeState = getResumeMediaState(signature, ordered);
+		var index = resumeState ? resumeState.index : 0;
+
+		function advance() {
+			index = (index + 1) % ordered.length;
+			resumeState = null;
+			renderCurrent();
+		}
+
+		function scheduleTimedAdvance(item, defaultSeconds) {
+			var durationMs = (parseInt(item.display_duration, 10) || defaultSeconds) * 1000;
+			var remainingMs = durationMs;
+			if (resumeState && resumeState.index === index) {
+				var elapsedMs = Date.now() - (resumeState.startedAt || Date.now());
+				if (elapsedMs >= durationMs && ordered.length > 1) {
+					index = (index + Math.floor(elapsedMs / durationMs)) % ordered.length;
+					resumeState = null;
+					renderCurrent();
+					return;
+				}
+				remainingMs = Math.max(250, durationMs - Math.max(0, elapsedMs));
+				rememberMediaState(signature, index, item, Date.now() - (durationMs - remainingMs), 0);
+			} else {
+				rememberMediaState(signature, index, item, Date.now(), 0);
+			}
+			if (ordered.length > 1) {
+				state.mediaTimer = setTimeout(advance, remainingMs);
+			}
+		}
+
+		function renderCurrent() {
+			if (state.mediaTimer) {
+				clearTimeout(state.mediaTimer);
+				state.mediaTimer = null;
+			}
+			var item = ordered[index];
+			if (!item) return;
+			if (item.media_type === 'Embed') {
+				if (stageMatchesMedia(signature, index, item) && stage.querySelector('iframe')) {
+					scheduleTimedAdvance(item, 45);
+					return;
+				}
+				stage.innerHTML = '<iframe src="' + esc(item.media_file) + '" title="' + esc(item.title || 'Display media') + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+				markStageMedia(signature, index, item);
+				scheduleTimedAdvance(item, 45);
+				return;
+			}
+
+			if (item.media_type === 'Video') {
+				if (stageMatchesMedia(signature, index, item)) {
+					var existingVideo = stage.querySelector('video');
+					if (existingVideo) {
+						rememberMediaState(signature, index, item, state.mediaState && state.mediaState.startedAt || Date.now(), existingVideo.currentTime || 0);
+						existingVideo.play().catch(function() {});
+						return;
+					}
+				}
+				stage.innerHTML = '<video src="' + esc(item.media_file) + '" autoplay muted playsinline preload="auto"></video>';
+				markStageMedia(signature, index, item);
+				var video = stage.querySelector('video');
+				if (!video) return;
+				var resumeTime = resumeState && resumeState.index === index ? (resumeState.currentTime || 0) : 0;
+				rememberMediaState(signature, index, item, Date.now(), resumeTime);
+				if (resumeTime > 0) {
+					video.addEventListener('loadedmetadata', function() {
+						var nextTime = resumeTime;
+						if (isFinite(video.duration)) {
+							nextTime = Math.min(resumeTime, Math.max(0, video.duration - 0.25));
+						}
+						try {
+							video.currentTime = Math.max(0, nextTime);
+						} catch (error) {}
+					}, { once: true });
+				}
+				video.addEventListener('timeupdate', function() {
+					if (!state.mediaState || state.mediaState.signature !== signature || state.mediaState.index !== index) return;
+					state.mediaState.currentTime = video.currentTime || 0;
+				});
+				video.onended = function() {
+					if (ordered.length > 1) {
+						advance();
+					} else {
+						video.currentTime = 0;
+						if (state.mediaState) state.mediaState.currentTime = 0;
+						video.play().catch(function() {});
+					}
+				};
+				video.play().catch(function() {});
+				return;
+			}
+
+			if (stageMatchesMedia(signature, index, item) && stage.querySelector('img')) {
+				scheduleTimedAdvance(item, 10);
+				return;
+			}
+			stage.innerHTML = '<img src="' + esc(item.media_file) + '" alt="' + esc(item.title || 'Display media') + '">';
+			markStageMedia(signature, index, item);
+			scheduleTimedAdvance(item, 10);
+		}
+
+		renderCurrent();
+	}
+
+	function updateClock() {
+		var clockEl = document.getElementById('qms-board-clock');
+		if (!clockEl) return;
+		var now = new Date();
+		var locale = state.language === 'Arabic' ? 'ar' : 'en-US';
+		var timeText = now.toLocaleTimeString(locale, {
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+		var dateText = now.toLocaleDateString(locale, {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric'
+		});
+		clockEl.textContent = timeText + ' • ' + dateText;
+	}
+
+	function bindClock() {
+		updateClock();
+		if (!state.clockTimer) {
+			state.clockTimer = setInterval(updateClock, 1000);
+		}
+	}
+
+	function matchesLocation(eventData) {
+		if (!state.location || !eventData) return true;
+		var location = eventData.location || eventData.to_location || eventData.from_location || '';
+		return !location || location === state.location;
+	}
+
+	function matchesBoard(eventData) {
+		if (!matchesLocation(eventData)) return false;
+		if (!state.counterSelection || state.counterSelection === '__all__') return true;
+		return !eventData || !eventData.counter || eventData.counter === state.counterSelection;
+	}
+
+	function showPopup(eventData) {
+		if (!matchesBoard(eventData)) return;
+		state.activePopup = {
+			ticket_number: eventData && eventData.ticket_number,
+			counter_name: eventData && eventData.counter_name,
+			counter_number: eventData && eventData.counter_number,
+			service: eventData && eventData.service
+		};
+		if (state.popupTimer) clearTimeout(state.popupTimer);
+		state.popupTimer = setTimeout(function() {
+			state.activePopup = null;
+			state.popupTimer = null;
+			if (state.location) renderBoard(state.currentData || {});
+		}, 5000);
+		if (state.location && state.currentData) renderBoard(state.currentData);
+	}
+
+	function speakCall(eventData) {
+		if (!matchesBoard(eventData) || !window.speechSynthesis || !eventData || !eventData.ticket_number) return;
+		try {
+			window.speechSynthesis.cancel();
+			var ticket = String(eventData.ticket_number).replace(/[^0-9A-Za-z]/g, ' ').trim().split('').join(' ');
+			var counterText = eventData.counter_name || ('Counter ' + (eventData.counter_number || ''));
+			var utterance = new SpeechSynthesisUtterance('Ticket ' + ticket + '. Please proceed to ' + counterText + '.');
+			utterance.lang = 'en-US';
+			utterance.rate = 0.75;
+			utterance.pitch = 1;
+			utterance.volume = 1;
+			window.speechSynthesis.speak(utterance);
+		} catch (error) {}
+	}
+
+	function startHeartbeat() {
+		if (state.heartbeatTimer) clearInterval(state.heartbeatTimer);
+		state.heartbeatTimer = setInterval(function() {
+			if (state.location) loadBoard(true);
+		}, 60000);
+	}
+
+	function bindRealtime() {
+		if (state.realtimeBound || !(window.frappe && frappe.realtime)) return;
+		if (!frappe.realtime.socket && typeof frappe.realtime.init === 'function' && window.socketio_port) {
+			frappe.realtime.init(window.socketio_port, true);
+		}
+		if (!frappe.realtime.socket) {
+			if (!state.realtimeRetryTimer) {
+				state.realtimeRetryTimer = window.setTimeout(function() {
+					state.realtimeRetryTimer = null;
+					bindRealtime();
+				}, 250);
+			}
+			return;
+		}
+		if (state.realtimeRetryTimer) {
+			clearTimeout(state.realtimeRetryTimer);
+			state.realtimeRetryTimer = null;
+		}
+		frappe.realtime.connect();
+		var refreshSoon = function(delay) {
+			window.setTimeout(function() {
+				if (state.location) loadBoard(true);
+			}, delay || 50);
+		};
+
+		frappe.realtime.on('qms_ticket_called_website', function(data) {
+			if (!matchesBoard(data)) return;
+			state.lastCalledTicket = data && data.ticket_number ? data.ticket_number : '';
+			showPopup(data);
+			speakCall(data);
+			refreshSoon(50);
+		});
+		frappe.realtime.on('qms_ticket_completed_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(50);
+		});
+		frappe.realtime.on('qms_new_ticket_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_held_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_no_show_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_transferred_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_requeued_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_serving_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_counter_updated_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		frappe.realtime.on('qms_ticket_cancelled_website', function(data) {
+			if (!matchesLocation(data)) return;
+			refreshSoon(80);
+		});
+		state.realtimeBound = true;
+	}
+
+	function showAuthScreen(errorMessage) {
+		clearTimers();
+		root.innerHTML = ''
+			+ '<div class="qms-center-screen">'
+			+ '  <div class="qms-card">'
+			+ '    <div class="qms-brand-row">'
+			+        getBrandMarkup()
+			+ '      <div class="qms-brand-copy">'
+			+ '        <h1>' + esc(state.hospitalName) + '</h1>'
+			+ '        <p>' + esc(t('Queue Display Portal', 'بوابة عرض قائمة الانتظار')) + '</p>'
+			+ '      </div>'
+			+ '    </div>'
+			+ '    <div class="qms-info-banner">' + esc(t('Use the external display portal credentials configured in QMS Settings.', 'استخدم بيانات اعتماد بوابة العرض الخارجية المهيأة في إعدادات QMS.')) + '</div>'
+			+ '    <form id="qms-login-form" class="qms-form-stack">'
+			+ '      <div class="qms-field">'
+			+ '        <label for="qms-login-username">' + esc(t('Username', 'اسم المستخدم')) + '</label>'
+			+ '        <input class="qms-input" id="qms-login-username" name="username" autocomplete="username" required>'
+			+ '      </div>'
+			+ '      <div class="qms-field">'
+			+ '        <label for="qms-login-password">' + esc(t('Password', 'كلمة المرور')) + '</label>'
+			+ '        <input class="qms-input" type="password" id="qms-login-password" name="password" autocomplete="current-password" required>'
+			+ '      </div>'
+			+ '      <button class="qms-button qms-button-primary" type="submit">' + esc(t('Sign In', 'تسجيل الدخول')) + '</button>'
+			+ '    </form>'
+			+ (errorMessage ? '<div class="qms-error">' + esc(errorMessage) + '</div>' : '')
+			+ '  </div>'
+			+ '</div>';
+
+		var form = document.getElementById('qms-login-form');
+		var usernameInput = document.getElementById('qms-login-username');
+		if (usernameInput) usernameInput.focus();
+		if (form) {
+			form.addEventListener('submit', async function(event) {
+				event.preventDefault();
+				var formData = new FormData(form);
+				var username = (formData.get('username') || '').toString().trim();
+				var password = (formData.get('password') || '').toString();
+				try {
+					showLoading(t('Signing in...', 'جاري تسجيل الدخول...'));
+					var result = await callPortalApi('display_portal_login', {
+						username: username,
+						password: password
+					});
+					state.token = result && result.token ? result.token : '';
+					state.authenticated = true;
+					localStorage.setItem(DISPLAY_TOKEN_KEY, state.token);
+					await bootstrapPortal();
+				} catch (error) {
+					state.token = '';
+					state.authenticated = false;
+					localStorage.removeItem(DISPLAY_TOKEN_KEY);
+					showAuthScreen(error.message || t('Unable to sign in.', 'تعذر تسجيل الدخول.'));
+				}
+			});
+		}
+	}
+
+	function showLocationPicker() {
+		clearTimers();
+		var locations = state.latestLocations || [];
+		root.innerHTML = ''
+			+ '<div class="qms-center-screen">'
+			+ '  <div class="qms-card" dir="' + (state.language === 'Arabic' ? 'rtl' : 'ltr') + '">'
+			+ '    <div class="qms-brand-row">'
+			+        getBrandMarkup()
+			+ '      <div class="qms-brand-copy">'
+			+ '        <h1>' + esc(state.hospitalName) + '</h1>'
+			+ '        <p>' + esc(t('Select a display location', 'اختر موقع العرض')) + '</p>'
+			+ '      </div>'
+			+ '    </div>'
+			+ '    <div class="qms-choice-grid" id="qms-location-grid"></div>'
+			+ (locations.length ? '' : '<div class="qms-empty-state">' + esc(t('No active locations are configured yet.', 'لا توجد مواقع مفعلة حالياً.')) + '</div>')
+			+ '  </div>'
+			+ '</div>';
+
+		var grid = document.getElementById('qms-location-grid');
+		locations.forEach(function(location) {
+			var button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'qms-choice';
+			button.innerHTML = '<strong>' + esc(location.location_name || location.name) + '</strong><span>' + esc(location.location_type || t('Display location', 'موقع العرض')) + '</span>';
+			button.addEventListener('click', function() {
+				state.location = location.name;
+				state.counterSelection = null;
+				localStorage.setItem(DISPLAY_LOCATION_KEY, state.location);
+				localStorage.removeItem(DISPLAY_COUNTER_KEY);
+				updateUrl();
+				loadCounterPicker();
+			});
+			grid.appendChild(button);
+		});
+	}
+
+	async function loadCounterPicker() {
+		showLoading(t('Loading counters...', 'جاري تحميل نقاط الخدمة...'));
+		try {
+			state.latestCounters = await callPortalApi('get_display_counters_portal', {
+				token: state.token,
+				location: state.location
+			});
+			showCounterPicker();
+		} catch (error) {
+			showLocationPicker();
+		}
+	}
+
+	function showCounterPicker() {
+		clearTimers();
+		var counters = state.latestCounters || [];
+		root.innerHTML = ''
+			+ '<div class="qms-center-screen">'
+			+ '  <div class="qms-card" dir="' + (state.language === 'Arabic' ? 'rtl' : 'ltr') + '">'
+			+ '    <div class="qms-brand-row">'
+			+        getBrandMarkup()
+			+ '      <div class="qms-brand-copy">'
+			+ '        <h1>' + esc(state.hospitalName) + '</h1>'
+			+ '        <p>' + esc(t('Choose a counter view', 'اختر عرض نقطة الخدمة')) + '</p>'
+			+ '      </div>'
+			+ '    </div>'
+			+ '    <div class="qms-form-stack">'
+			+ '      <button type="button" class="qms-button qms-button-secondary" id="qms-change-location">' + esc(t('Change Location', 'غيّر الموقع')) + '</button>'
+			+ '    </div>'
+			+ '    <div class="qms-choice-grid" id="qms-counter-grid"></div>'
+			+ '  </div>'
+			+ '</div>';
+
+		var grid = document.getElementById('qms-counter-grid');
+		var allButton = document.createElement('button');
+		allButton.type = 'button';
+		allButton.className = 'qms-choice';
+		allButton.innerHTML = '<strong>' + esc(t('All Counters', 'جميع نقاط الخدمة')) + '</strong><span>' + esc(t('Show the full queue for this location', 'اعرض قائمة الانتظار الكاملة لهذا الموقع')) + '</span>';
+		allButton.addEventListener('click', function() {
+			state.counterSelection = '__all__';
+			localStorage.setItem(DISPLAY_COUNTER_KEY, state.counterSelection);
+			updateUrl();
+			loadBoard();
+		});
+		grid.appendChild(allButton);
+
+		counters.forEach(function(counter) {
+			var button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'qms-choice';
+			button.innerHTML = '<strong>' + esc(counter.counter_name || counter.name) + '</strong><span>' + esc(t('Counter #', 'نقطة الخدمة رقم ') + (counter.counter_number || '')) + '</span>';
+			button.addEventListener('click', function() {
+				state.counterSelection = counter.name;
+				localStorage.setItem(DISPLAY_COUNTER_KEY, state.counterSelection);
+				updateUrl();
+				loadBoard();
+			});
+			grid.appendChild(button);
+		});
+
+		var changeLocation = document.getElementById('qms-change-location');
+		if (changeLocation) {
+			changeLocation.addEventListener('click', function() {
+				state.location = '';
+				state.counterSelection = null;
+				localStorage.removeItem(DISPLAY_LOCATION_KEY);
+				localStorage.removeItem(DISPLAY_COUNTER_KEY);
+				updateUrl();
+				showLocationPicker();
+			});
+		}
+	}
+
+	function applyTemplateStyles(template) {
+		var board = document.querySelector('.qms-board');
+		if (!board || !template) return;
+		if (template.background_color) board.style.backgroundColor = template.background_color;
+		if (template.background_image) {
+			board.style.backgroundImage = 'url(' + template.background_image + ')';
+			board.style.backgroundSize = 'cover';
+			board.style.backgroundPosition = 'center';
+		}
+		if (template.text_color) board.style.color = template.text_color;
+	}
+
+	function getFooterDurationSeconds(text) {
+		var length = (text || '').trim().length;
+		if (!length) return 18;
+		return Math.max(14, Math.min(38, Math.round(length * 0.22)));
+	}
+
+	function renderBoard(data) {
+		captureMediaProgress();
+		state.currentData = data || {};
+		state.currentTemplate = state.currentData.template || {};
+		var template = state.currentTemplate;
+		var nowServing = Array.isArray(state.currentData.now_serving) ? state.currentData.now_serving : [];
+		var waiting = Array.isArray(state.currentData.waiting) ? state.currentData.waiting : [];
+		var onHold = Array.isArray(state.currentData.on_hold) ? state.currentData.on_hold : [];
+		var mediaItems = buildPlaylist(state.currentData.media_items || []);
+		var showArabic = state.language === 'Arabic';
+		var headerText = showArabic ? (template.header_text_ar || template.header_text || t('Queue Display Board', 'لوحة عرض قائمة الانتظار')) : (template.header_text || t('Queue Display Board', 'لوحة عرض قائمة الانتظار'));
+		var footerText = showArabic ? (template.footer_text_ar || template.footer_text || t('Please listen for your token number and follow staff instructions.', 'يرجى الانتباه لرقم التذكرة واتباع تعليمات الموظفين.')) : (template.footer_text || t('Please listen for your token number and follow staff instructions.', 'يرجى الانتباه لرقم التذكرة واتباع تعليمات الموظفين.'));
+		var announcementText = showArabic ? (template.announcement_text_ar || template.announcement_text || '') : (template.announcement_text || '');
+		var locationDoc = (state.latestLocations || []).find(function(row) { return row.name === state.location; }) || {};
+		var counterDoc = (state.latestCounters || []).find(function(row) { return row.name === state.counterSelection; }) || {};
+		var visualImage = template.logo || template.background_image || state.hospitalLogo || '';
+		var rows = nowServing.slice(0, 8);
+		var placeholderRows = Math.max(6, rows.length);
+		var footerDuration = getFooterDurationSeconds(footerText);
+
+		root.innerHTML = ''
+			+ '<div class="qms-board" dir="' + (showArabic ? 'rtl' : 'ltr') + '">'
+			+ '  <div class="qms-board-header">'
+			+ '    <div>'
+			+ '      <h2>' + esc(headerText) + '</h2>'
+			+ '      <p>' + esc((locationDoc.location_name || state.location || '') + (state.counterSelection && state.counterSelection !== '__all__' ? ' • ' + (counterDoc.counter_name || state.counterSelection) : '')) + '</p>'
+			+ '    </div>'
+			+ '    <div class="qms-board-controls">'
+			+ '      <span class="qms-chip" id="qms-board-clock">--:--</span>'
+			+ '      <button type="button" class="qms-chip" id="qms-change-location">' + esc(t('Location', 'الموقع')) + '</button>'
+			+ '      <button type="button" class="qms-chip" id="qms-change-counter">' + esc(t('Counter', 'نقطة الخدمة')) + '</button>'
+			+ '      <button type="button" class="qms-chip" id="qms-lang-toggle">' + esc(getLangToggleLabel()) + '</button>'
+			+ (state.authRequired ? '<button type="button" class="qms-chip" id="qms-logout">' + esc(t('Sign Out', 'خروج')) + '</button>' : '')
+			+ '    </div>'
+			+ '  </div>'
+			+ (announcementText ? '<div class="qms-board-announcement">' + esc(announcementText) + '</div>' : '')
+			+ '  <div class="qms-board-grid">'
+			+ '    <section class="qms-panel qms-panel-visual">'
+			+ (mediaItems.length
+				? '      <div class="qms-media-stage" id="qms-media-stage"></div>'
+				: '      <div class="qms-visual-fallback">'
+				+ '        <div class="qms-visual-copy">'
+				+ '          <div class="qms-visual-kicker">' + esc(state.hospitalName) + '</div>'
+				+ '          <div class="qms-visual-title">' + esc(headerText) + '</div>'
+				+ '          <div class="qms-visual-subtitle">' + esc(showArabic ? (template.header_text || headerText) : (template.header_text_ar || headerText)) + '</div>'
+				+ '        </div>'
+				+ (visualImage
+					? '        <img src="' + esc(visualImage) + '" alt="' + esc(state.hospitalName) + '">'
+					: '        <div class="qms-visual-mark">' + esc((state.hospitalName || 'Q').charAt(0).toUpperCase()) + '</div>')
+				+ '      </div>')
+			+ '    </section>'
+			+ '    <aside class="qms-panel qms-panel-list">'
+			+ '      <div class="qms-list-head">'
+			+ '        <div><small>' + esc(t('Now Serving', 'قيد الخدمة حالياً')) + '</small><strong>' + nowServing.length + '</strong></div>'
+			+ '        <div><span>' + esc(t('Waiting', 'في الانتظار')) + ': ' + waiting.length + (onHold.length ? ' &nbsp;|&nbsp; ' + esc(t('On Hold', 'في الانتظار المؤقت')) + ': ' + onHold.length : '') + '</span></div>'
+			+ '      </div>'
+			+ '      <div class="qms-board-table-head"><span>' + esc(t('Token', 'رقم التذكرة')) + '</span><span>' + esc(t('Counter', 'نقطة الخدمة')) + '</span></div>'
+			+ '      <div class="qms-board-list">'
+			+ rows.map(function(ticket) {
+				var rowClass = 'qms-board-row';
+				if (state.lastCalledTicket && state.lastCalledTicket === ticket.ticket_number) rowClass += ' is-called';
+				return '<div class="' + rowClass + '"><span>' + esc(ticket.ticket_number) + '</span><span>' + esc(ticket.counter || '-') + '</span></div>';
+			}).join('')
+			+ (rows.length ? '' : '<div class="qms-board-row is-empty">' + esc(t('No active token right now', 'لا توجد تذاكر قيد الخدمة حالياً')) + '</div>')
+			+ new Array(Math.max(0, placeholderRows - rows.length)).fill('').map(function() {
+				return '<div class="qms-board-row is-placeholder"><span class="qms-placeholder-line"></span></div>';
+			}).join('')
+			+ '      </div>'
+			+ (onHold.length
+				? '      <div class="qms-onhold-wrap">'
+				+ '        <div class="qms-onhold-label">' + esc(t('On Hold', 'في الانتظار المؤقت')) + ' (' + onHold.length + ')</div>'
+				+ onHold.slice(0, 4).map(function(ticket) {
+					return '<div class="qms-onhold-chip"><span class="qms-onhold-icon">\u23F8\uFE0F</span><span class="qms-onhold-ticket">' + esc(ticket.ticket_number) + '</span></div>';
+				}).join('')
+				+ '      </div>'
+				: '')
+			+ '      <div class="qms-waiting-wrap">'
+			+ '        <div class="qms-waiting-label">' + esc(t('Up Next', 'التالي')) + '</div>'
+			+ (waiting.length
+				? waiting.slice(0, 4).map(function(ticket, index) {
+					return '<div class="qms-waiting-chip"><span class="qms-waiting-order">' + (index + 1) + '</span><span class="qms-waiting-ticket">' + esc(ticket.ticket_number) + '</span></div>';
+				}).join('')
+				: '<div class="qms-empty-state">' + esc(t('No waiting tickets', 'لا توجد تذاكر في الانتظار')) + '</div>')
+			+ '      </div>'
+			+ '    </aside>'
+			+ '  </div>'
+			+ '  <div class="qms-board-footer">'
+			+ '    <div class="qms-board-footer-track">'
+			+ '      <div class="qms-board-footer-text' + (footerText.length < 48 ? ' is-static' : '') + '" style="animation-duration:' + footerDuration + 's">' + esc(footerText) + '</div>'
+			+ '    </div>'
+			+ '  </div>'
+			+ (state.activePopup && state.activePopup.ticket_number
+				? '  <div class="qms-popup"><div class="qms-popup-card"><div class="qms-popup-kicker">' + esc(t('Now Calling', 'تجري الآن مناداة')) + '</div><div class="qms-popup-ticket">' + esc(state.activePopup.ticket_number) + '</div>' + (state.activePopup.counter_name || state.activePopup.counter_number ? '<div class="qms-popup-counter">' + esc(state.activePopup.counter_name || ('Counter ' + state.activePopup.counter_number)) + '</div>' : '') + (state.activePopup.service ? '<div class="qms-popup-service">' + esc(state.activePopup.service) + '</div>' : '') + '</div></div>'
+				: '')
+			+ '</div>';
+
+		applyTemplateStyles(template);
+		bindClock();
+		startHeartbeat();
+		renderMedia(mediaItems);
+		bindBoardActions();
+	}
+
+	function bindBoardActions() {
+		var changeLocation = document.getElementById('qms-change-location');
+		var changeCounter = document.getElementById('qms-change-counter');
+		var langToggle = document.getElementById('qms-lang-toggle');
+		var logout = document.getElementById('qms-logout');
+
+		if (changeLocation) {
+			changeLocation.addEventListener('click', function() {
+				state.location = '';
+				state.counterSelection = null;
+				localStorage.removeItem(DISPLAY_LOCATION_KEY);
+				localStorage.removeItem(DISPLAY_COUNTER_KEY);
+				updateUrl();
+				showLocationPicker();
+			});
+		}
+
+		if (changeCounter) {
+			changeCounter.addEventListener('click', function() {
+				state.counterSelection = null;
+				localStorage.removeItem(DISPLAY_COUNTER_KEY);
+				updateUrl();
+				showCounterPicker();
+			});
+		}
+
+		if (langToggle) {
+			langToggle.addEventListener('click', function() {
+				setLanguage(state.language === 'Arabic' ? 'English' : 'Arabic');
+				if (state.location && state.currentData) renderBoard(state.currentData);
+				else if (state.counterSelection === null && state.location) showCounterPicker();
+				else if (!state.location) showLocationPicker();
+				else if (state.authRequired && !state.authenticated) showAuthScreen();
+			});
+		}
+
+		if (logout) {
+			logout.addEventListener('click', async function() {
+				try {
+					await callPortalApi('display_portal_logout', { token: state.token });
+				} catch (error) {}
+				state.token = '';
+				state.authenticated = false;
+				localStorage.removeItem(DISPLAY_TOKEN_KEY);
+				showAuthScreen();
+			});
+		}
+	}
+
+	async function loadBoard(silent) {
+		if (!state.location) {
+			showLocationPicker();
+			return;
+		}
+
+		if (!silent || !state.currentData) {
+			showLoading(t('Loading display board...', 'جاري تحميل لوحة العرض...'));
+		}
+		try {
+			var counter = (!state.counterSelection || state.counterSelection === '__all__') ? '' : state.counterSelection;
+			state.currentData = await callPortalApi('get_display_data_portal', {
+				token: state.token,
+				location: state.location,
+				counter: counter
+			});
+			renderBoard(state.currentData);
+		} catch (error) {
+			if (error.isDisplayAuthError) {
+				state.authenticated = false;
+				bootstrapPortal();
+				return;
+			}
+			// Transient errors during silent heartbeat — keep current board, retry next cycle
+			if (silent && state.currentData) {
+				return;
+			}
+			root.innerHTML = '<div class="qms-center-screen"><div class="qms-card"><div class="qms-error">' + esc(error.message || t('Unable to load the display board.', 'تعذر تحميل لوحة العرض.')) + '</div><div class="qms-form-stack"><button type="button" class="qms-button qms-button-primary" id="qms-retry-load">' + esc(t('Try Again', 'حاول مرة أخرى')) + '</button></div></div></div>';
+			var retry = document.getElementById('qms-retry-load');
+			if (retry) retry.addEventListener('click', function() { loadBoard(false); });
+		}
+	}
+
+	async function bootstrapPortal() {
+		showLoading();
+		try {
+			var boot = await callPortalApi('get_display_portal_boot', { token: state.token });
+			state.hospitalName = boot.hospital_name || state.hospitalName;
+			state.authRequired = !!boot.auth_required;
+			state.authenticated = !state.authRequired || !!boot.authenticated;
+			if (state.authRequired && !state.authenticated) {
+				state.token = '';
+				localStorage.removeItem(DISPLAY_TOKEN_KEY);
+				showAuthScreen();
+				return;
+			}
+
+			state.latestLocations = await callPortalApi('get_display_locations_portal', { token: state.token });
+			if (!state.latestLocations.length) {
+				root.innerHTML = '<div class="qms-center-screen"><div class="qms-card"><div class="qms-brand-row">' + getBrandMarkup() + '<div class="qms-brand-copy"><h1>' + esc(state.hospitalName) + '</h1><p>' + esc(t('Queue Display Portal', 'بوابة عرض قائمة الانتظار')) + '</p></div></div><div class="qms-empty-state">' + esc(t('No active display locations are configured yet.', 'لا توجد مواقع عرض مفعلة حالياً.')) + '</div></div></div>';
+				return;
+			}
+
+			if (state.location && !state.latestLocations.some(function(row) { return row.name === state.location; })) {
+				state.location = '';
+				localStorage.removeItem(DISPLAY_LOCATION_KEY);
+			}
+			if (!state.location && state.latestLocations.length === 1) {
+				state.location = state.latestLocations[0].name;
+				localStorage.setItem(DISPLAY_LOCATION_KEY, state.location);
+			}
+
+			if (!state.location) {
+				showLocationPicker();
+				return;
+			}
+
+			state.latestCounters = await callPortalApi('get_display_counters_portal', {
+				token: state.token,
+				location: state.location
+			});
+			if (state.counterSelection && state.counterSelection !== '__all__' && !state.latestCounters.some(function(row) { return row.name === state.counterSelection; })) {
+				state.counterSelection = null;
+				localStorage.removeItem(DISPLAY_COUNTER_KEY);
+			}
+
+			if (state.counterSelection === null) {
+				showCounterPicker();
+				return;
+			}
+
+			updateUrl();
+			bindRealtime();
+			await loadBoard();
+		} catch (error) {
+			if (error.isDisplayAuthError) {
+				state.token = '';
+				state.authenticated = false;
+				localStorage.removeItem(DISPLAY_TOKEN_KEY);
+				showAuthScreen(error.message);
+				// Auto-retry in 30s so unattended display boards recover after Redis restart
+				setTimeout(function() {
+					if (!state.authenticated) bootstrapPortal();
+				}, 30000);
+				return;
+			}
+			root.innerHTML = '<div class="qms-center-screen"><div class="qms-card"><div class="qms-error">' + esc(error.message || t('Unable to initialize the display portal.', 'تعذر تهيئة بوابة عرض قائمة الانتظار.')) + '</div><div class="qms-form-stack"><button type="button" class="qms-button qms-button-primary" id="qms-retry-bootstrap">' + esc(t('Try Again', 'حاول مرة أخرى')) + '</button></div></div></div>';
+			var retry = document.getElementById('qms-retry-bootstrap');
+			if (retry) retry.addEventListener('click', bootstrapPortal);
+		}
+	}
+
+	setLanguage(state.language);
+	getQuerySelection();
+	bootstrapPortal();
+})();
+</script>
+{% endblock %}

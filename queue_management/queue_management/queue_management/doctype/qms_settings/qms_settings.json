@@ -1,0 +1,300 @@
+{
+ "actions": [],
+ "autoname": "",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "enable_qms",
+  "hospital_name",
+  "column_break_gen1",
+  "hospital_logo",
+  "default_ticket_prefix",
+  "queue_rules_section",
+  "max_recall_count",
+  "column_break_qrules",
+  "no_show_timeout_minutes",
+  "country_section",
+  "default_country_code",
+  "allowed_countries",
+  "column_break_lang",
+  "default_language",
+  "supported_languages",
+  "notification_section",
+  "smtp_email_account",
+  "sender_email",
+  "column_break_notif",
+  "enable_email_notifications",
+  "enable_whatsapp_notifications",
+  "features_section",
+  "enable_online_booking",
+  "enable_feedback",
+  "column_break_feat",
+  "enable_qr_codes",
+  "enable_tts",
+    "display_portal_section",
+    "enable_display_portal_auth",
+    "display_portal_username",
+    "column_break_display_portal",
+    "display_portal_password",
+  "sound_section",
+  "default_call_sound",
+  "column_break_sound",
+  "call_sound_repeat",
+  "data_section",
+  "data_retention_days"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "fieldname": "enable_qms",
+   "fieldtype": "Check",
+   "label": "Enable Queue Management",
+   "default": "1"
+  },
+  {
+   "fieldname": "hospital_name",
+   "fieldtype": "Data",
+   "label": "Hospital Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_gen1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hospital_logo",
+   "fieldtype": "Attach Image",
+   "label": "Hospital Logo"
+  },
+  {
+   "fieldname": "default_ticket_prefix",
+   "fieldtype": "Data",
+   "label": "Default Ticket Prefix",
+   "default": "T"
+  },
+  {
+   "fieldname": "queue_rules_section",
+   "fieldtype": "Section Break",
+   "label": "Queue Rules"
+  },
+  {
+   "fieldname": "max_recall_count",
+   "fieldtype": "Int",
+   "label": "Max Recall Count",
+   "default": "3",
+   "description": "Maximum times a ticket can be recalled before auto-marking as No Show. 0 = unlimited."
+  },
+  {
+   "fieldname": "column_break_qrules",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "no_show_timeout_minutes",
+   "fieldtype": "Int",
+   "label": "No-Show Timeout (Minutes)",
+   "default": "5",
+   "description": "Auto-mark called tickets as No Show after this many minutes. 0 = disabled."
+  },
+  {
+   "fieldname": "country_section",
+   "fieldtype": "Section Break",
+   "label": "Country & Language Settings"
+  },
+  {
+   "fieldname": "default_country_code",
+   "fieldtype": "Data",
+   "label": "Default Country Code",
+   "default": "+961",
+   "description": "Phone number extension (e.g., +961 for Lebanon)"
+  },
+  {
+   "fieldname": "allowed_countries",
+   "fieldtype": "Table",
+   "label": "Allowed Countries",
+   "options": "QMS Allowed Country"
+  },
+  {
+   "fieldname": "column_break_lang",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_language",
+   "fieldtype": "Select",
+   "label": "Default Language",
+   "options": "English\nArabic",
+   "default": "English"
+  },
+  {
+   "fieldname": "supported_languages",
+   "fieldtype": "Table",
+   "label": "Supported Languages",
+   "options": "QMS Supported Language"
+  },
+  {
+   "fieldname": "notification_section",
+   "fieldtype": "Section Break",
+   "label": "Notification Settings"
+  },
+  {
+   "fieldname": "smtp_email_account",
+   "fieldtype": "Link",
+   "label": "Email Account (SMTP)",
+   "options": "Email Account",
+   "description": "Select the Email Account for sending notifications"
+  },
+  {
+   "fieldname": "sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email Address",
+   "options": "Email",
+   "description": "Default sender email for QMS notifications. If blank, uses the SMTP Email Account above or system default."
+  },
+  {
+   "fieldname": "column_break_notif",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enable_email_notifications",
+   "fieldtype": "Check",
+   "label": "Enable Email Notifications",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_whatsapp_notifications",
+   "fieldtype": "Check",
+   "label": "Enable WhatsApp Notifications",
+   "default": "0"
+  },
+  {
+   "fieldname": "features_section",
+   "fieldtype": "Section Break",
+   "label": "Features"
+  },
+  {
+   "fieldname": "enable_online_booking",
+   "fieldtype": "Check",
+   "label": "Enable Online Booking",
+   "default": "0"
+  },
+  {
+   "fieldname": "enable_feedback",
+   "fieldtype": "Check",
+   "label": "Enable Feedback Collection",
+   "default": "1"
+  },
+  {
+   "fieldname": "column_break_feat",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enable_qr_codes",
+   "fieldtype": "Check",
+   "label": "Enable QR Codes",
+   "default": "1"
+  },
+  {
+   "fieldname": "enable_tts",
+   "fieldtype": "Check",
+   "label": "Enable Text-to-Speech Announcements",
+   "default": "0"
+  },
+    {
+     "fieldname": "display_portal_section",
+     "fieldtype": "Section Break",
+     "label": "Display Portal Access"
+    },
+    {
+     "fieldname": "enable_display_portal_auth",
+     "fieldtype": "Check",
+     "label": "Require Login For Public Display Board",
+     "default": "1",
+     "description": "Use external portal credentials for the public queue display board instead of Frappe users."
+    },
+    {
+     "fieldname": "display_portal_username",
+     "fieldtype": "Data",
+     "label": "Display Portal Username",
+     "depends_on": "eval:doc.enable_display_portal_auth==1"
+    },
+    {
+     "fieldname": "column_break_display_portal",
+     "fieldtype": "Column Break"
+    },
+    {
+     "fieldname": "display_portal_password",
+     "fieldtype": "Password",
+     "label": "Display Portal Password",
+     "depends_on": "eval:doc.enable_display_portal_auth==1"
+    },
+  {
+   "fieldname": "sound_section",
+   "fieldtype": "Section Break",
+   "label": "Sound Settings"
+  },
+  {
+   "fieldname": "default_call_sound",
+   "fieldtype": "Attach",
+   "label": "Default Call Sound",
+   "description": "Audio file played when a ticket is called"
+  },
+  {
+   "fieldname": "column_break_sound",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "call_sound_repeat",
+   "fieldtype": "Int",
+   "label": "Sound Repeat Count",
+   "default": "2"
+  },
+  {
+   "fieldname": "data_section",
+   "fieldtype": "Section Break",
+   "label": "Data Management"
+  },
+  {
+   "fieldname": "data_retention_days",
+   "fieldtype": "Int",
+   "label": "Data Retention (Days)",
+   "default": "365",
+   "description": "Auto-delete completed tickets older than this many days. 0 = keep forever."
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 1,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-30 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Settings",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

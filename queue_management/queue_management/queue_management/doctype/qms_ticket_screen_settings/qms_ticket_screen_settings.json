@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "autoname": "QTSS-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "settings_name",
+  "location",
+  "column_break_tss1",
+  "logo",
+  "language",
+  "text_section",
+  "header_text",
+  "header_text_ar",
+  "column_break_tss2",
+  "footer_text",
+  "footer_text_ar",
+  "style_section",
+  "background_color",
+  "text_color",
+  "column_break_tss3",
+  "accent_color",
+  "display_section",
+  "show_qr_code",
+  "show_estimated_wait_time",
+  "column_break_tss4",
+  "show_queue_position",
+  "custom_section",
+  "template_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "settings_name",
+   "fieldtype": "Data",
+   "label": "Settings Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location"
+  },
+  {
+   "fieldname": "column_break_tss1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Select",
+   "label": "Language",
+   "options": "English\nArabic\nBoth",
+   "default": "Both"
+  },
+  {
+   "fieldname": "text_section",
+   "fieldtype": "Section Break",
+   "label": "Text"
+  },
+  {
+   "fieldname": "header_text",
+   "fieldtype": "Data",
+   "label": "Header Text (English)"
+  },
+  {
+   "fieldname": "header_text_ar",
+   "fieldtype": "Data",
+   "label": "Header Text (Arabic)"
+  },
+  {
+   "fieldname": "column_break_tss2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Data",
+   "label": "Footer Text (English)"
+  },
+  {
+   "fieldname": "footer_text_ar",
+   "fieldtype": "Data",
+   "label": "Footer Text (Arabic)"
+  },
+  {
+   "fieldname": "style_section",
+   "fieldtype": "Section Break",
+   "label": "Styling"
+  },
+  {
+   "fieldname": "background_color",
+   "fieldtype": "Color",
+   "label": "Background Color"
+  },
+  {
+   "fieldname": "text_color",
+   "fieldtype": "Color",
+   "label": "Text Color"
+  },
+  {
+   "fieldname": "column_break_tss3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Color"
+  },
+  {
+   "fieldname": "display_section",
+   "fieldtype": "Section Break",
+   "label": "Display Options"
+  },
+  {
+   "fieldname": "show_qr_code",
+   "fieldtype": "Check",
+   "label": "Show QR Code on Ticket",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_estimated_wait_time",
+   "fieldtype": "Check",
+   "label": "Show Estimated Wait Time",
+   "default": "1"
+  },
+  {
+   "fieldname": "column_break_tss4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "show_queue_position",
+   "fieldtype": "Check",
+   "label": "Show Queue Position",
+   "default": "1"
+  },
+  {
+   "fieldname": "custom_section",
+   "fieldtype": "Section Break",
+   "label": "Custom Template",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "template_html",
+   "fieldtype": "Code",
+   "label": "Custom HTML Template",
+   "options": "HTML"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Ticket Screen Settings",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,415 @@
+{% extends "templates/web.html" %}
+
+{% block title %}Queue Access{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+{% endblock %}
+
+{% block style %}
+<style>
+{% raw %}
+header.web-header, .web-footer, .page-breadcrumbs,
+.page-header-wrapper, .page-footer,
+.navbar, footer, .web-sidebar { display: none !important; }
+body { padding-top: 0 !important; }
+.page-content-wrapper { padding: 0 !important; }
+.page_content { padding: 0 !important; margin: 0 !important; }
+main.container { max-width: 100% !important; padding: 0 !important; }
+
+.queue-portal {
+	--portal-bg: radial-gradient(circle at top left, rgba(255,255,255,.28), transparent 36%), linear-gradient(145deg, #d8efe5 0%, #c2e6de 42%, #eef7f3 100%);
+	--portal-panel: rgba(255,255,255,.82);
+	--portal-border: rgba(0,77,64,.12);
+	--portal-text: #17342d;
+	--portal-muted: #47655f;
+	--portal-primary: #0e6b5c;
+	--portal-primary-dark: #084d43;
+	--portal-secondary: #c8ede2;
+	min-height: 100vh;
+	background: var(--portal-bg);
+	color: var(--portal-text);
+	font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+	position: relative;
+	overflow: hidden;
+}
+.queue-portal.has-image::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image: var(--portal-image);
+	background-size: cover;
+	background-position: center;
+	opacity: .16;
+	filter: saturate(.9);
+}
+.queue-portal::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.58));
+	pointer-events: none;
+}
+.queue-portal-inner {
+	position: relative;
+	z-index: 1;
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 40px 24px 56px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 28px;
+}
+.queue-hero {
+	background: linear-gradient(135deg, rgba(9,77,67,.94), rgba(10,121,104,.9));
+	border-radius: 32px;
+	padding: 30px;
+	color: #fff;
+	box-shadow: 0 24px 70px rgba(9,77,67,.24);
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+	gap: 24px;
+	align-items: center;
+}
+.queue-hero-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+.queue-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: rgba(255,255,255,.14);
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	width: fit-content;
+}
+.queue-title {
+	font-size: clamp(34px, 5vw, 56px);
+	line-height: 1.03;
+	font-weight: 800;
+	margin: 0;
+	max-width: 12ch;
+}
+.queue-subtitle {
+	font-size: clamp(17px, 2.2vw, 21px);
+	line-height: 1.6;
+	margin: 0;
+	max-width: 38ch;
+	color: rgba(255,255,255,.88);
+}
+.queue-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.queue-badge {
+	padding: 10px 14px;
+	border-radius: 14px;
+	background: rgba(255,255,255,.12);
+	border: 1px solid rgba(255,255,255,.14);
+	font-size: 14px;
+	font-weight: 700;
+}
+.queue-brand-card {
+	background: rgba(255,255,255,.12);
+	border: 1px solid rgba(255,255,255,.12);
+	backdrop-filter: blur(8px);
+	border-radius: 28px;
+	padding: 24px;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 18px;
+}
+.queue-brand-top {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	min-width: 0;
+}
+.queue-logo {
+	width: 72px;
+	height: 72px;
+	border-radius: 20px;
+	background: rgba(255,255,255,.18);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	flex-shrink: 0;
+	box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.queue-logo img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.queue-logo-fallback {
+	font-size: 30px;
+	font-weight: 800;
+	letter-spacing: .04em;
+}
+.queue-brand-name {
+	font-size: 24px;
+	font-weight: 800;
+	line-height: 1.1;
+	margin: 0;
+	word-break: break-word;
+}
+.queue-brand-note {
+	font-size: 15px;
+	line-height: 1.6;
+	color: rgba(255,255,255,.84);
+	margin: 0;
+}
+.queue-options {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+}
+.queue-card {
+	background: var(--portal-panel);
+	border: 1px solid var(--portal-border);
+	border-radius: 28px;
+	padding: 28px;
+	backdrop-filter: blur(10px);
+	box-shadow: 0 18px 50px rgba(26,61,52,.12);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	min-height: 280px;
+}
+.queue-card.staff {
+	background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(241,249,246,.95));
+}
+.queue-card.patient {
+	background: linear-gradient(180deg, rgba(244,253,250,.92), rgba(225,245,238,.96));
+}
+.queue-card-icon {
+	width: 68px;
+	height: 68px;
+	border-radius: 18px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 30px;
+	font-weight: 800;
+}
+.queue-card.staff .queue-card-icon {
+	background: rgba(11,106,91,.1);
+	color: var(--portal-primary);
+}
+.queue-card.patient .queue-card-icon {
+	background: rgba(0,150,136,.12);
+	color: #0b8a78;
+}
+.queue-card-title {
+	font-size: 28px;
+	font-weight: 800;
+	margin: 0;
+}
+.queue-card-copy {
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0;
+	color: var(--portal-muted);
+	max-width: 34ch;
+}
+.queue-points {
+	display: grid;
+	gap: 10px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.queue-points li {
+	padding-left: 18px;
+	position: relative;
+	font-size: 15px;
+	line-height: 1.6;
+	color: #36524c;
+}
+.queue-points li::before {
+	content: "";
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: currentColor;
+	position: absolute;
+	left: 0;
+	top: 9px;
+	opacity: .65;
+}
+.queue-actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: auto;
+}
+.queue-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 15px 20px;
+	border-radius: 16px;
+	text-decoration: none;
+	font-size: 16px;
+	font-weight: 800;
+	transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.queue-btn:hover {
+	transform: translateY(-2px);
+}
+.queue-btn.primary {
+	background: linear-gradient(135deg, var(--portal-primary), var(--portal-primary-dark));
+	color: #fff;
+	box-shadow: 0 14px 28px rgba(8,77,67,.18);
+}
+.queue-btn.secondary {
+	background: rgba(255,255,255,.74);
+	border: 1px solid rgba(9,77,67,.12);
+	color: var(--portal-primary-dark);
+}
+.queue-footer {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	align-items: center;
+	flex-wrap: wrap;
+	padding: 0 4px;
+	color: #5b736d;
+	font-size: 14px;
+	font-weight: 600;
+}
+.queue-footer-links {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.queue-footer-links a {
+	color: var(--portal-primary);
+	text-decoration: none;
+}
+.queue-footer-links a:hover {
+	text-decoration: underline;
+}
+@media (max-width: 900px) {
+	.queue-hero,
+	.queue-options {
+		grid-template-columns: 1fr;
+	}
+	.queue-title,
+	.queue-subtitle {
+		max-width: none;
+	}
+}
+@media (max-width: 640px) {
+	.queue-portal-inner {
+		padding: 24px 16px 40px;
+	}
+	.queue-hero,
+	.queue-card {
+		padding: 22px;
+		border-radius: 24px;
+	}
+	.queue-card-title {
+		font-size: 24px;
+	}
+	.queue-btn {
+		width: 100%;
+	}
+}
+{% endraw %}
+</style>
+{% endblock %}
+
+{% block page_content %}
+<section class="queue-portal{% if background_image %} has-image{% endif %}"{% if background_image %} style="--portal-image: url('{{ background_image | e }}');"{% endif %}>
+	<div class="queue-portal-inner">
+		<div class="queue-hero">
+			<div class="queue-hero-copy">
+				<div class="queue-kicker">Queue Management Portal</div>
+				<h1 class="queue-title">Choose how you want to enter the queue system.</h1>
+				<p class="queue-subtitle">Staff can sign in to operate counters and call tickets. Patients can open the kiosk to select a service and receive a queue number.</p>
+				<div class="queue-badges">
+					<span class="queue-badge">Fast access</span>
+					<span class="queue-badge">Staff workflow</span>
+					<span class="queue-badge">Patient tickets</span>
+				</div>
+			</div>
+			<div class="queue-brand-card">
+				<div class="queue-brand-top">
+					<div class="queue-logo">
+						{% if hospital_logo %}
+						<img src="{{ hospital_logo }}" alt="{{ hospital_name }}">
+						{% else %}
+						<div class="queue-logo-fallback">Q</div>
+						{% endif %}
+					</div>
+					<div>
+						<p class="queue-brand-name">{{ hospital_name }}</p>
+						<p class="queue-brand-note">Public queue access for front-desk teams and walk-in patients.</p>
+					</div>
+				</div>
+				<p class="queue-brand-note">Use the staff area for authenticated counter work. Use the patient area to get a new ticket, check availability, and follow queue instructions.</p>
+			</div>
+		</div>
+
+		<div class="queue-options">
+			<article class="queue-card staff">
+				<div class="queue-card-icon">S</div>
+				<div>
+					<h2 class="queue-card-title">Staff Login</h2>
+					<p class="queue-card-copy">Open the operator call screen and sign in with your staff credentials to manage counters, call the next ticket, and complete service.</p>
+				</div>
+				<ul class="queue-points">
+					<li>Access the existing QMS call screen login.</li>
+					<li>Select your assigned counter after authentication.</li>
+					<li>Manage live queue activity from one screen.</li>
+				</ul>
+				<div class="queue-actions">
+					<a class="queue-btn primary" href="/queue/staff">Open Staff Login</a>
+					<a class="queue-btn secondary" href="/qms_call_screen">Direct Staff URL</a>
+				</div>
+			</article>
+
+			<article class="queue-card patient">
+				<div class="queue-card-icon">P</div>
+				<div>
+					<h2 class="queue-card-title">Patient Tickets</h2>
+					<p class="queue-card-copy">Open the public kiosk experience to choose a service, submit patient details when required, and receive a queue ticket with wait information.</p>
+				</div>
+				<ul class="queue-points">
+					<li>Works for patients and walk-ins without login.</li>
+					<li>Lets patients pick a service and generate a ticket.</li>
+					<li>Shows queue position and estimated wait when enabled.</li>
+				</ul>
+				<div class="queue-actions">
+					<a class="queue-btn primary" href="/queue/patient">Get a Ticket</a>
+					<a class="queue-btn secondary" href="/qms_kiosk">Direct Kiosk URL</a>
+				</div>
+			</article>
+		</div>
+
+		<div class="queue-footer">
+			<div>Queue access page for {{ hospital_name }}</div>
+			<div class="queue-footer-links">
+				<a href="/queue/staff">Staff</a>
+				<a href="/queue/patient">Patients</a>
+				<a href="/qms-display">Display Board</a>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

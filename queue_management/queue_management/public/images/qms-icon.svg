@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="112" fill="#2490EF"/>
+  <g transform="translate(96, 80)" fill="white">
+    <!-- Person 1 (head + body) -->
+    <circle cx="56" cy="40" r="28"/>
+    <rect x="28" y="76" width="56" height="16" rx="8"/>
+    <!-- Person 2 -->
+    <circle cx="56" cy="148" r="28"/>
+    <rect x="28" y="184" width="56" height="16" rx="8"/>
+    <!-- Person 3 -->
+    <circle cx="56" cy="256" r="28"/>
+    <rect x="28" y="292" width="56" height="16" rx="8"/>
+    <!-- Queue lines -->
+    <rect x="128" y="32" width="192" height="16" rx="8"/>
+    <rect x="128" y="56" width="128" height="12" rx="6" opacity="0.6"/>
+    <rect x="128" y="140" width="192" height="16" rx="8"/>
+    <rect x="128" y="164" width="128" height="12" rx="6" opacity="0.6"/>
+    <rect x="128" y="248" width="192" height="16" rx="8"/>
+    <rect x="128" y="272" width="128" height="12" rx="6" opacity="0.6"/>
+  </g>
+</svg>

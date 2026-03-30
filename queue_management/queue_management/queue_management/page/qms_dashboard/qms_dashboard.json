@@ -1,0 +1,25 @@
+{
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "Page",
+ "icon": "fa fa-tachometer-alt",
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "qms-dashboard",
+ "owner": "Administrator",
+ "page_name": "qms-dashboard",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Healthcare Administrator"
+  },
+  {
+   "role": "QMS Operator"
+  }
+ ],
+ "standard": "Yes",
+ "system_page": 0,
+ "title": "QMS Dashboard"
+}

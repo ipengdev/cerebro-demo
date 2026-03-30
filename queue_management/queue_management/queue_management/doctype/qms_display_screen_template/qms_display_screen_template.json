@@ -1,0 +1,272 @@
+{
+ "actions": [],
+ "autoname": "QDST-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "location",
+  "screen_type",
+  "column_break_dst1",
+  "logo",
+  "language",
+  "style_section",
+  "background_image",
+  "background_color",
+  "column_break_dst2",
+  "text_color",
+  "accent_color",
+  "text_section",
+  "header_text",
+  "header_text_ar",
+  "column_break_dst3",
+  "footer_text",
+  "footer_text_ar",
+  "display_section",
+  "show_now_serving",
+  "show_waiting_list",
+  "max_tickets_displayed",
+  "column_break_dst4",
+  "auto_refresh_interval",
+  "announcement_section",
+  "announcement_text",
+  "column_break_dst5",
+  "announcement_text_ar",
+  "sound_section",
+  "call_sound",
+  "column_break_dst6",
+  "call_sound_repeat",
+  "media_section",
+  "media_items",
+  "custom_section",
+  "custom_css"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "label": "Template Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "screen_type",
+   "fieldtype": "Select",
+   "label": "Screen Type",
+   "options": "Queue Display\nWelcome\nInfo\nMixed",
+   "default": "Queue Display"
+  },
+  {
+   "fieldname": "column_break_dst1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Select",
+   "label": "Language",
+   "options": "English\nArabic\nBoth",
+   "default": "Both"
+  },
+  {
+   "fieldname": "style_section",
+   "fieldtype": "Section Break",
+   "label": "Styling"
+  },
+  {
+   "fieldname": "background_image",
+   "fieldtype": "Attach Image",
+   "label": "Background Image"
+  },
+  {
+   "fieldname": "background_color",
+   "fieldtype": "Color",
+   "label": "Background Color"
+  },
+  {
+   "fieldname": "column_break_dst2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "text_color",
+   "fieldtype": "Color",
+   "label": "Text Color"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Color"
+  },
+  {
+   "fieldname": "text_section",
+   "fieldtype": "Section Break",
+   "label": "Text"
+  },
+  {
+   "fieldname": "header_text",
+   "fieldtype": "Data",
+   "label": "Header Text (English)"
+  },
+  {
+   "fieldname": "header_text_ar",
+   "fieldtype": "Data",
+   "label": "Header Text (Arabic)"
+  },
+  {
+   "fieldname": "column_break_dst3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Data",
+   "label": "Footer Text (English)"
+  },
+  {
+   "fieldname": "footer_text_ar",
+   "fieldtype": "Data",
+   "label": "Footer Text (Arabic)"
+  },
+  {
+   "fieldname": "display_section",
+   "fieldtype": "Section Break",
+   "label": "Display Options"
+  },
+  {
+   "fieldname": "show_now_serving",
+   "fieldtype": "Check",
+   "label": "Show Now Serving",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_waiting_list",
+   "fieldtype": "Check",
+   "label": "Show Waiting List",
+   "default": "1"
+  },
+  {
+   "fieldname": "max_tickets_displayed",
+   "fieldtype": "Int",
+   "label": "Max Tickets Displayed",
+   "default": "10"
+  },
+  {
+   "fieldname": "column_break_dst4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "auto_refresh_interval",
+   "fieldtype": "Int",
+   "label": "Auto Refresh Interval (sec)",
+   "default": "5"
+  },
+  {
+   "fieldname": "announcement_section",
+   "fieldtype": "Section Break",
+   "label": "Announcements"
+  },
+  {
+   "fieldname": "announcement_text",
+   "fieldtype": "Small Text",
+   "label": "Announcement (English)"
+  },
+  {
+   "fieldname": "column_break_dst5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "announcement_text_ar",
+   "fieldtype": "Small Text",
+   "label": "Announcement (Arabic)"
+  },
+  {
+   "fieldname": "sound_section",
+   "fieldtype": "Section Break",
+   "label": "Sound"
+  },
+  {
+   "fieldname": "call_sound",
+   "fieldtype": "Attach",
+   "label": "Call Sound"
+  },
+  {
+   "fieldname": "column_break_dst6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "call_sound_repeat",
+   "fieldtype": "Int",
+   "label": "Sound Repeat Count",
+   "default": "2"
+  },
+  {
+   "fieldname": "media_section",
+   "fieldtype": "Section Break",
+   "label": "Media Slideshow"
+  },
+  {
+   "fieldname": "media_items",
+   "fieldtype": "Table",
+   "label": "Media Items",
+   "options": "QMS Display Media Item"
+  },
+  {
+   "fieldname": "custom_section",
+   "fieldtype": "Section Break",
+   "label": "Custom CSS",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "custom_css",
+   "fieldtype": "Code",
+   "label": "Custom CSS",
+   "options": "CSS"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Display Screen Template",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

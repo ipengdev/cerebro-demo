@@ -1,0 +1,108 @@
+@import 'frappe-ui/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #111827;
+  }
+  [data-theme="dark"] body {
+    background-color: #171717 !important;
+    color: #f3f4f6 !important;
+  }
+}
+
+@layer components {
+  /* ── Cards ──────────────────────────────────────────── */
+  .ess-card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm
+           dark:bg-gray-800 dark:border-gray-700 dark:shadow-none;
+  }
+  .ess-card-interactive {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm
+           transition-all duration-200 ease-out
+           hover:shadow-md hover:border-gray-200 hover:-translate-y-0.5
+           cursor-pointer
+           dark:bg-gray-800 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:shadow-lg dark:hover:shadow-black/20;
+  }
+  .ess-stat-card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm p-5
+           dark:bg-gray-800 dark:border-gray-700;
+  }
+
+  /* ── Buttons ────────────────────────────────────────── */
+  .ess-btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-xl text-sm font-semibold
+           text-white shadow-sm
+           transition-all duration-200
+           active:scale-[0.97];
+    background-image: linear-gradient(135deg, #8b2346, #6e1d39);
+    box-shadow: 0 1px 3px 0 rgba(139, 35, 70, 0.3);
+  }
+  .ess-btn-primary:hover {
+    background-image: linear-gradient(135deg, #a62952, #8b2346);
+    box-shadow: 0 4px 14px -3px rgba(139, 35, 70, 0.4);
+  }
+  .ess-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-xl text-sm font-semibold
+           bg-white text-gray-700 border border-gray-200
+           transition-all duration-200
+           hover:bg-gray-50 hover:border-gray-300
+           active:scale-[0.97]
+           dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600
+           dark:hover:bg-gray-600 dark:hover:border-gray-500;
+  }
+
+  /* ── Badges ─────────────────────────────────────────── */
+  .ess-badge-success,
+  .ess-badge-danger,
+  .ess-badge-warning,
+  .ess-badge-info,
+  .ess-badge-neutral {
+    @apply inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold;
+    ring: 1px inset;
+  }
+  .ess-badge-success { background:#ecfdf5; color:#047857; box-shadow:inset 0 0 0 1px #a7f3d0; }
+  .ess-badge-danger  { background:#fdf2f4; color:#8b2346; box-shadow:inset 0 0 0 1px #f9d0da; }
+  .ess-badge-warning { background:#fffbeb; color:#b45309; box-shadow:inset 0 0 0 1px #fde68a; }
+  .ess-badge-info    { background:#f0f9ff; color:#0369a1; box-shadow:inset 0 0 0 1px #bae6fd; }
+  .ess-badge-neutral { background:#f3f4f6; color:#4b5563; box-shadow:inset 0 0 0 1px #e5e7eb; }
+  [data-theme="dark"] .ess-badge-success { background:#052e16; color:#86efac; box-shadow:inset 0 0 0 1px #166534; }
+  [data-theme="dark"] .ess-badge-danger  { background:#3b0a1a; color:#f4a9bc; box-shadow:inset 0 0 0 1px #6e1d39; }
+  [data-theme="dark"] .ess-badge-warning { background:#451a03; color:#fcd34d; box-shadow:inset 0 0 0 1px #78350f; }
+  [data-theme="dark"] .ess-badge-info    { background:#0c2d48; color:#7dd3fc; box-shadow:inset 0 0 0 1px #0e3f5e; }
+  [data-theme="dark"] .ess-badge-neutral { background:#1f2937; color:#d1d5db; box-shadow:inset 0 0 0 1px #374151; }
+
+  /* ── Spinner ────────────────────────────────────────── */
+  .ess-spinner {
+    @apply rounded-full animate-spin;
+    width: 1.5rem; height: 1.5rem;
+    border: 2px solid #8b2346;
+    border-top-color: transparent;
+  }
+  [data-theme="dark"] .ess-spinner {
+    border-color: #ec7596;
+    border-top-color: transparent;
+  }
+
+  /* ── Demo Banner ────────────────────────────────────── */
+  .ess-demo-banner {
+    @apply flex items-center gap-2 px-4 py-2 text-xs font-medium;
+    background: linear-gradient(to right, #fffbeb, #fff7ed);
+    border-bottom: 1px solid #fde68a;
+    color: #92400e;
+  }
+  [data-theme="dark"] .ess-demo-banner {
+    background: linear-gradient(to right, #451a03, #431407);
+    border-bottom-color: #78350f;
+    color: #fcd34d;
+  }
+}

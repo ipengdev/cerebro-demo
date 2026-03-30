@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "autoname": "QSVC-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "service_name",
+  "service_code",
+  "parent_service",
+  "column_break_svc1",
+  "location",
+  "is_active",
+  "ticket_prefix",
+  "details_section",
+  "estimated_service_time",
+  "priority",
+  "column_break_svc2",
+  "icon",
+  "color",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "service_code",
+   "fieldtype": "Data",
+   "label": "Service Code",
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "parent_service",
+   "fieldtype": "Link",
+   "label": "Parent Service",
+   "options": "QMS Service",
+   "description": "For sub-services (supports 2+ levels of hierarchy)",
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_svc1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1",
+   "search_index": 1
+  },
+  {
+   "fieldname": "ticket_prefix",
+   "fieldtype": "Data",
+   "label": "Ticket Prefix",
+   "description": "Override prefix for this service (e.g., LAB, INS). Leave blank to use default."
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Service Details"
+  },
+  {
+   "fieldname": "estimated_service_time",
+   "fieldtype": "Int",
+   "label": "Estimated Service Time (min)",
+   "default": "15"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority",
+   "default": "0",
+   "description": "Higher number = higher priority in queue"
+  },
+  {
+   "fieldname": "column_break_svc2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "icon",
+   "fieldtype": "Data",
+   "label": "Icon",
+   "description": "Icon name for kiosk display"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Service",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "search_fields": "service_name,service_code,location"
+}

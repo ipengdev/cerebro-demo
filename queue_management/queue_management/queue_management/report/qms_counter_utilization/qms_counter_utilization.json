@@ -1,0 +1,21 @@
+{
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "Report",
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Counter Utilization",
+ "owner": "Administrator",
+ "ref_doctype": "QMS Queue Ticket",
+ "report_name": "QMS Counter Utilization",
+ "report_type": "Script Report",
+ "is_standard": "Yes",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Healthcare Administrator"
+  }
+ ]
+}

@@ -1,0 +1,1486 @@
+{% extends "templates/web.html" %}
+
+{% block title %}QMS Call Screen{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+{% endblock %}
+
+{% block style %}
+<style>
+{% raw %}
+/* Hide website navbar/footer for full-screen */
+header.web-header, .web-footer, .page-breadcrumbs,
+.page-header-wrapper, .page-footer,
+.navbar, footer, .web-sidebar { display: none !important; }
+body { padding-top: 0 !important; }
+.page-content-wrapper { padding: 0 !important; }
+.page_content { padding: 0 !important; margin: 0 !important; }
+main.container { max-width: 100% !important; padding: 0 !important; }
+
+/* ══════════════════════════════════════════════
+   QMS Call Screen — CSS Custom Properties
+   ══════════════════════════════════════════════ */
+.cs-wrap {
+    --cs-bg: linear-gradient(170deg, #b2dfdb 0%, #c8e6e2 40%, #dceee9 100%);
+    --cs-card: rgba(255,255,255,.92);
+    --cs-card-shadow: 0 4px 20px rgba(0,77,64,.1), 0 2px 8px rgba(0,0,0,.05);
+    --cs-border: #80cbc4;
+    --cs-text: #1a2332;
+    --cs-text-muted: #00695c;
+    --cs-text-light: #00838f;
+    --cs-primary: #0097a7;
+    --cs-primary-dark: #00838f;
+    --cs-accent: #00695c;
+    --cs-control-bg: rgba(255,255,255,.7);
+    --cs-hospital-bg: linear-gradient(135deg, #00695c 0%, #00838f 50%, #0097a7 100%);
+    --cs-header-gradient: linear-gradient(135deg, #00838f, #0097a7);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--cs-bg);
+    color: var(--cs-text);
+    transition: background .3s, color .3s;
+}
+.cs-wrap[data-theme="dark"] {
+    --cs-bg: #0f1923;
+    --cs-card: rgba(26,40,54,.95);
+    --cs-card-shadow: 0 4px 20px rgba(0,0,0,.35);
+    --cs-border: #2a3d4e;
+    --cs-text: #e4eaf0;
+    --cs-text-muted: #8fa4b5;
+    --cs-text-light: #6b8295;
+    --cs-primary: #26c6da;
+    --cs-primary-dark: #00acc1;
+    --cs-accent: #4db6ac;
+    --cs-control-bg: #1e3040;
+    --cs-hospital-bg: linear-gradient(135deg, #004d40 0%, #00695c 50%, #00838f 100%);
+    --cs-header-gradient: linear-gradient(135deg, #00695c, #00838f);
+}
+
+/* ── Login Screen ── */
+.cs-login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.cs-login-card {
+    background: var(--cs-card);
+    border: 2px solid var(--cs-border);
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 8px 40px rgba(0,77,64,.15);
+    backdrop-filter: blur(8px);
+    text-align: center;
+}
+.cs-login-logo {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, #004d40, #00838f);
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 30px rgba(0,77,64,.3);
+    color: #fff; font-size: 36px;
+}
+.cs-login-title {
+    font-size: 28px; font-weight: 800; color: var(--cs-accent);
+    margin: 0 0 6px;
+}
+.cs-login-sub {
+    font-size: 16px; color: var(--cs-text-muted);
+    margin: 0 0 32px; font-weight: 500;
+}
+.cs-login-field {
+    margin-bottom: 20px; text-align: left;
+}
+.cs-login-field label {
+    display: block; font-size: 14px; font-weight: 700;
+    color: var(--cs-text); margin-bottom: 8px;
+}
+.cs-login-field input {
+    width: 100%; padding: 16px 18px; border-radius: 12px;
+    border: 2px solid var(--cs-border);
+    background: var(--cs-control-bg);
+    color: var(--cs-text); font-size: 16px; outline: none;
+    transition: border-color .2s;
+}
+.cs-login-field input:focus {
+    border-color: var(--cs-primary);
+    box-shadow: 0 0 0 3px rgba(0,151,167,.12);
+}
+.cs-login-btn {
+    width: 100%; padding: 16px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #00897b, #00695c);
+    color: #fff; font-size: 18px; font-weight: 800;
+    cursor: pointer; transition: all .15s; margin-top: 8px;
+}
+.cs-login-btn:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    box-shadow: 0 6px 20px rgba(0,137,123,.35);
+}
+.cs-login-btn:disabled { opacity: .6; cursor: not-allowed; }
+.cs-login-error {
+    color: #c62828; background: #ffebee; border: 1px solid #ef9a9a;
+    border-radius: 10px; padding: 12px 16px; margin-top: 16px;
+    font-size: 14px; font-weight: 600; display: none;
+}
+
+/* ── Hospital Header ── */
+.cs-hospital-header {
+    background: var(--cs-hospital-bg);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+}
+.cs-hospital-header::before {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(255,255,255,.06);
+}
+.cs-hospital-brand {
+    display: flex; align-items: center; gap: 14px;
+    position: relative; z-index: 1; min-width: 0; flex: 1;
+}
+.cs-hospital-logo-sm {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,.18); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 20px;
+}
+.cs-hospital-text { color: #fff; min-width: 0; overflow: hidden; }
+.cs-hospital-name { font-size: 20px; font-weight: 800; text-shadow: 0 1px 3px rgba(0,0,0,.15); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-hospital-sub { font-size: 12px; opacity: .85; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cs-hospital-right {
+    display: flex; align-items: center; gap: 12px;
+    position: relative; z-index: 1; flex-shrink: 0;
+}
+.cs-hospital-time { color: rgba(255,255,255,.9); font-size: 13px; font-weight: 600; }
+.cs-staff-badge {
+    background: rgba(255,255,255,.2); color: #fff;
+    padding: 6px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+}
+.cs-theme-toggle, .cs-logout-btn {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.2);
+    color: #fff; width: 36px; height: 36px;
+    border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all .15s;
+}
+.cs-theme-toggle:hover, .cs-logout-btn:hover { background: rgba(255,255,255,.25); }
+.cs-logout-btn { width: auto; padding: 0 12px; font-size: 13px; font-weight: 700; gap: 6px; }
+
+/* ── Counter Bar ── */
+.cs-counter-bar {
+    background: var(--cs-card);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: var(--cs-card-shadow);
+    border-top: 2px solid rgba(0,151,167,.15);
+}
+.cs-counter-bar label {
+    font-weight: 700; font-size: 14px; color: var(--cs-text);
+    white-space: nowrap;
+}
+.cs-counter-bar select {
+    padding: 10px 14px; border-radius: 10px;
+    border: 2px solid var(--cs-border); font-size: 14px;
+    min-width: 240px; background: var(--cs-control-bg);
+    color: var(--cs-text);
+}
+.cs-counter-info {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--cs-text-muted); font-weight: 600;
+}
+.cs-shift-bar { display: flex; gap: 8px; margin-left: auto; }
+.cs-shift-btn {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--cs-border);
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: all .15s; background: var(--cs-control-bg); color: var(--cs-text);
+}
+.cs-shift-btn:hover { opacity: .85; }
+.cs-shift-btn.start { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+.cs-shift-btn.break { background: #FFA726; color: #fff; border-color: #FFA726; }
+.cs-shift-btn.end { background: #c62828; color: #fff; border-color: #c62828; }
+
+/* ── Status Dot ── */
+.cs-status-dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+}
+.cs-status-dot.Available { background: #4CAF50; box-shadow: 0 0 6px rgba(76,175,80,.5); }
+.cs-status-dot.Busy { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,.5); }
+.cs-status-dot.Closed { background: #94a3b8; }
+.cs-status-dot.On-Break { background: #FFA726; box-shadow: 0 0 6px rgba(255,167,38,.5); }
+
+/* ── Main Content ── */
+#cs-content { padding: 16px 20px; }
+
+/* ── Stats ── */
+.cs-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.cs-stat {
+    background: var(--cs-card); border-radius: 12px; padding: 14px;
+    box-shadow: var(--cs-card-shadow); display: flex;
+    align-items: center; gap: 12px; border: 1px solid var(--cs-border);
+}
+.cs-stat-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+}
+.cs-stat-val { font-size: 28px; font-weight: 800; line-height: 1; overflow-wrap: break-word; }
+.cs-stat-lbl {
+    font-size: 11px; color: var(--cs-text-muted);
+    text-transform: uppercase; letter-spacing: .7px; font-weight: 600; margin-top: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cs-stat.waiting .cs-stat-icon { background: #fff7ed; color: #f97316; }
+.cs-stat.waiting .cs-stat-val { color: #ea580c; }
+.cs-stat.serving .cs-stat-icon { background: #e0f2f1; color: #00897b; }
+.cs-stat.serving .cs-stat-val { color: #00897b; }
+.cs-stat.held .cs-stat-icon { background: #fff3e0; color: #e65100; }
+.cs-stat.held .cs-stat-val { color: #e65100; }
+.cs-stat.done .cs-stat-icon { background: #e8f5e9; color: #2e7d32; }
+.cs-stat.done .cs-stat-val { color: #4CAF50; }
+
+.cs-wrap[data-theme="dark"] .cs-stat.waiting .cs-stat-icon { background: rgba(249,115,22,.15); }
+.cs-wrap[data-theme="dark"] .cs-stat.waiting .cs-stat-val { color: #fb923c; }
+.cs-wrap[data-theme="dark"] .cs-stat.serving .cs-stat-icon { background: rgba(0,137,123,.15); }
+.cs-wrap[data-theme="dark"] .cs-stat.serving .cs-stat-val { color: #80cbc4; }
+.cs-wrap[data-theme="dark"] .cs-stat.held .cs-stat-icon { background: rgba(230,81,0,.15); }
+.cs-wrap[data-theme="dark"] .cs-stat.held .cs-stat-val { color: #ffb74d; }
+.cs-wrap[data-theme="dark"] .cs-stat.done .cs-stat-icon { background: rgba(46,125,50,.15); }
+.cs-wrap[data-theme="dark"] .cs-stat.done .cs-stat-val { color: #81c784; }
+
+/* ── Call Next ── */
+.cs-call-next-bar { margin-bottom: 14px; display: flex; gap: 10px; align-items: stretch; }
+.cs-btn {
+    padding: 14px 20px; border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all .15s; display: flex; align-items: center;
+    gap: 8px;
+}
+.cs-btn:hover { opacity: .88; transform: translateY(-1px); }
+.cs-btn:active { transform: translateY(0); }
+.cs-btn-next {
+    background: linear-gradient(135deg, #00897b, #00695c);
+    color: #fff; font-size: 17px; padding: 18px 24px;
+    box-shadow: 0 4px 14px rgba(0,137,123,.3);
+	flex: 1; justify-content: center;
+}
+.cs-btn-next:hover { box-shadow: 0 6px 20px rgba(0,137,123,.4); }
+.cs-btn-reset {
+	background: var(--cs-control-bg); color: var(--cs-text);
+	border: 1px solid var(--cs-border); justify-content: center;
+	min-width: 220px; box-shadow: var(--cs-card-shadow);
+}
+.cs-btn-reset:hover {
+	border-color: var(--cs-primary);
+	box-shadow: 0 6px 18px rgba(0,151,167,.14);
+}
+.cs-btn-shortcut {
+    margin-left: 12px; font-size: 12px; font-weight: 700;
+    opacity: .7; background: rgba(255,255,255,.2);
+    padding: 2px 8px; border-radius: 4px;
+}
+
+/* ── Serving Area ── */
+.cs-serving-area {
+    background: var(--cs-card); border-radius: 14px;
+    box-shadow: var(--cs-card-shadow); overflow: hidden;
+    border: 1px solid var(--cs-border); margin-bottom: 16px;
+}
+.cs-serving-header {
+    background: var(--cs-header-gradient);
+    padding: 12px 20px; color: #fff;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    display: flex; align-items: center; gap: 8px;
+}
+.cs-serving-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px; padding: 14px;
+}
+.cs-serve-card {
+    background: var(--cs-control-bg); border: 2px solid var(--cs-border);
+    border-radius: 12px; padding: 14px;
+    transition: border-color .15s;
+}
+.cs-serve-card:hover {
+    border-color: var(--cs-primary);
+    box-shadow: 0 0 0 2px rgba(0,151,167,.15);
+}
+.cs-serve-card-top {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 8px;
+}
+.cs-serve-ticket-num {
+    font-size: 32px; font-weight: 900;
+    color: var(--cs-primary); letter-spacing: 1px; line-height: 1;
+    overflow-wrap: break-word;
+}
+.cs-serve-transferred {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #6a1b9a; color: #fff; font-size: 11px;
+    font-weight: 700; padding: 3px 8px; border-radius: 6px;
+}
+.cs-wrap[data-theme="dark"] .cs-serve-transferred { background: #9c27b0; }
+.cs-serve-card-details { margin-bottom: 10px; }
+.cs-serve-detail {
+    font-size: 13px; color: var(--cs-text-muted);
+    margin-bottom: 3px; display: flex; align-items: center; gap: 6px;
+}
+.cs-serve-timer {
+    font-size: 12px; color: var(--cs-text-light);
+    margin-top: 4px;
+}
+.cs-serve-card-actions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    border-top: 1px solid var(--cs-border); padding-top: 10px;
+}
+.cs-mini-btn {
+    flex: 1; min-width: 40px; padding: 8px 6px; border: none;
+    border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px; transition: all .12s; font-size: 12px;
+    font-weight: 700; color: #fff;
+}
+.cs-mini-btn:hover { opacity: .85; transform: translateY(-1px); }
+.cs-mini-done { background: #2e7d32; }
+.cs-mini-hold { background: #e65100; }
+.cs-mini-noshow { background: #c62828; }
+.cs-mini-recall { background: #546e7a; }
+.cs-mini-transfer { background: #6a1b9a; }
+
+.cs-no-ticket {
+    padding: 40px 24px; text-align: center;
+    color: var(--cs-text-muted); font-size: 16px;
+}
+
+/* ── Bottom Panels ── */
+.cs-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cs-bottom.has-peer { grid-template-columns: 1fr 1fr 1fr; }
+.cs-panel {
+    background: var(--cs-card); border-radius: 12px;
+    box-shadow: var(--cs-card-shadow); overflow: hidden;
+    border: 1px solid var(--cs-border);
+}
+.cs-panel-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--cs-border);
+    display: flex; align-items: center; gap: 8px;
+}
+.cs-panel-title { font-size: 14px; font-weight: 700; color: var(--cs-text); flex: 1; }
+.cs-panel-count {
+    background: var(--cs-control-bg); padding: 3px 10px;
+    border-radius: 10px; font-size: 12px; font-weight: 700;
+    color: var(--cs-text-muted);
+}
+.cs-panel-body { max-height: 320px; overflow-y: auto; }
+.cs-queue-row {
+    display: flex; align-items: center; padding: 10px 16px;
+    border-bottom: 1px solid var(--cs-border); cursor: pointer;
+    transition: background .1s; gap: 8px;
+}
+.cs-queue-row:last-child { border-bottom: none; }
+.cs-queue-row:hover { background: var(--cs-control-bg); }
+.cs-q-pos {
+    font-size: 12px; font-weight: 800; color: var(--cs-text-light);
+    min-width: 32px; text-align: center;
+}
+.cs-q-num { font-weight: 800; font-size: 14px; min-width: 80px; color: var(--cs-text); }
+.cs-q-transferred {
+    background: #6a1b9a; color: #fff; font-size: 10px;
+    font-weight: 700; padding: 2px 6px; border-radius: 4px;
+}
+.cs-wrap[data-theme="dark"] .cs-q-transferred { background: #9c27b0; }
+.cs-q-patient { flex: 1; font-size: 13px; color: var(--cs-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.cs-q-service { font-size: 12px; color: var(--cs-text-light); margin-right: 8px; }
+.cs-q-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.cs-q-badge-VIP { background: #ffcdd2; color: #b71c1c; }
+.cs-q-badge-High { background: #ffe0b2; color: #bf360c; }
+.cs-q-badge-Normal { background: #c8e6c9; color: #1b5e20; }
+.cs-wrap[data-theme="dark"] .cs-q-badge-VIP { background: rgba(239,68,68,.2); color: #ef9a9a; }
+.cs-wrap[data-theme="dark"] .cs-q-badge-High { background: rgba(255,152,0,.2); color: #ffcc80; }
+.cs-wrap[data-theme="dark"] .cs-q-badge-Normal { background: rgba(76,175,80,.2); color: #a5d6a7; }
+.cs-q-wait { font-size: 11px; color: var(--cs-text-muted); min-width: 50px; text-align: right; font-weight: 600; }
+.cs-q-wait.long { color: #c62828; }
+.cs-q-wait.medium { color: #e65100; }
+.cs-q-wait.short { color: #2e7d32; }
+.cs-wrap[data-theme="dark"] .cs-q-wait.long { color: #ef9a9a; }
+.cs-wrap[data-theme="dark"] .cs-q-wait.medium { color: #ffcc80; }
+.cs-wrap[data-theme="dark"] .cs-q-wait.short { color: #a5d6a7; }
+
+.cs-empty {
+    text-align: center; padding: 28px; color: var(--cs-text-muted);
+    font-size: 13px;
+}
+
+/* ── Peer Counter Preview ── */
+.cs-peer-counter {
+    border: 1px solid var(--cs-border); border-radius: 8px;
+    padding: 10px; margin-bottom: 8px; background: var(--cs-control-bg);
+}
+.cs-peer-counter:last-child { margin-bottom: 0; }
+.cs-peer-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+}
+.cs-peer-name { font-weight: 700; font-size: 13px; color: var(--cs-text); flex: 1; }
+.cs-peer-status {
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 6px;
+}
+.cs-peer-status.Available { background: #e8f5e9; color: #2e7d32; }
+.cs-peer-status.Busy { background: #ffebee; color: #c62828; }
+.cs-peer-status.Closed { background: #eceff1; color: #546e7a; }
+.cs-peer-status.On-Break { background: #fff3e0; color: #e65100; }
+.cs-wrap[data-theme="dark"] .cs-peer-status.Available { background: rgba(46,125,50,.2); color: #a5d6a7; }
+.cs-wrap[data-theme="dark"] .cs-peer-status.Busy { background: rgba(198,40,40,.2); color: #ef9a9a; }
+.cs-wrap[data-theme="dark"] .cs-peer-status.Closed { background: rgba(84,110,122,.2); color: #b0bec5; }
+.cs-wrap[data-theme="dark"] .cs-peer-status.On-Break { background: rgba(230,81,0,.2); color: #ffcc80; }
+.cs-peer-stats {
+    display: flex; gap: 12px; font-size: 12px;
+    color: var(--cs-text-muted); margin-bottom: 6px; font-weight: 600;
+}
+.cs-peer-stats span { display: flex; align-items: center; gap: 3px; }
+.cs-peer-serving-item {
+    font-size: 12px; color: var(--cs-text-light); padding: 4px 0;
+    border-top: 1px solid var(--cs-border);
+    display: flex; align-items: center; gap: 6px;
+}
+.cs-peer-ticket-num {
+    font-weight: 800; color: var(--cs-primary); font-size: 13px;
+}
+.cs-peer-transfer-btn {
+    margin-left: auto; padding: 3px 8px; border: 1px solid #6a1b9a;
+    background: transparent; color: #6a1b9a; border-radius: 4px;
+    font-size: 10px; font-weight: 700; cursor: pointer;
+    transition: all .12s; display: none;
+}
+.cs-peer-transfer-btn:hover { background: #6a1b9a; color: #fff; }
+.cs-wrap[data-theme="dark"] .cs-peer-transfer-btn { border-color: #9c27b0; color: #ce93d8; }
+.cs-wrap[data-theme="dark"] .cs-peer-transfer-btn:hover { background: #9c27b0; color: #fff; }
+
+.cs-refresh-note {
+    text-align: center; padding: 12px; font-size: 12px;
+    color: var(--cs-text-light); font-weight: 500; margin-top: 8px;
+}
+
+/* ── Transfer Dialog ── */
+.cs-dialog-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.5); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+}
+.cs-dialog {
+    background: var(--cs-card); border: 2px solid var(--cs-border);
+    border-radius: 16px; padding: 28px; max-width: 480px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+.cs-dialog h3 {
+    font-size: 20px; font-weight: 800; color: var(--cs-text);
+    margin: 0 0 20px;
+}
+.cs-dialog-field { margin-bottom: 16px; }
+.cs-dialog-field label {
+    display: block; font-size: 13px; font-weight: 700;
+    color: var(--cs-text); margin-bottom: 6px;
+}
+.cs-dialog-field select,
+.cs-dialog-field input,
+.cs-dialog-field textarea {
+    width: 100%; padding: 10px 14px; border-radius: 8px;
+    border: 2px solid var(--cs-border); background: var(--cs-control-bg);
+    color: var(--cs-text); font-size: 14px;
+}
+.cs-dialog-actions {
+    display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;
+}
+.cs-dialog-btn {
+    padding: 10px 20px; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: all .15s;
+}
+.cs-dialog-btn.primary {
+    background: linear-gradient(135deg, #00897b, #00695c); color: #fff;
+}
+.cs-dialog-btn.cancel {
+    background: var(--cs-control-bg); color: var(--cs-text);
+    border: 1px solid var(--cs-border);
+}
+.cs-dialog-btn:hover { opacity: .85; }
+
+/* ── Confirm Dialog ── */
+.cs-confirm-msg { font-size: 15px; color: var(--cs-text); line-height: 1.5; }
+
+/* ── Prompt Dialog ── */
+.cs-prompt-input {
+    width: 100%; padding: 10px 14px; border-radius: 8px;
+    border: 2px solid var(--cs-border); background: var(--cs-control-bg);
+    color: var(--cs-text); font-size: 14px; margin-top: 12px;
+}
+
+/* ── Toast ── */
+.cs-toast {
+    position: fixed; top: 20px; right: 20px; z-index: 2000;
+    padding: 14px 22px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; color: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    animation: csToastIn .3s ease;
+    max-width: 360px;
+}
+.cs-toast.green { background: #2e7d32; }
+.cs-toast.blue { background: #0277bd; }
+.cs-toast.orange { background: #e65100; }
+.cs-toast.red { background: #c62828; }
+.cs-toast.purple { background: #6a1b9a; }
+@keyframes csToastIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .cs-hospital-header { flex-direction: column; gap: 8px; padding: 10px 14px; }
+    .cs-hospital-name { font-size: 15px; }
+    .cs-hospital-sub { font-size: 11px; }
+    .cs-hospital-brand { gap: 10px; }
+    .cs-hospital-logo-sm { width: 36px; height: 36px; font-size: 16px; }
+    .cs-hospital-right { gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .cs-staff-badge { font-size: 12px; padding: 5px 10px; }
+
+    .cs-counter-bar { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
+    .cs-counter-bar label { font-size: 13px; }
+    .cs-counter-bar select { min-width: auto; flex: 1; font-size: 14px; padding: 10px 12px; }
+    .cs-counter-info { font-size: 12px; }
+    .cs-shift-bar { margin-left: 0; width: 100%; display: flex; gap: 6px; }
+    .cs-shift-btn { flex: 1; text-align: center; justify-content: center;
+        min-height: 44px; font-size: 13px; padding: 8px 10px; }
+
+    .cs-stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .cs-stat { padding: 10px; gap: 8px; border-radius: 10px; }
+    .cs-stat-icon { width: 36px; height: 36px; border-radius: 8px; font-size: 16px; }
+    .cs-stat-val { font-size: 22px; }
+    .cs-stat-lbl { font-size: 10px; }
+
+	.cs-call-next-bar { flex-direction: column; }
+	.cs-btn-next { font-size: 16px; padding: 16px 20px; border-radius: 12px; }
+	.cs-btn-reset { min-width: 0; width: 100%; min-height: 44px; }
+    .cs-btn-shortcut { display: none; }
+
+    .cs-bottom { grid-template-columns: 1fr; gap: 12px; }
+    .cs-bottom.has-peer { grid-template-columns: 1fr; }
+
+    .cs-serving-grid { grid-template-columns: 1fr; gap: 10px; padding: 10px; }
+    .cs-serve-card { padding: 12px; border-radius: 10px; }
+    .cs-serve-ticket-num { font-size: 26px; }
+    .cs-serve-card-actions { gap: 4px; padding-top: 8px; flex-wrap: wrap; }
+    .cs-mini-btn { min-height: 40px; font-size: 12px; padding: 8px 8px;
+        border-radius: 8px; min-width: 0; }
+
+    .cs-panel-header { padding: 10px 14px; }
+    .cs-panel-title { font-size: 13px; }
+    .cs-panel-body { max-height: 240px; }
+    .cs-queue-row { padding: 8px 12px; gap: 6px; }
+    .cs-q-num { font-size: 13px; min-width: 60px; }
+    .cs-q-pos { font-size: 11px; min-width: 24px; }
+    .cs-q-patient { font-size: 12px; }
+    .cs-q-service { font-size: 11px; }
+    .cs-q-wait { font-size: 11px; min-width: 40px; }
+
+    #cs-content { padding: 10px 12px; }
+
+    .cs-dialog { padding: 20px 16px; border-radius: 14px; }
+    .cs-dialog h3 { font-size: 18px; margin-bottom: 16px; }
+    .cs-dialog-actions { flex-direction: column-reverse; gap: 8px; }
+    .cs-dialog-btn { width: 100%; text-align: center; min-height: 44px; }
+    .cs-dialog-field select,
+    .cs-dialog-field input,
+    .cs-dialog-field textarea { font-size: 16px; padding: 12px 14px; }
+
+    .cs-toast { left: 12px; right: 12px; max-width: none; top: auto;
+        bottom: 20px; text-align: center; border-radius: 12px; }
+
+    .cs-login-card { padding: 32px 24px; border-radius: 20px; }
+    .cs-login-logo { width: 64px; height: 64px; font-size: 28px; margin-bottom: 16px; }
+    .cs-login-title { font-size: 24px; }
+    .cs-login-sub { font-size: 14px; margin-bottom: 24px; }
+    .cs-login-field input { padding: 14px 16px; font-size: 16px; }
+    .cs-login-btn { padding: 14px; font-size: 16px; min-height: 48px; }
+    .cs-login-error { font-size: 13px; padding: 10px 14px; }
+}
+
+@media (max-width: 480px) {
+    .cs-hospital-header { padding: 8px 12px; }
+    .cs-hospital-name { font-size: 14px; }
+    .cs-hospital-time { display: none; }
+    .cs-hospital-logo-sm { width: 32px; height: 32px; font-size: 14px; border-radius: 8px; }
+    .cs-theme-toggle, .cs-logout-btn { width: 32px; height: 32px; font-size: 14px; }
+    .cs-logout-btn { padding: 0 10px; font-size: 12px; }
+
+    .cs-stats { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .cs-stat { padding: 8px; }
+    .cs-stat-icon { width: 32px; height: 32px; font-size: 14px; }
+    .cs-stat-val { font-size: 20px; }
+    .cs-stat-lbl { font-size: 9px; letter-spacing: .4px; }
+
+    .cs-btn-next { font-size: 15px; padding: 14px 16px; }
+
+    .cs-serve-ticket-num { font-size: 22px; }
+    .cs-serve-detail { font-size: 12px; }
+    .cs-serve-card-actions { gap: 3px; }
+    .cs-mini-btn { font-size: 11px; padding: 6px 4px; min-height: 36px; }
+
+    #cs-content { padding: 8px 10px; }
+
+    .cs-login-card { padding: 24px 18px; }
+    .cs-login-title { font-size: 22px; }
+    .cs-login-field input { padding: 12px 14px; }
+}
+
+/* Extra-small phones */
+@media (max-width: 360px) {
+    .cs-hospital-header { padding: 6px 10px; gap: 4px; }
+    .cs-hospital-name { font-size: 13px; }
+    .cs-hospital-brand { gap: 8px; }
+    .cs-staff-badge { font-size: 11px; padding: 4px 8px; }
+
+    .cs-counter-bar { padding: 8px 10px; gap: 8px; }
+    .cs-counter-bar label { font-size: 12px; }
+    .cs-counter-bar select { font-size: 13px; padding: 8px 10px; }
+    .cs-shift-btn { font-size: 12px; min-height: 40px; padding: 6px 8px; }
+
+    .cs-stats { gap: 4px; }
+    .cs-stat { padding: 6px; gap: 6px; }
+    .cs-stat-icon { width: 28px; height: 28px; font-size: 12px; border-radius: 6px; }
+    .cs-stat-val { font-size: 18px; }
+
+    .cs-serve-ticket-num { font-size: 20px; }
+    .cs-mini-btn { font-size: 10px; padding: 5px 3px; min-height: 34px; border-radius: 6px; }
+
+    .cs-q-num { font-size: 12px; min-width: 50px; }
+    .cs-queue-row { padding: 6px 8px; }
+
+    #cs-content { padding: 6px 8px; }
+
+    .cs-login-card { padding: 20px 14px; border-radius: 16px; }
+    .cs-login-logo { width: 56px; height: 56px; font-size: 24px; }
+    .cs-login-title { font-size: 20px; }
+    .cs-login-field input { padding: 10px 12px; font-size: 15px; border-radius: 10px; }
+    .cs-login-btn { padding: 12px; font-size: 15px; border-radius: 10px; }
+
+    .cs-dialog { padding: 16px 12px; }
+    .cs-toast { left: 8px; right: 8px; bottom: 12px; font-size: 13px; padding: 10px 14px; }
+}
+
+/* iPhone safe-area (notch / dynamic island / home indicator) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .cs-wrap {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .cs-toast {
+        bottom: calc(20px + env(safe-area-inset-bottom));
+    }
+    @media (max-width: 768px) {
+        .cs-hospital-header {
+            padding-top: calc(10px + env(safe-area-inset-top));
+        }
+    }
+}
+
+/* ── Accessibility: Focus-visible styles ─────────────────────── */
+button:focus-visible,
+input:focus-visible,
+.cs-counter-card:focus-visible,
+.cs-action-btn:focus-visible,
+a:focus-visible {
+    outline: 3px solid #1976d2;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(25,118,210,.25);
+}
+
+{% endraw %}
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="cs-wrap" id="cs-wrap" data-theme="light" data-hospital="{{ hospital_name | e }}">
+	<div id="cs-app">
+		<!-- Login or main content rendered by JS -->
+		<div class="cs-login-wrap">
+			<div class="cs-login-card">
+				<div class="cs-login-logo">&#9769;</div>
+				<div style="text-align:center;padding:20px;color:var(--cs-text-muted)">Loading...</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+{% raw %}
+(function() {
+	var _hospitalName = $('#cs-wrap').attr('data-hospital') || 'Queue Management';
+	var API = 'queue_management.qms_call_screen_api.';
+	var _token = sessionStorage.getItem('qms_staff_token') || '';
+	var _staffName = sessionStorage.getItem('qms_staff_name') || '';
+	var _selectedCounter = sessionStorage.getItem('qms_staff_counter') || '';
+	var _refreshInterval = null;
+	var _servingTickets = [];
+	var _staffId = sessionStorage.getItem('qms_staff_id') || '';
+	var _theme = localStorage.getItem('qms_ext_cs_theme') || 'light';
+	var _counterLocations = {};
+	var _csRealtimeBound = false;
+	var _csDebounce = null;
+	var _audioCtx = null;
+	var _clockInterval = null;
+	var _csRealtimeHandler = function() {};
+	var _csRealtimeAlertHandler = function() {};
+
+	$('#cs-wrap').attr('data-theme', _theme);
+
+	function esc(v) { return String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+	function csrfToken() {
+		return (window.frappe && frappe.csrf_token) || $('meta[name="csrf-token"]').attr('content') || $('[name="csrf_token"]').attr('content') || '';
+	}
+
+	function refreshCsrfToken() {
+		return $.ajax({
+			url: '/api/method/frappe.auth.get_csrf_token',
+			type: 'GET',
+			dataType: 'json',
+			timeout: 10000,
+		}).then(function(r) {
+			if (r && r.message) {
+				if (window.frappe) frappe.csrf_token = r.message;
+				$('meta[name="csrf-token"]').attr('content', r.message);
+			}
+		}).catch(function() {});
+	}
+
+	function apiPost(method, args, _isRetry) {
+		return $.ajax({
+			url: '/api/method/' + API + method,
+			type: 'POST',
+			data: JSON.stringify(args || {}),
+			contentType: 'application/json',
+			headers: {'X-Frappe-CSRF-Token': csrfToken()},
+			timeout: 30000,
+		}).then(function(r) { return r.message; }).catch(function(xhr) {
+			// On 403 without AuthenticationError, likely stale CSRF — refresh and retry once
+			var excType = '';
+			try { excType = JSON.parse(xhr.responseText).exc_type || ''; } catch(x) {}
+			if (xhr.status === 403 && excType !== 'AuthenticationError' && !_isRetry) {
+				return refreshCsrfToken().then(function() {
+					return apiPost(method, args, true);
+				});
+			}
+			// Re-throw with exc_type info attached
+			xhr._excType = excType;
+			xhr._isStaffAuthError = (excType === 'AuthenticationError');
+			return $.Deferred().reject(xhr).promise();
+		});
+	}
+
+	function selectedCounterLocation() {
+		return _counterLocations[_selectedCounter] || '';
+	}
+
+	function statusToken(status) {
+		return String(status || 'Closed').replace(/[^A-Za-z0-9]+/g, '-');
+	}
+
+	function matchesCounterEvent(data) {
+		if (!_selectedCounter || !data) return true;
+		if (data.counter === _selectedCounter || data.from_counter === _selectedCounter || data.to_counter === _selectedCounter) {
+			return true;
+		}
+		var eventLocation = data.location || data.to_location || data.from_location || '';
+		var counterLocation = selectedCounterLocation();
+		if (!counterLocation) return true;
+		return !eventLocation || eventLocation === counterLocation;
+	}
+
+	function toast(msg, color) {
+		$('.cs-toast').remove();
+		var $t = $('<div class="cs-toast ' + (color||'blue') + '" role="alert" aria-live="assertive">' + esc(msg) + '</div>');
+		$('body').append($t);
+		setTimeout(function() { $t.fadeOut(300, function() { $t.remove(); }); }, 3000);
+	}
+
+	function showDialog(html) {
+		$('.cs-dialog-overlay').remove();
+		var $overlay = $('<div class="cs-dialog-overlay" role="dialog" aria-modal="true"></div>');
+		$overlay.html('<div class="cs-dialog">' + html + '</div>');
+		$('body').append($overlay);
+		$overlay.on('click', function(e) {
+			if ($(e.target).hasClass('cs-dialog-overlay')) { $overlay.remove(); }
+		});
+		// Close on Escape key
+		var escHandler = function(e) {
+			if (e.key === 'Escape' || e.keyCode === 27) {
+				$overlay.remove();
+				$(document).off('keydown', escHandler);
+			}
+		};
+		$(document).on('keydown', escHandler);
+		// Focus first focusable element
+		setTimeout(function() {
+			var focusable = $overlay.find('button, input, select, textarea, [tabindex]:not([tabindex="-1"])').first();
+			if (focusable.length) focusable.focus();
+		}, 50);
+		return $overlay;
+	}
+
+	function confirm(msg, onYes, yesLabel, noLabel) {
+		var h = '<h3>Confirm</h3>';
+		h += '<div class="cs-confirm-msg">' + msg + '</div>';
+		h += '<div class="cs-dialog-actions">';
+		h += '<button class="cs-dialog-btn cancel" id="cs-dlg-no">' + (noLabel||'Cancel') + '</button>';
+		h += '<button class="cs-dialog-btn primary" id="cs-dlg-yes">' + (yesLabel||'Yes') + '</button>';
+		h += '</div>';
+		var $d = showDialog(h);
+		$d.find('#cs-dlg-no').on('click', function() { $d.remove(); });
+		$d.find('#cs-dlg-yes').on('click', function() { $d.remove(); onYes(); });
+	}
+
+	function prompt(title, label, onSubmit) {
+		var h = '<h3>' + esc(title) + '</h3>';
+		h += '<div class="cs-dialog-field"><label>' + esc(label) + '</label>';
+		h += '<input type="text" class="cs-prompt-input" id="cs-prompt-val"></div>';
+		h += '<div class="cs-dialog-actions">';
+		h += '<button class="cs-dialog-btn cancel" id="cs-dlg-no">Cancel</button>';
+		h += '<button class="cs-dialog-btn primary" id="cs-dlg-yes">OK</button>';
+		h += '</div>';
+		var $d = showDialog(h);
+		$d.find('#cs-dlg-no').on('click', function() { $d.remove(); });
+		$d.find('#cs-dlg-yes').on('click', function() {
+			var val = $d.find('#cs-prompt-val').val();
+			$d.remove();
+			onSubmit(val);
+		});
+	}
+
+	// ── Login Screen ──
+	function showLogin(errorMsg) {
+		if (_refreshInterval) { clearInterval(_refreshInterval); _refreshInterval = null; }
+		var h = '<div class="cs-login-wrap">';
+		h += '<div class="cs-login-card">';
+		h += '<div class="cs-login-logo">&#9769;</div>';
+		h += '<h2 class="cs-login-title">' + __("Staff Login") + '</h2>';
+		h += '<p class="cs-login-sub">' + __("QMS Call Screen — Enter your credentials") + '</p>';
+		h += '<div class="cs-login-field"><label for="cs-login-user">Username</label>';
+		h += '<input type="text" id="cs-login-user" placeholder="e.g. staff1" autocomplete="username"></div>';
+		h += '<div class="cs-login-field"><label for="cs-login-pass">Password</label>';
+		h += '<input type="password" id="cs-login-pass" placeholder="Enter password" autocomplete="current-password"></div>';
+		h += '<button class="cs-login-btn" id="cs-login-submit">Sign In</button>';
+		h += '<div class="cs-login-error" id="cs-login-error">' + esc(errorMsg||'') + '</div>';
+		h += '</div></div>';
+		$('#cs-app').html(h);
+		if (errorMsg) $('#cs-login-error').show();
+
+		$('#cs-login-submit').on('click', doLogin);
+		$('#cs-login-pass').on('keypress', function(e) { if (e.which === 13) doLogin(); });
+		$('#cs-login-user').on('keypress', function(e) { if (e.which === 13) $('#cs-login-pass').focus(); });
+		$('#cs-login-user').focus();
+	}
+
+	function doLogin() {
+		var user = ($('#cs-login-user').val()||'').trim();
+		var pass = ($('#cs-login-pass').val()||'').trim();
+		if (!user || !pass) {
+			$('#cs-login-error').text('Please enter username and password').show();
+			return;
+		}
+		$('#cs-login-submit').prop('disabled', true).text('Signing in...');
+		apiPost('staff_login', {username: user, password: pass}).then(function(r) {
+			_token = r.token;
+			_staffName = r.display_name;
+			_staffId = r.staff_id;
+			sessionStorage.setItem('qms_staff_token', _token);
+			sessionStorage.setItem('qms_staff_name', _staffName);
+			sessionStorage.setItem('qms_staff_id', _staffId);
+			showMain();
+		}).catch(function(e) {
+			var msg = 'Login failed';
+			try {
+				var parsed = JSON.parse(e.responseText || '{}');
+				var serverMsgs = parsed._server_messages;
+				if (serverMsgs) {
+					var arr = JSON.parse(serverMsgs);
+					if (arr && arr[0]) msg = JSON.parse(arr[0]).message || msg;
+				}
+			} catch(x) {
+				if (e.status === 0) msg = 'Network error — please check your connection';
+				else if (e.statusText === 'timeout') msg = 'Request timed out — please try again';
+			}
+			$('#cs-login-error').text(msg).show();
+			$('#cs-login-submit').prop('disabled', false).text('Sign In');
+		});
+	}
+
+	// ── Main Screen ──
+	function showMain() {
+		var h = '';
+		// Hospital header
+		h += '<div class="cs-hospital-header">';
+		h += '<div class="cs-hospital-brand">';
+		h += '<div class="cs-hospital-logo-sm">&#9769;</div>';
+		h += '<div class="cs-hospital-text">';
+		h += '<div class="cs-hospital-name">' + esc(_hospitalName) + '</div>';
+		h += '<div class="cs-hospital-sub">Patient Queue Management</div>';
+		h += '</div></div>';
+		h += '<div class="cs-hospital-right">';
+		h += '<div class="cs-hospital-time" id="cs-time"></div>';
+		h += '<div class="cs-staff-badge">' + esc(_staffName) + '</div>';
+		h += '<button class="cs-theme-toggle" id="cs-theme-toggle" title="Toggle theme">' + (_theme==='dark'?'&#9728;':'&#9790;') + '</button>';
+		h += '<button class="cs-logout-btn" id="cs-logout" title="Sign out">&#x2190; Logout</button>';
+		h += '</div></div>';
+		// Counter bar
+		h += '<div class="cs-counter-bar">';
+		h += '<label>Counter:</label>';
+		h += '<select id="cs-counter-select"><option value="">-- Select counter --</option></select>';
+		h += '<div class="cs-counter-info" id="cs-counter-info"></div>';
+		h += '<div class="cs-shift-bar" id="cs-shift-bar"></div>';
+		h += '</div>';
+		// Content
+		h += '<div id="cs-content"></div>';
+		$('#cs-app').html(h);
+
+		// Clock
+		function updateClock() {
+			var el = document.getElementById('cs-time');
+			if (!el) return;
+			var now = new Date();
+			el.textContent = now.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+		}
+		updateClock();
+		if (_clockInterval) clearInterval(_clockInterval);
+		_clockInterval = setInterval(updateClock, 30000);
+
+		// Theme toggle
+		$('#cs-theme-toggle').on('click', function() {
+			_theme = _theme === 'dark' ? 'light' : 'dark';
+			$('#cs-wrap').attr('data-theme', _theme);
+			$(this).html(_theme === 'dark' ? '&#9728;' : '&#9790;');
+			localStorage.setItem('qms_ext_cs_theme', _theme);
+		});
+
+		// Logout
+		$('#cs-logout').on('click', function() {
+			apiPost('staff_logout', {token: _token});
+			_token = '';
+			_staffName = '';
+			_staffId = '';
+			_selectedCounter = '';
+			sessionStorage.removeItem('qms_staff_token');
+			sessionStorage.removeItem('qms_staff_name');
+			sessionStorage.removeItem('qms_staff_id');
+			sessionStorage.removeItem('qms_staff_counter');
+			showLogin();
+		});
+
+		// Load counters
+		apiPost('get_counters', {token: _token}).then(function(counters) {
+			var $sel = $('#cs-counter-select');
+			(counters||[]).forEach(function(c) {
+				_counterLocations[c.name] = c.location || '';
+				$sel.append('<option value="' + esc(c.name) + '">' + esc(c.counter_name) + ' (#' + esc(c.counter_number) + ')</option>');
+			});
+			// Auto-select if only one counter is available (staff-locked)
+			if (counters && counters.length === 1 && !_selectedCounter) {
+				_selectedCounter = counters[0].name;
+				sessionStorage.setItem('qms_staff_counter', _selectedCounter);
+			}
+			if (_selectedCounter) $sel.val(_selectedCounter);
+			$sel.on('change', function() {
+				_selectedCounter = $(this).val();
+				sessionStorage.setItem('qms_staff_counter', _selectedCounter);
+				refreshData();
+				if (_refreshInterval) clearInterval(_refreshInterval);
+				_refreshInterval = setInterval(refreshData, 15000);
+			});
+			if (_selectedCounter) $sel.trigger('change');
+		}).catch(function(e) {
+			if (e && e._isStaffAuthError) {
+				showLogin('Session expired. Please log in again.');
+			} else {
+				showLogin('Unable to load counters. Please log in again.');
+			}
+		});
+
+		// Event delegation: shift buttons
+		$('#cs-app').on('click', '[data-cs-shift]', function() {
+			var action = $(this).attr('data-cs-shift');
+			var counter = $(this).attr('data-cs-counter');
+			var methods = { start:'action_start_shift', end:'action_end_shift', break:'action_take_break' };
+			var fn = methods[action];
+			if (!fn) return;
+			if (action === 'end') {
+				confirm('End your shift at this counter? Active tickets will be returned to queue.', function() {
+					apiPost(fn, {token:_token, counter:counter}).then(function() {
+						toast('Shift ended', 'blue');
+						refreshData();
+					});
+				});
+			} else {
+				apiPost(fn, {token:_token, counter:counter}).then(function() {
+					toast(action==='start'?'Shift started':'On break', 'green');
+					refreshData();
+				});
+			}
+		});
+
+		// Event delegation: ticket actions
+		$('#cs-app').on('click', '[data-cs-action]', function() {
+			var action = $(this).attr('data-cs-action');
+			var counter = $(this).attr('data-cs-counter');
+			var ticket = $(this).attr('data-cs-ticket') || '';
+			doAction(action, counter, ticket);
+		});
+
+		// Realtime updates — instant push via socketio
+		if (window.frappe && frappe.realtime) {
+			function csPlayNotify() {
+				try {
+					if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+					var osc = _audioCtx.createOscillator(), gain = _audioCtx.createGain();
+					osc.connect(gain); gain.connect(_audioCtx.destination);
+					osc.frequency.value = 880; gain.gain.value = 0.3; osc.start();
+					gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.3);
+					osc.stop(_audioCtx.currentTime + 0.3);
+				} catch(e) {}
+			}
+			_csRealtimeHandler = function(data) {
+				if (!_selectedCounter || !matchesCounterEvent(data)) return;
+				if (_csDebounce) clearTimeout(_csDebounce);
+				_csDebounce = setTimeout(refreshData, 80);
+			};
+			_csRealtimeAlertHandler = function(data) {
+				if (!_selectedCounter || !matchesCounterEvent(data)) return;
+				csPlayNotify();
+				_csRealtimeHandler(data);
+			};
+			if (!_csRealtimeBound) {
+				frappe.realtime.on('qms_ticket_called_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_ticket_completed_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_new_ticket_website', _csRealtimeAlertHandler);
+				frappe.realtime.on('qms_ticket_held_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_ticket_no_show_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_ticket_transferred_website', _csRealtimeAlertHandler);
+				frappe.realtime.on('qms_ticket_requeued_website', _csRealtimeAlertHandler);
+				frappe.realtime.on('qms_ticket_serving_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_counter_updated_website', _csRealtimeHandler);
+				frappe.realtime.on('qms_ticket_cancelled_website', _csRealtimeHandler);
+				_csRealtimeBound = true;
+			}
+		}
+
+		// Keyboard shortcuts
+		$(document).off('keydown.qms_ext_cs').on('keydown.qms_ext_cs', function(e) {
+			if ($(e.target).is('input, textarea, select') || $('.cs-dialog-overlay').length) return;
+			if (!e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+			if (!_selectedCounter) return;
+			var ct = (_servingTickets.length===1) ? _servingTickets[0].name : null;
+			switch(e.key.toLowerCase()) {
+				case 'n': case ' ': e.preventDefault(); doAction('next', _selectedCounter, ''); break;
+				case 'c': if(ct){e.preventDefault(); doAction('complete', _selectedCounter, ct);} break;
+				case 'h': if(ct){e.preventDefault(); doAction('hold', _selectedCounter, ct);} break;
+				case 't': if(ct){e.preventDefault(); doAction('transfer', _selectedCounter, ct);} break;
+			}
+		});
+	}
+
+	// ── Actions ──
+	var _actionInFlight = false;
+	function doAction(action, counter, ticket) {
+		// Prevent concurrent actions (double-click, key repeat, etc.)
+		if (_actionInFlight) return;
+
+		if (action === 'next') {
+			if (_servingTickets.length > 0) {
+				confirm('You are already serving <b>' + _servingTickets.length + '</b> ticket(s).<br><br>Call the next ticket as additional?', function() {
+					callNext(counter);
+				});
+			} else {
+				callNext(counter);
+			}
+			return;
+		}
+		if (action === 'reset-avg-wait') {
+			confirm('Reset kiosk average wait time for this counter\'s services?<br><br>New averages will be calculated only from tickets completed after this reset.', function() {
+				apiPost('action_reset_kiosk_avg_wait', {token:_token, counter:counter}).then(function(r) {
+					if (r && r.reset_count) {
+						toast('Kiosk average wait reset', 'blue');
+					} else {
+						toast('No services assigned to this counter', 'orange');
+					}
+					refreshData();
+				}).catch(function(e) { toast(parseErr(e), 'red'); });
+			});
+			return;
+		}
+		if (action === 'call') {
+			if (_servingTickets.length > 0) {
+				confirm('Already serving ' + _servingTickets.length + ' ticket(s). Call <b>' + esc(ticket) + '</b> as additional?', function() {
+					_actionInFlight = true;
+					apiPost('action_call_ticket', {token:_token, ticket:ticket, counter:counter}).then(function() {
+						_actionInFlight = false; toast('Ticket called', 'green'); refreshData();
+					}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+				});
+			} else {
+				_actionInFlight = true;
+				apiPost('action_call_ticket', {token:_token, ticket:ticket, counter:counter}).then(function() {
+					_actionInFlight = false; toast('Ticket called', 'green'); refreshData();
+				}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			}
+			return;
+		}
+		if (action === 'serve') {
+			_actionInFlight = true;
+			apiPost('action_start_serving', {token:_token, ticket:ticket}).then(function() {
+				_actionInFlight = false; toast('Service started', 'green'); refreshData();
+			}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			return;
+		}
+		if (action === 'complete') {
+			var st = null;
+			_servingTickets.forEach(function(s) { if(s.name===ticket) st=s; });
+			if (st && st.transferred_from_counter) {
+				var cn = st.transferred_from_counter_name || st.transferred_from_counter;
+				confirm('This ticket was transferred from <b>' + esc(cn) + '</b>.<br><br>Send it back to the front of their queue?', function() {
+					apiPost('action_return', {token:_token, ticket:ticket}).then(function() {
+						toast('Ticket sent back to ' + cn, 'blue'); refreshData();
+					}).catch(function(e) { toast(parseErr(e), 'red'); });
+				}, 'Send Back', 'Just Complete');
+				// Also handle "Just Complete" via the cancel button
+				setTimeout(function() {
+					var $overlay = $('.cs-dialog-overlay');
+					$overlay.find('#cs-dlg-no').off('click').on('click', function() {
+						$overlay.remove();
+						apiPost('action_complete', {token:_token, ticket:ticket}).then(function() {
+							toast('Ticket completed', 'green'); refreshData();
+						}).catch(function(e) { toast(parseErr(e), 'red'); });
+					});
+				}, 50);
+				return;
+			}
+			_actionInFlight = true;
+			apiPost('action_complete', {token:_token, ticket:ticket}).then(function() {
+				_actionInFlight = false; toast('Ticket completed', 'green'); refreshData();
+			}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			return;
+		}
+		if (action === 'hold') {
+			prompt('Hold Ticket', 'Hold Reason (optional)', function(reason) {
+				_actionInFlight = true;
+				apiPost('action_hold', {token:_token, ticket:ticket, reason:reason||''}).then(function() {
+					_actionInFlight = false; toast('Ticket on hold', 'orange'); refreshData();
+				}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			});
+			return;
+		}
+		if (action === 'noshow') {
+			confirm('Mark this ticket as No Show?', function() {
+				_actionInFlight = true;
+				apiPost('action_no_show', {token:_token, ticket:ticket}).then(function() {
+					_actionInFlight = false; toast('Marked as No Show', 'red'); refreshData();
+				}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			});
+			return;
+		}
+		if (action === 'recall') {
+			_actionInFlight = true;
+			apiPost('action_call_ticket', {token:_token, ticket:ticket, counter:counter}).then(function() {
+				_actionInFlight = false; toast('Ticket recalled', 'green'); refreshData();
+			}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+			return;
+		}
+		if (action === 'transfer') {
+			showTransferDialog(ticket, counter);
+			return;
+		}
+	}
+
+	function callNext(counter) {
+		_actionInFlight = true;
+		apiPost('action_call_next', {token:_token, counter:counter}).then(function(r) {
+			_actionInFlight = false;
+			if (r && r.empty) { toast('No tickets in queue', 'orange'); }
+			else { toast('Next ticket called', 'green'); }
+			refreshData();
+		}).catch(function(e) { _actionInFlight = false; toast(parseErr(e), 'red'); });
+	}
+
+	function showTransferDialog(ticket, counter) {
+		apiPost('get_transfer_options', {token:_token, counter:counter}).then(function(opts) {
+			var h = '<h3>Transfer Ticket</h3>';
+			h += '<div class="cs-dialog-field"><label>Transfer to Counter</label>';
+			h += '<select id="cs-tf-counter"><option value="">-- Select --</option>';
+			(opts.counters||[]).forEach(function(c) {
+				h += '<option value="' + esc(c.name) + '">' + esc(c.counter_name) + ' (#' + esc(c.counter_number) + ') — ' + esc(c.status) + '</option>';
+			});
+			h += '</select></div>';
+			h += '<div class="cs-dialog-field"><label>Or transfer to Location</label>';
+			h += '<select id="cs-tf-location"><option value="">-- Select --</option>';
+			(opts.locations||[]).forEach(function(l) {
+				h += '<option value="' + esc(l.name) + '">' + esc(l.location_name) + '</option>';
+			});
+			h += '</select></div>';
+			h += '<div class="cs-dialog-field"><label>Reason (optional)</label>';
+			h += '<input type="text" id="cs-tf-reason" placeholder="Reason for transfer"></div>';
+			h += '<div class="cs-dialog-actions">';
+			h += '<button class="cs-dialog-btn cancel" id="cs-tf-cancel">Cancel</button>';
+			h += '<button class="cs-dialog-btn primary" id="cs-tf-submit">Transfer</button>';
+			h += '</div>';
+			var $d = showDialog(h);
+			$d.find('#cs-tf-cancel').on('click', function() { $d.remove(); });
+			$d.find('#cs-tf-submit').on('click', function() {
+				var tc = $d.find('#cs-tf-counter').val();
+				var tl = $d.find('#cs-tf-location').val();
+				var reason = $d.find('#cs-tf-reason').val() || '';
+				if (!tc && !tl) { toast('Select a counter or location', 'orange'); return; }
+				$d.remove();
+				var args = {token:_token, ticket:ticket, reason:reason};
+				if (tc) args.to_counter = tc;
+				if (tl && !tc) args.to_location = tl;
+				apiPost('action_transfer', args).then(function() {
+					toast('Ticket transferred', 'purple'); refreshData();
+				}).catch(function(e) { toast(parseErr(e), 'red'); });
+			});
+		}).catch(function(e) { toast(parseErr(e), 'red'); });
+	}
+
+	function parseErr(e) {
+		try {
+			var msgs = JSON.parse(e.responseText)._server_messages;
+			msgs = JSON.parse(msgs);
+			return JSON.parse(msgs[0]).message;
+		} catch(x) {
+			return 'An error occurred';
+		}
+	}
+
+	// ── Render Data ──
+	function refreshData() {
+		var counter = _selectedCounter;
+		if (!counter) { $('#cs-content').html(''); $('#cs-counter-info').html(''); return; }
+
+		apiPost('get_screen_data', {token:_token, counter:counter}).then(function(data) {
+			var stList = data.serving_tickets || [];
+			_servingTickets = stList;
+			var ctr = data.counter || {};
+			var wl = data.waiting || [];
+			var hl = data.on_hold || [];
+			var ql = data.queue_length || 0;
+			var ec = esc(counter);
+
+			var cStatus = ctr.status || 'Available';
+			$('#cs-counter-info').html(
+				'<span class="cs-status-dot ' + statusToken(cStatus) + '"></span><span>' + cStatus + '</span>'
+			);
+
+			// Shift buttons
+			var sb = '';
+			if (cStatus === 'Closed' || cStatus === 'On Break' || cStatus === 'On-Break') {
+				sb += '<button class="cs-shift-btn start" data-cs-shift="start" data-cs-counter="' + ec + '">&#9654; Start</button>';
+			}
+			if (cStatus === 'Available' || cStatus === 'Busy') {
+				sb += '<button class="cs-shift-btn break" data-cs-shift="break" data-cs-counter="' + ec + '">&#9749; Break</button>';
+				sb += '<button class="cs-shift-btn end" data-cs-shift="end" data-cs-counter="' + ec + '">&#9632; End</button>';
+			}
+			$('#cs-shift-bar').html(sb);
+
+			var h = '';
+			// Stats
+			h += '<div class="cs-stats">';
+			h += '<div class="cs-stat waiting"><div class="cs-stat-icon">&#128338;</div><div><div class="cs-stat-val">' + ql + '</div><div class="cs-stat-lbl">In Queue</div></div></div>';
+			h += '<div class="cs-stat serving"><div class="cs-stat-icon">&#128100;</div><div><div class="cs-stat-val">' + stList.length + '</div><div class="cs-stat-lbl">Serving</div></div></div>';
+			h += '<div class="cs-stat held"><div class="cs-stat-icon">&#9208;</div><div><div class="cs-stat-val">' + hl.length + '</div><div class="cs-stat-lbl">On Hold</div></div></div>';
+			h += '<div class="cs-stat done"><div class="cs-stat-icon">&#9989;</div><div><div class="cs-stat-val">' + (data.completed_today||0) + '</div><div class="cs-stat-lbl">Completed</div></div></div>';
+			h += '</div>';
+
+			// Call Next
+			h += '<div class="cs-call-next-bar">';
+			h += '<button class="cs-btn cs-btn-next" data-cs-action="next" data-cs-counter="' + ec + '">&#9654; Call Next Ticket<span class="cs-btn-shortcut">N</span></button>';
+			h += '<button class="cs-btn cs-btn-reset" data-cs-action="reset-avg-wait" data-cs-counter="' + ec + '">&#8635; Reset Kiosk Avg Wait</button>';
+			h += '</div>';
+
+			// Serving area
+			h += '<div class="cs-serving-area">';
+			h += '<div class="cs-serving-header">&#128276; Currently Serving (' + stList.length + ')</div>';
+			if (stList.length) {
+				h += '<div class="cs-serving-grid">';
+				stList.forEach(function(st) {
+					var stEsc = esc(st.name);
+					var waitInfo = '';
+					if (st.called_time) {
+						try {
+							var calledAt = new Date(st.called_time.replace(' ', 'T'));
+							var serverNow = data.server_time ? new Date(data.server_time.replace(' ', 'T')) : new Date();
+							var elapsed = Math.round((serverNow - calledAt) / 60000);
+							if (elapsed >= 0) waitInfo = elapsed + ' min ago';
+						} catch(e) {}
+					}
+					h += '<div class="cs-serve-card">';
+					h += '<div class="cs-serve-card-top">';
+					h += '<div class="cs-serve-ticket-num">' + esc(st.ticket_number || st.name) + '</div>';
+					h += '<span class="cs-q-badge cs-q-badge-' + esc(st.status || 'Called') + '">' + esc(st.status || 'Called') + '</span>';
+					if (st.transferred_from_counter) {
+						h += '<span class="cs-serve-transferred">&#x21C4; from ' + esc(st.transferred_from_counter_name||st.transferred_from_counter) + '</span>';
+					}
+					h += '</div>';
+					h += '<div class="cs-serve-card-details">';
+					h += '<div class="cs-serve-detail">&#128100; ' + esc(st.patient_name||'Walk-in') + '</div>';
+					h += '<div class="cs-serve-detail">&#128203; ' + esc(st.service||'-') + '</div>';
+					if (waitInfo) h += '<div class="cs-serve-timer">&#128338; Called ' + waitInfo + '</div>';
+					h += '</div>';
+					h += '<div class="cs-serve-card-actions">';
+					if (st.status === 'Called') {
+						h += '<button class="cs-mini-btn cs-mini-call" data-cs-action="serve" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="Start Serving">&#128100;</button>';
+					}
+					h += '<button class="cs-mini-btn cs-mini-done" data-cs-action="complete" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="Complete">&#10004;</button>';
+					h += '<button class="cs-mini-btn cs-mini-hold" data-cs-action="hold" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="Hold">&#9208;</button>';
+					h += '<button class="cs-mini-btn cs-mini-noshow" data-cs-action="noshow" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="No Show">&#10060;</button>';
+					h += '<button class="cs-mini-btn cs-mini-recall" data-cs-action="recall" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="Recall">&#8635;</button>';
+					h += '<button class="cs-mini-btn cs-mini-transfer" data-cs-action="transfer" data-cs-counter="' + ec + '" data-cs-ticket="' + stEsc + '" title="Transfer">&#8644;</button>';
+					h += '</div>';
+					h += '</div>';
+				});
+				h += '</div>';
+			} else {
+				h += '<div class="cs-no-ticket"><div style="font-size:40px;opacity:.3">&#127915;</div>';
+				h += '<div style="margin-top:8px">No ticket being served</div>';
+				h += '<div style="font-size:12px;color:var(--cs-text-light);margin-top:4px">Click "Call Next Ticket" to start</div></div>';
+			}
+			h += '</div>';
+
+			// Bottom panels
+			h += '<div class="cs-bottom has-peer">';
+			// Waiting queue
+			h += '<div class="cs-panel"><div class="cs-panel-header"><span class="cs-panel-title">&#128338; Waiting Queue</span><span class="cs-panel-count">' + wl.length + '</span></div>';
+			h += '<div class="cs-panel-body">';
+			if (wl.length) {
+				wl.forEach(function(t, idx) {
+					var tpr = t.priority || 'Normal';
+					var wt = '';
+					if (t.check_in_time) {
+						try {
+							var ciy = new Date(t.check_in_time).getFullYear();
+							if (ciy > 2000) {
+								var diff = Math.round((new Date() - new Date(t.check_in_time)) / 60000);
+								if (diff >= 0) wt = diff + ' min';
+							} else { wt = 'returning'; }
+						} catch(e) {}
+					}
+					var wc = '';
+					if (wt) { var m=parseInt(wt); if(m>15)wc=' long'; else if(m>5)wc=' medium'; else wc=' short'; }
+					var isT = (t.transfer_count||0)>0;
+					h += '<div class="cs-queue-row" data-cs-action="call" data-cs-counter="' + ec + '" data-cs-ticket="' + esc(t.name) + '" title="Click to call">';
+					h += '<span class="cs-q-pos">#' + (idx+1) + '</span>';
+					h += '<span class="cs-q-num">' + esc(t.ticket_number||t.name) + '</span>';
+					if (isT && t.transferred_from_counter) {
+						h += '<span class="cs-q-transferred">&#x21C4; ' + esc(t.transferred_from_counter_name||'') + '</span>';
+					}
+					h += '<span class="cs-q-patient">' + esc(t.patient_name||'Walk-in') + '</span>';
+					h += '<span class="cs-q-service">' + esc(t.service||'') + '</span>';
+					h += '<span class="cs-q-badge cs-q-badge-' + tpr + '">' + tpr + '</span>';
+					h += '<span class="cs-q-wait' + wc + '">' + wt + '</span>';
+					h += '</div>';
+				});
+			} else {
+				h += '<div class="cs-empty">&#9989; Queue is empty</div>';
+			}
+			h += '</div></div>';
+
+			// On hold
+			h += '<div class="cs-panel"><div class="cs-panel-header"><span class="cs-panel-title">&#9208; On Hold</span><span class="cs-panel-count">' + hl.length + '</span></div>';
+			h += '<div class="cs-panel-body">';
+			if (hl.length) {
+				hl.forEach(function(t) {
+					var tpr = t.priority || 'Normal';
+					h += '<div class="cs-queue-row" data-cs-action="call" data-cs-counter="' + ec + '" data-cs-ticket="' + esc(t.name) + '" title="Click to recall">';
+					h += '<span class="cs-q-num">' + esc(t.ticket_number||t.name) + '</span>';
+					h += '<span class="cs-q-patient">' + esc(t.patient_name||'Walk-in') + '</span>';
+					h += '<span class="cs-q-service">' + esc(t.service||'') + '</span>';
+					h += '<span class="cs-q-badge cs-q-badge-' + tpr + '">' + tpr + '</span>';
+					h += '</div>';
+				});
+			} else {
+				h += '<div class="cs-empty">No tickets on hold</div>';
+			}
+			h += '</div></div>';
+
+			// Peer counters panel (populated async)
+			h += '<div class="cs-panel" id="cs-peer-panel"><div class="cs-panel-header"><span class="cs-panel-title">&#128065; Other Counters</span><span class="cs-panel-count" id="cs-peer-count">...</span></div>';
+			h += '<div class="cs-panel-body" id="cs-peer-body"><div class="cs-empty">Loading...</div></div></div>';
+			h += '</div>'; // close cs-bottom
+
+			h += '<div class="cs-refresh-note">&#10084; Real-time live updates &bull; Click waiting ticket to call &bull; Keys: Alt+N=Next, Alt+C=Complete, Alt+H=Hold, Alt+T=Transfer</div>';
+			$('#cs-content').html(h);
+
+			// Fetch peer counter data separately
+			apiPost('get_peer_counter_preview', {token:_token, counter:counter}).then(function(peers) {
+				var ph = '';
+				if (peers && peers.length) {
+					$('#cs-peer-count').text(peers.length);
+					peers.forEach(function(pc) {
+						var statusCls = (pc.status||'').replace(/\s/g, '-');
+						ph += '<div class="cs-peer-counter">';
+						ph += '<div class="cs-peer-header">';
+						ph += '<span class="cs-status-dot ' + statusCls + '"></span>';
+						ph += '<span class="cs-peer-name">' + esc(pc.counter_name) + '</span>';
+						ph += '<span class="cs-peer-status ' + statusCls + '">' + esc(pc.status) + '</span>';
+						ph += '</div>';
+						ph += '<div class="cs-peer-stats">';
+						ph += '<span>&#128338; ' + (pc.waiting_count||0) + ' waiting</span>';
+						ph += '<span>&#128100; ' + (pc.serving||[]).length + ' serving</span>';
+						ph += '<span>&#9208; ' + (pc.on_hold_count||0) + ' held</span>';
+						ph += '</div>';
+						if (pc.serving && pc.serving.length) {
+							pc.serving.forEach(function(st) {
+								ph += '<div class="cs-peer-serving-item">';
+								ph += '<span class="cs-peer-ticket-num">' + esc(st.ticket_number||st.name) + '</span>';
+								ph += '<span>' + esc(st.patient_name||'Walk-in') + '</span>';
+								ph += '<span style="margin-left:4px;font-size:11px;color:var(--cs-text-light)">' + esc(st.service||'') + '</span>';
+								ph += '</div>';
+							});
+						} else if (pc.status === 'Available') {
+							ph += '<div style="font-size:11px;color:var(--cs-text-light);padding:4px 0;border-top:1px solid var(--cs-border)">No ticket being served</div>';
+						}
+						ph += '</div>';
+					});
+				} else {
+					ph = '<div class="cs-empty">No other counters</div>';
+					$('#cs-peer-count').text('0');
+				}
+				$('#cs-peer-body').html(ph);
+			}).catch(function() {
+				$('#cs-peer-body').html('<div class="cs-empty">Could not load</div>');
+				$('#cs-peer-count').text('?');
+			});
+		}).catch(function(e) {
+			if (e && e._isStaffAuthError) {
+				showLogin('Session expired. Please log in again.');
+			} else {
+				var msg = parseErr(e);
+				toast(msg, 'red');
+			}
+		});
+	}
+
+	// ── Start ──
+	if (_token) {
+		showMain();
+	} else {
+		showLogin();
+	}
+})();
+{% endraw %}
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "autoname": "QCTR-.YYYY.-.#####",
+ "creation": "2026-03-12 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "counter_name",
+  "counter_number",
+  "location",
+  "operator",
+  "column_break_ctr1",
+  "status",
+  "is_active",
+  "current_ticket",
+  "services_section",
+  "services"
+ ],
+ "fields": [
+  {
+   "fieldname": "counter_name",
+   "fieldtype": "Data",
+   "label": "Counter Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "counter_number",
+   "fieldtype": "Int",
+   "label": "Counter Number",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "QMS Location",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "operator",
+   "fieldtype": "Link",
+   "label": "Operator",
+   "options": "User",
+   "description": "User assigned to this counter. Used for auto-selecting counter on Call Screen."
+  },
+  {
+   "fieldname": "column_break_ctr1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Available\nBusy\nClosed\nOn Break",
+   "default": "Available",
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1",
+   "search_index": 1
+  },
+  {
+   "fieldname": "current_ticket",
+   "fieldtype": "Link",
+   "label": "Current Ticket",
+   "options": "QMS Queue Ticket",
+   "read_only": 1
+  },
+  {
+   "fieldname": "services_section",
+   "fieldtype": "Section Break",
+   "label": "Services Handled"
+  },
+  {
+   "fieldname": "services",
+   "fieldtype": "Table",
+   "label": "Services",
+   "options": "QMS Counter Service",
+   "reqd": 1,
+   "description": "Services that this counter can handle"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 0,
+ "issingle": 0,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-03-12 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Queue Management",
+ "name": "QMS Counter",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Healthcare Administrator",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "QMS Operator",
+   "read": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "search_fields": "counter_name,counter_number,location"
+}

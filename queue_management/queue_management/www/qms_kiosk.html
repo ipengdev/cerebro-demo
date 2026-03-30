@@ -1,0 +1,1946 @@
+{% extends "templates/web.html" %}
+
+{% block title %}QMS Kiosk{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+{% endblock %}
+
+{% block style %}
+<style>
+{% raw %}
+/* Hide website navbar/footer for full-screen kiosk */
+header.web-header, .web-footer, .page-breadcrumbs,
+.page-header-wrapper, .page-footer,
+.navbar, footer, .web-sidebar { display: none !important; }
+body { padding-top: 0 !important; }
+.page-content-wrapper { padding: 0 !important; }
+.page_content { padding: 0 !important; margin: 0 !important; }
+main.container { max-width: 100% !important; padding: 0 !important; }
+
+/* QMS Kiosk Styles — Elderly-Friendly: Light theme, massive fonts, huge touch targets, WCAG AAA */
+.k-wrap {
+    min-height: 100vh;
+    background: linear-gradient(170deg, #b2dfdb 0%, #c8e6e2 40%, #dceee9 100%);
+    color: #1a2332;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 22px;
+    line-height: 1.5;
+    overflow-y: auto;
+    position: relative;
+}
+.k-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 32px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.k-welcome { text-align: center }
+.k-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #004d40, #00838f);
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(0,77,64,.4), 0 4px 16px rgba(0,0,0,.15);
+}
+.k-logo svg {
+    width: 64px; height: 64px;
+    fill: none; stroke: #fff; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+.k-title {
+    font-size: 48px; font-weight: 800; letter-spacing: -0.5px;
+    margin: 0 0 8px; color: #004d40; overflow-wrap: break-word; word-wrap: break-word;
+}
+.k-subtitle {
+    font-size: 26px; color: #00695c; margin-bottom: 48px; font-weight: 600;
+}
+.k-main-actions {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 24px; margin-bottom: 40px;
+}
+.k-main-btn {
+    width: 100%; max-width: 640px; padding: 40px 48px;
+    border-radius: 24px; border: 3px solid #80cbc4;
+    background: rgba(255,255,255,.92); cursor: pointer;
+    text-align: center; transition: all .2s ease;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1), 0 2px 8px rgba(0,0,0,.06);
+    -webkit-tap-highlight-color: transparent; min-height: 120px;
+    backdrop-filter: blur(8px);
+}
+.k-main-btn:hover {
+    border-color: #00838f;
+    box-shadow: 0 8px 36px rgba(0,131,143,.25), 0 4px 12px rgba(0,0,0,.08);
+    transform: translateY(-3px); background: rgba(255,255,255,.98);
+}
+.k-main-btn:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+.k-main-btn-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+.k-main-btn-text { font-size: 36px; font-weight: 800; color: #004d40; display: block; }
+.k-main-btn-sub { font-size: 22px; color: #00695c; margin-top: 8px; display: block; }
+.k-main-btn.primary {
+    border-color: #00838f;
+    background: linear-gradient(135deg, #00897b, #00695c);
+    box-shadow: 0 8px 32px rgba(0,137,123,.35);
+}
+.k-main-btn.primary .k-main-btn-text,
+.k-main-btn.primary .k-main-btn-sub { color: #fff; }
+.k-main-btn.primary .k-main-btn-icon { filter: brightness(0) invert(1); }
+.k-main-btn.primary:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    box-shadow: 0 12px 40px rgba(0,137,123,.45); border-color: #00695c;
+}
+
+.k-secondary-link { text-align: center; margin-top: 12px; }
+.k-secondary-link a {
+    font-size: 22px; color: #00695c; text-decoration: none; cursor: pointer;
+    padding: 18px 36px; display: inline-block; min-height: 60px; line-height: 1.4;
+    border: 2px solid #80cbc4; border-radius: 16px;
+    background: rgba(255,255,255,.85); font-weight: 600; transition: all .15s;
+}
+.k-secondary-link a:hover { background: #e0f2f1; border-color: #0097a7; }
+.k-secondary-link a:active { transform: scale(0.97); }
+.k-change-loc { text-align: center; margin-top: 20px; }
+.k-change-loc a {
+    font-size: 20px; color: #00695c; text-decoration: none; cursor: pointer;
+    padding: 16px 28px; display: inline-block; min-height: 56px;
+    border: 2px solid #80cbc4; border-radius: 14px;
+    background: rgba(255,255,255,.85); font-weight: 600; transition: all .15s;
+}
+.k-change-loc a:hover { background: #e0f2f1; border-color: #0097a7; }
+
+.k-header { display: flex; align-items: center; margin-bottom: 36px; gap: 8px; }
+.k-header-spacer { width: 140px; flex-shrink: 0; }
+.k-back {
+    background: rgba(255,255,255,.85); border: 2px solid #80cbc4; color: #004d40;
+    min-width: 140px; height: 64px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; font-size: 18px; font-weight: 700; transition: all .15s;
+    flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+}
+.k-back svg { width: 24px; height: 24px; }
+.k-back:hover { background: #e0f2f1; border-color: #0097a7 }
+.k-back:active { transform: scale(0.95) }
+.k-header-text { flex: 1; text-align: center; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; }
+.k-header-text h2 { font-size: 38px; font-weight: 800; margin: 0; color: #004d40; overflow-wrap: break-word; }
+.k-header-text p { font-size: 22px; color: #00695c; margin: 6px 0 0; font-weight: 600; }
+
+.k-services {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px; margin-bottom: 24px;
+}
+.k-svc-card {
+    background: rgba(255,255,255,.92); border: 3px solid #80cbc4;
+    border-radius: 24px; padding: 36px 28px; cursor: pointer; transition: all .2s;
+    position: relative; overflow: hidden; min-height: 140px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1), 0 2px 8px rgba(0,0,0,.05);
+    -webkit-tap-highlight-color: transparent; backdrop-filter: blur(8px);
+}
+.k-svc-card:hover {
+    border-color: #00838f;
+    box-shadow: 0 8px 36px rgba(0,131,143,.2), 0 4px 12px rgba(0,0,0,.06);
+    transform: translateY(-3px); background: rgba(255,255,255,.98);
+}
+.k-svc-card:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+.k-svc-card.disabled { opacity: .5; pointer-events: none; }
+.k-svc-card.loading { opacity: .6; pointer-events: none; }
+.k-svc-accent { position: absolute; top: 0; left: 0; right: 0; height: 6px; border-radius: 24px 24px 0 0; }
+.k-svc-icon { font-size: 48px; margin-bottom: 14px; display: block; }
+.k-svc-name { font-size: 28px; font-weight: 800; color: #004d40; margin-bottom: 10px; overflow-wrap: break-word; word-wrap: break-word; }
+.k-svc-info { display: flex; gap: 20px; font-size: 20px; color: #00695c; font-weight: 600; }
+.k-svc-info-item { display: flex; align-items: center; gap: 8px; }
+.k-svc-info-item .num { font-weight: 800; color: #004d40; font-size: 22px; }
+.k-no-services {
+    text-align: center; padding: 80px 32px; color: #6b7280;
+    font-size: 24px; grid-column: 1 / -1;
+}
+
+.k-info-step { text-align: center; max-width: 560px; margin: 0 auto; }
+.k-info-step h2 { font-size: 38px; font-weight: 800; margin: 0 0 8px; color: #004d40; }
+.k-info-step p { font-size: 22px; color: #00695c; margin: 0 0 36px; }
+.k-info-fields { text-align: left; margin-bottom: 32px; }
+.k-info-field { margin-bottom: 24px; }
+.k-info-field label { display: block; font-size: 20px; font-weight: 700; color: #004d40; margin-bottom: 10px; }
+.k-info-field input,
+.k-info-field select,
+.k-info-field textarea {
+    width: 100%; padding: 20px 24px; border-radius: 16px;
+    border: 3px solid #80cbc4; background: rgba(255,255,255,.95);
+    color: #1a1a2e; font-size: 24px; outline: none; transition: border-color .2s;
+    min-height: 64px;
+}
+.k-info-field input:focus,
+.k-info-field select:focus,
+.k-info-field textarea:focus { border-color: #0097a7; box-shadow: 0 0 0 4px rgba(0,151,167,.12); }
+.k-info-field input::placeholder,
+.k-info-field textarea::placeholder { color: #9ca3af; }
+
+.k-info-btns { display: flex; gap: 20px; justify-content: center; }
+.k-btn {
+    padding: 24px 48px; border-radius: 18px; border: none; font-size: 24px; font-weight: 800;
+    cursor: pointer; transition: all .15s; min-height: 80px;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+}
+.k-btn svg { width: 24px; height: 24px; }
+.k-btn:hover { transform: translateY(-2px) }
+.k-btn:active { transform: scale(0.97) }
+.k-btn-primary {
+    background: linear-gradient(135deg, #00897b, #00695c); color: #fff;
+    box-shadow: 0 6px 20px rgba(0,137,123,.35);
+}
+.k-btn-primary:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    box-shadow: 0 8px 28px rgba(0,137,123,.45);
+}
+.k-btn-ghost {
+    background: rgba(255,255,255,.85); color: #004d40; border: 3px solid #80cbc4;
+}
+.k-btn-ghost:hover { background: #e0f2f1; border-color: #00838f; color: #004d40; }
+
+
+.k-result { text-align: center }
+.k-result-check {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: linear-gradient(135deg, #4CAF50, #388E3C);
+    margin: 0 auto 28px; display: flex; align-items: center; justify-content: center;
+    font-size: 60px; color: #fff; animation: k-pop .5s ease;
+    box-shadow: 0 8px 32px rgba(76,175,80,.35);
+}
+.k-result-check svg { width: 56px; height: 56px; }
+@keyframes k-pop { 0% { transform: scale(0); opacity: 0 } 60% { transform: scale(1.15) } 100% { transform: scale(1); opacity: 1 } }
+.k-result-label { font-size: 28px; color: #00695c; font-weight: 600; margin-bottom: 8px; overflow-wrap: break-word; }
+.k-result-ticket {
+    font-size: 130px; font-weight: 900; letter-spacing: 6px; color: #00695c;
+    margin: 0 0 12px; animation: k-slideup .5s ease; line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0,105,92,.15);
+    overflow-wrap: break-word; word-wrap: break-word;
+}
+/* Called screen responsive overrides */
+.k-called-heading { font-size: 36px; font-weight: 900; color: #1565C0; margin-bottom: 12px; }
+.k-called-proceed { font-size: 36px; font-weight: 900; color: #004d40; margin: 20px 0 8px; }
+.k-called-counter { font-size: 64px; font-weight: 900; color: #1565C0; letter-spacing: 2px; margin-bottom: 24px; overflow-wrap: break-word; word-wrap: break-word; }
+@keyframes k-slideup { from { transform: translateY(24px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+.k-result-service { font-size: 24px; color: #00695c; margin: 0 0 32px; font-weight: 600; }
+.k-result-stats { display: flex; justify-content: center; gap: 56px; margin-bottom: 36px; }
+.k-result-stat { text-align: center }
+.k-result-stat-val { font-size: 48px; font-weight: 900; color: #004d40; }
+.k-result-stat-lbl { font-size: 18px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 600; }
+.k-result-msg {
+    background: #e8f5e9; border: 3px solid #a5d6a7; border-radius: 20px;
+    padding: 28px 36px; margin: 0 auto 36px; max-width: 560px;
+    font-size: 24px; color: #1b5e20; line-height: 1.6; font-weight: 600;
+    overflow-wrap: break-word; word-wrap: break-word;
+}
+.k-result-actions { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.k-result-countdown { font-size: 22px; color: #6b7280; margin-top: 28px; font-weight: 500; }
+.k-result-countdown strong { color: #00695c; font-size: 26px; }
+
+/* ═══ Queue Tracker ═══ */
+.k-serving-counters {
+    text-align: center; margin: -16px auto 24px; max-width: 560px;
+}
+.k-serving-counters-label {
+    font-size: 18px; font-weight: 700; color: #00695c; margin-bottom: 10px;
+}
+.k-serving-counters-list {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+}
+.k-counter-chip {
+    display: inline-block; padding: 8px 20px; border-radius: 24px;
+    background: rgba(255,255,255,.92); border: 2px solid #80cbc4;
+    font-size: 18px; font-weight: 800; color: #004d40;
+    box-shadow: 0 2px 8px rgba(0,77,64,.08);
+}
+.k-wrap[data-theme="dark"] .k-serving-counters-label { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-counter-chip {
+    background: rgba(26,40,54,.92); border-color: #2a3d4e; color: #e0f2f1;
+}
+.k-queue-tracker {
+    max-width: 560px; margin: 32px auto 0;
+}
+
+/* ═══ Compact Waiting Layout ═══ */
+.k-waiting-compact {
+    display: flex; flex-direction: column; max-width: 560px; margin: 0 auto;
+    height: calc(100dvh - 40px); min-height: 0;
+}
+.k-waiting-header {
+    text-align: center; padding: 10px 0 6px; flex-shrink: 0;
+}
+.k-waiting-label {
+    font-size: 16px; color: #00695c; font-weight: 600; margin-bottom: 2px;
+}
+.k-waiting-ticket {
+    font-size: 64px; font-weight: 900; letter-spacing: 3px; color: #00695c;
+    line-height: 1.1; text-shadow: 0 2px 12px rgba(0,105,92,.12);
+}
+.k-waiting-service {
+    font-size: 16px; color: #00695c; font-weight: 600; margin-top: 2px;
+}
+.k-waiting-counters {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    padding: 8px 0; flex-shrink: 0; align-items: center;
+}
+.k-waiting-counters .k-waiting-counters-label {
+    font-size: 14px; font-weight: 700; color: #00695c;
+}
+.k-waiting-counters .k-counter-chip {
+    padding: 5px 14px; font-size: 14px;
+}
+.k-waiting-info-strip {
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.92); border: 2px solid #80cbc4;
+    border-radius: 16px; padding: 12px 20px; margin: 6px 0 10px;
+    box-shadow: 0 2px 12px rgba(0,77,64,.08); flex-shrink: 0;
+}
+.k-info-cell { flex: 1; text-align: center; }
+.k-info-val {
+    font-size: 32px; font-weight: 900; color: #004d40; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.k-info-label { font-size: 13px; color: #6b7280; font-weight: 600; margin-top: 2px; }
+.k-info-divider {
+    width: 2px; height: 36px; background: #b2dfdb; margin: 0 12px; flex-shrink: 0;
+}
+.k-waiting-compact .k-feed-title { font-size: 16px; margin-bottom: 6px; flex-shrink: 0; }
+.k-waiting-compact .k-feed {
+    flex: 1; min-height: 0; max-height: none; overflow-y: auto;
+}
+.k-waiting-compact .k-feed-row { padding: 8px 14px; font-size: 16px; }
+.k-waiting-compact .k-feed-pos { width: 30px; height: 30px; font-size: 14px; }
+.k-waiting-compact .k-feed-num { font-size: 17px; }
+.k-waiting-compact .k-feed-status { font-size: 13px; padding: 2px 10px; }
+.k-waiting-actions {
+    text-align: center; padding: 10px 0 6px; flex-shrink: 0;
+}
+.k-waiting-actions .k-btn { font-size: 16px; padding: 10px 28px; min-height: auto; }
+@keyframes k-pulse { 0%,100% { opacity:1 } 50% { opacity:.5 } }
+.k-info-val.k-pulse { animation: k-pulse 1.5s ease-in-out infinite; }
+
+/* Dark theme overrides for compact waiting */
+.k-wrap[data-theme="dark"] .k-waiting-label { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-waiting-ticket { color: #e0f2f1; text-shadow: 0 2px 12px rgba(0,105,92,.3); }
+.k-wrap[data-theme="dark"] .k-waiting-service { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-waiting-counters-label { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-waiting-info-strip { background: rgba(26,40,54,.92); border-color: #2a3d4e; }
+.k-wrap[data-theme="dark"] .k-info-val { color: #e0f2f1; }
+.k-wrap[data-theme="dark"] .k-info-label { color: #90a4ae; }
+.k-wrap[data-theme="dark"] .k-info-divider { background: #37474f; }
+
+/* Progress bar */
+.k-progress-wrap {
+    background: rgba(255,255,255,.92); border: 3px solid #80cbc4;
+    border-radius: 20px; padding: 24px 28px; margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1); backdrop-filter: blur(8px);
+}
+.k-progress-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.k-progress-title {
+    font-size: 20px; font-weight: 800; color: #004d40;
+}
+.k-progress-fraction {
+    font-size: 18px; font-weight: 700; color: #00695c;
+}
+.k-progress-bar {
+    height: 18px; border-radius: 12px; background: #e0f2f1; overflow: hidden; position: relative;
+}
+.k-progress-fill {
+    height: 100%; border-radius: 12px; transition: width .6s ease;
+    background: linear-gradient(90deg, #00897b, #26c6da);
+    position: relative; min-width: 18px;
+}
+.k-progress-fill::after {
+    content: ''; position: absolute; right: 2px; top: 2px; bottom: 2px; width: 14px;
+    border-radius: 50%; background: #fff; opacity: .7;
+}
+.k-progress-labels {
+    display: flex; justify-content: space-between; margin-top: 10px; font-size: 16px; font-weight: 600;
+}
+.k-progress-labels span:first-child { color: #2e7d32; }
+.k-progress-labels span:last-child { color: #00695c; }
+
+/* Countdown */
+.k-countdown-card {
+    background: rgba(255,255,255,.92); border: 3px solid #80cbc4;
+    border-radius: 20px; padding: 24px 28px; margin-bottom: 20px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1); backdrop-filter: blur(8px);
+}
+.k-countdown-label {
+    font-size: 18px; font-weight: 700; color: #00695c; margin-bottom: 6px;
+}
+.k-countdown-time {
+    font-size: 56px; font-weight: 900; color: #004d40; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.k-countdown-sub {
+    font-size: 16px; color: #6b7280; margin-top: 4px; font-weight: 600;
+}
+@keyframes k-pulse { 0%,100% { opacity:1 } 50% { opacity:.5 } }
+.k-countdown-time.k-pulse { animation: k-pulse 1.5s ease-in-out infinite; }
+
+/* Active queue feed */
+.k-feed-title {
+    font-size: 20px; font-weight: 800; color: #004d40; margin-bottom: 12px; text-align: center;
+}
+.k-feed {
+    background: rgba(255,255,255,.92); border: 3px solid #80cbc4;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1); backdrop-filter: blur(8px);
+    max-height: 320px; overflow-y: auto;
+}
+.k-feed-row {
+    display: flex; align-items: center; padding: 12px 20px; border-bottom: 2px solid #e0f2f1;
+    gap: 12px; font-size: 18px;
+}
+.k-feed-row:last-child { border-bottom: none; }
+.k-feed-pos {
+    width: 36px; height: 36px; border-radius: 50%; font-size: 16px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    background: #e0f2f1; color: #004d40;
+}
+.k-feed-row.row-served .k-feed-pos { background: #c8e6c9; color: #2e7d32; }
+.k-feed-row.row-active .k-feed-pos { background: #bbdefb; color: #1565c0; }
+.k-feed-row.row-you .k-feed-pos { background: #00897b; color: #fff; }
+.k-feed-mid { flex: 1; min-width: 0; }
+.k-feed-num { font-weight: 800; color: #004d40; font-size: 20px; }
+.k-feed-row.row-served .k-feed-num { color: #6b7280; text-decoration: line-through; }
+.k-feed-you-tag {
+    display: inline-block; font-size: 13px; font-weight: 900; color: #fff;
+    background: #00897b; padding: 1px 8px; border-radius: 6px; margin-left: 8px;
+    vertical-align: middle; letter-spacing: .5px;
+}
+.k-feed-status {
+    font-size: 15px; font-weight: 700; padding: 3px 12px; border-radius: 10px;
+    white-space: nowrap; flex-shrink: 0;
+}
+.k-feed-status.fs-done { background: #e8f5e9; color: #2e7d32; }
+.k-feed-status.fs-called { background: #e3f2fd; color: #1565c0; }
+.k-feed-status.fs-serving { background: #e8f5e9; color: #2e7d32; }
+.k-feed-status.fs-waiting { background: #fff8e1; color: #ef6c00; }
+.k-feed-status.fs-hold { background: #fff3e0; color: #e65100; }
+.k-feed-status.fs-noshow { background: #fce4ec; color: #c62828; }
+.k-feed-row.row-served { opacity: .5; }
+.k-feed-row.row-you {
+    background: linear-gradient(90deg, rgba(0,137,123,.08), rgba(0,137,123,.02));
+    border-left: 4px solid #00897b;
+}
+
+/* Dark mode queue tracker */
+.k-wrap[data-theme="dark"] .k-progress-wrap,
+.k-wrap[data-theme="dark"] .k-countdown-card,
+.k-wrap[data-theme="dark"] .k-feed {
+    background: rgba(26,40,54,.92); border-color: #2a3d4e; box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.k-wrap[data-theme="dark"] .k-progress-title,
+.k-wrap[data-theme="dark"] .k-feed-title,
+.k-wrap[data-theme="dark"] .k-countdown-time { color: #e0f2f1; }
+.k-wrap[data-theme="dark"] .k-progress-fraction,
+.k-wrap[data-theme="dark"] .k-countdown-label { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-progress-bar { background: #1e3040; }
+.k-wrap[data-theme="dark"] .k-progress-labels span:first-child { color: #81c784; }
+.k-wrap[data-theme="dark"] .k-progress-labels span:last-child { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-countdown-sub { color: #6b8295; }
+.k-wrap[data-theme="dark"] .k-feed-row { border-bottom-color: #1e3040; }
+.k-wrap[data-theme="dark"] .k-feed-pos { background: #1e3040; color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-feed-row.row-served .k-feed-pos { background: #1a3e1f; color: #81c784; }
+.k-wrap[data-theme="dark"] .k-feed-row.row-active .k-feed-pos { background: #1a2d42; color: #64b5f6; }
+.k-wrap[data-theme="dark"] .k-feed-row.row-you .k-feed-pos { background: #00897b; color: #fff; }
+.k-wrap[data-theme="dark"] .k-feed-num { color: #e0f2f1; }
+.k-wrap[data-theme="dark"] .k-feed-row.row-served .k-feed-num { color: #6b8295; }
+.k-wrap[data-theme="dark"] .k-feed-row.row-you { background: linear-gradient(90deg, rgba(77,182,172,.1), transparent); border-left-color: #4db6ac; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-done { background: #1a3e1f; color: #81c784; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-called { background: #1a2d42; color: #64b5f6; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-serving { background: #1a3e1f; color: #81c784; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-waiting { background: #3e3520; color: #ffb74d; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-hold { background: #3e2e1a; color: #ffb74d; }
+.k-wrap[data-theme="dark"] .k-feed-status.fs-noshow { background: #3e1a1a; color: #ef9a9a; }
+
+.k-check { text-align: center; max-width: 560px; margin: 0 auto; }
+.k-check h2 { font-size: 38px; font-weight: 800; margin: 0 0 8px; color: #004d40; }
+.k-check p { font-size: 22px; color: #00695c; margin: 0 0 36px; }
+.k-check input {
+    width: 100%; padding: 24px 28px; border-radius: 20px;
+    border: 3px solid #80cbc4; background: rgba(255,255,255,.95);
+    color: #1a1a2e; font-size: 36px; text-align: center; letter-spacing: 4px;
+    outline: none; margin-bottom: 24px; font-weight: 800; min-height: 80px;
+}
+.k-check input:focus { border-color: #0097a7; box-shadow: 0 0 0 4px rgba(0,151,167,.12); }
+.k-check-result {
+    text-align: left; background: rgba(255,255,255,.92);
+    border: 3px solid #80cbc4; border-radius: 20px; padding: 28px;
+    margin-top: 28px; box-shadow: 0 4px 20px rgba(0,77,64,.1); backdrop-filter: blur(8px);
+}
+.k-check-row {
+    display: flex; justify-content: space-between; padding: 16px 0;
+    border-bottom: 2px solid #f0f0f0; font-size: 22px;
+}
+.k-check-row:last-child { border-bottom: none }
+.k-check-label { color: #6b7280; font-weight: 600 }
+.k-check-val { color: #1a1a2e; font-weight: 800 }
+.k-check-status {
+    display: inline-block; padding: 8px 20px; border-radius: 24px;
+    font-size: 18px; font-weight: 800;
+}
+.k-check-status.Waiting { background: #fef3c7; color: #78350f }
+.k-check-status.Called { background: #dbeafe; color: #1e3a5f }
+.k-check-status.Serving { background: #dbeafe; color: #1e3a5f }
+.k-check-status.Completed { background: #d1fae5; color: #064e3b }
+.k-check-status.On-Hold { background: #fef3c7; color: #78350f }
+
+.k-fb-wrap { text-align: center; max-width: 600px; margin: 0 auto; }
+.k-fb-question { font-size: 36px; font-weight: 800; color: #004d40; margin-bottom: 48px; }
+.k-fb-faces { display: flex; justify-content: center; gap: 36px; margin-bottom: 48px; }
+.k-fb-face {
+    width: 140px; height: 160px; border-radius: 28px;
+    border: 4px solid #80cbc4; background: rgba(255,255,255,.92);
+    cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    transition: all .2s; -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 4px 20px rgba(0,77,64,.1);
+}
+.k-fb-face:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,.12); }
+.k-fb-face:active { transform: scale(0.95); }
+.k-fb-face.selected { border-width: 5px; transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+.k-fb-face.selected.face-sad { border-color: #e53935; background: #ffebee }
+.k-fb-face.selected.face-ok { border-color: #FB8C00; background: #fff3e0 }
+.k-fb-face.selected.face-happy { border-color: #2e7d32; background: #e8f5e9 }
+.k-fb-face-emoji { font-size: 64px; line-height: 1; }
+.k-fb-face-label { font-size: 20px; font-weight: 700; color: #00695c; }
+.k-fb-face.selected .k-fb-face-label { color: #004d40 }
+.k-fb-comment { margin-bottom: 36px; }
+.k-fb-comment textarea {
+    width: 100%; padding: 20px 24px; border-radius: 16px;
+    border: 3px solid #80cbc4; background: rgba(255,255,255,.95);
+    color: #1a1a2e; font-size: 22px; outline: none; resize: vertical;
+    min-height: 120px; transition: border-color .2s;
+}
+.k-fb-comment textarea:focus { border-color: #0097a7; box-shadow: 0 0 0 4px rgba(0,151,167,.12); }
+.k-fb-comment label { display: block; text-align: left; font-size: 20px; font-weight: 700; color: #004d40; margin-bottom: 10px; }
+.k-fb-actions { display: flex; gap: 20px; justify-content: center; }
+
+.k-loading { text-align: center; padding: 80px; }
+.k-spinner {
+    width: 64px; height: 64px; border: 6px solid #e0e0e0; border-top-color: #0097a7;
+    border-radius: 50%; animation: k-spin 1s linear infinite; margin: 0 auto 24px;
+}
+@keyframes k-spin { to { transform: rotate(360deg) } }
+.k-loading-text { font-size: 24px; color: #00695c; font-weight: 600; }
+
+.k-loc-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px; margin-top: 28px;
+}
+.k-loc-card {
+    background: rgba(255,255,255,.92); border: 3px solid #80cbc4;
+    border-radius: 24px; padding: 44px 28px; cursor: pointer; text-align: center;
+    transition: all .2s; box-shadow: 0 4px 20px rgba(0,77,64,.1), 0 2px 8px rgba(0,0,0,.05);
+    -webkit-tap-highlight-color: transparent; min-height: 120px; backdrop-filter: blur(8px);
+}
+.k-loc-card:hover {
+    border-color: #00838f;
+    box-shadow: 0 8px 36px rgba(0,131,143,.2), 0 4px 12px rgba(0,0,0,.06);
+    transform: translateY(-3px); background: rgba(255,255,255,.98);
+}
+.k-loc-card:active { transform: scale(0.97) }
+.k-loc-card-icon { font-size: 52px; margin-bottom: 14px }
+.k-loc-card-name { font-size: 28px; font-weight: 800; color: #004d40; overflow-wrap: break-word; }
+.k-loc-card-type { font-size: 20px; color: #00695c; margin-top: 8px; font-weight: 600 }
+
+.k-error-msg {
+    color: #991b1b; background: #fef2f2; border: 2px solid #fecaca;
+    border-radius: 16px; padding: 20px 24px; margin-top: 24px; font-size: 22px; font-weight: 600;
+}
+.k-offline-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: #c62828; color: #fff; text-align: center;
+    padding: 12px 24px; font-size: 18px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2); animation: k-pop .5s ease;
+}
+
+/* ═══ Night Mode ═══ */
+.k-wrap[data-theme="dark"] { background: #0f1923; color: #e4eaf0; }
+.k-wrap[data-theme="dark"] .k-logo { box-shadow: 0 10px 40px rgba(0,0,0,.5), 0 4px 16px rgba(0,0,0,.3); }
+.k-wrap[data-theme="dark"] .k-title,
+.k-wrap[data-theme="dark"] .k-header-text h2,
+.k-wrap[data-theme="dark"] .k-info-step h2,
+.k-wrap[data-theme="dark"] .k-check h2,
+.k-wrap[data-theme="dark"] .k-fb-question,
+.k-wrap[data-theme="dark"] .k-svc-name,
+.k-wrap[data-theme="dark"] .k-main-btn-text,
+.k-wrap[data-theme="dark"] .k-loc-card-name,
+.k-wrap[data-theme="dark"] .k-info-field label,
+.k-wrap[data-theme="dark"] .k-fb-comment label,
+.k-wrap[data-theme="dark"] .k-result-stat-val,
+.k-wrap[data-theme="dark"] .k-svc-info-item .num,
+.k-wrap[data-theme="dark"] .k-check-val { color: #e0f2f1; }
+.k-wrap[data-theme="dark"] .k-subtitle,
+.k-wrap[data-theme="dark"] .k-header-text p,
+.k-wrap[data-theme="dark"] .k-info-step p,
+.k-wrap[data-theme="dark"] .k-check p,
+.k-wrap[data-theme="dark"] .k-main-btn-sub,
+.k-wrap[data-theme="dark"] .k-svc-info,
+.k-wrap[data-theme="dark"] .k-loc-card-type,
+.k-wrap[data-theme="dark"] .k-result-label,
+.k-wrap[data-theme="dark"] .k-result-ticket,
+.k-wrap[data-theme="dark"] .k-result-service,
+.k-wrap[data-theme="dark"] .k-fb-face-label,
+.k-wrap[data-theme="dark"] .k-loading-text,
+.k-wrap[data-theme="dark"] .k-result-countdown { color: #80cbc4; }
+.k-wrap[data-theme="dark"] .k-result-stat-lbl,
+.k-wrap[data-theme="dark"] .k-check-label,
+.k-wrap[data-theme="dark"] .k-no-services { color: #6b8295; }
+.k-wrap[data-theme="dark"] .k-main-btn,
+.k-wrap[data-theme="dark"] .k-svc-card,
+.k-wrap[data-theme="dark"] .k-loc-card,
+.k-wrap[data-theme="dark"] .k-check-result,
+.k-wrap[data-theme="dark"] .k-fb-face {
+    background: rgba(26,40,54,.92); border-color: #2a3d4e; box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.k-wrap[data-theme="dark"] .k-main-btn:hover,
+.k-wrap[data-theme="dark"] .k-svc-card:hover,
+.k-wrap[data-theme="dark"] .k-loc-card:hover {
+    background: rgba(26,40,54,.98); border-color: #4db6ac; box-shadow: 0 8px 36px rgba(0,0,0,.4);
+}
+.k-wrap[data-theme="dark"] .k-back,
+.k-wrap[data-theme="dark"] .k-btn-ghost,
+.k-wrap[data-theme="dark"] .k-secondary-link a,
+.k-wrap[data-theme="dark"] .k-change-loc a {
+    background: rgba(26,40,54,.85); border-color: #2a3d4e; color: #e0f2f1;
+}
+.k-wrap[data-theme="dark"] .k-back:hover,
+.k-wrap[data-theme="dark"] .k-btn-ghost:hover,
+.k-wrap[data-theme="dark"] .k-secondary-link a:hover,
+.k-wrap[data-theme="dark"] .k-change-loc a:hover {
+    background: rgba(42,61,78,.9); border-color: #4db6ac;
+}
+.k-wrap[data-theme="dark"] .k-info-field input,
+.k-wrap[data-theme="dark"] .k-info-field select,
+.k-wrap[data-theme="dark"] .k-info-field textarea,
+.k-wrap[data-theme="dark"] .k-check input,
+.k-wrap[data-theme="dark"] .k-fb-comment textarea {
+    background: rgba(26,40,54,.95); border-color: #2a3d4e; color: #e4eaf0;
+}
+.k-wrap[data-theme="dark"] .k-info-field input:focus,
+.k-wrap[data-theme="dark"] .k-info-field select:focus,
+.k-wrap[data-theme="dark"] .k-info-field textarea:focus,
+.k-wrap[data-theme="dark"] .k-check input:focus,
+.k-wrap[data-theme="dark"] .k-fb-comment textarea:focus {
+    border-color: #26c6da; box-shadow: 0 0 0 4px rgba(38,198,218,.15);
+}
+.k-wrap[data-theme="dark"] .k-info-field input::placeholder,
+.k-wrap[data-theme="dark"] .k-info-field textarea::placeholder,
+.k-wrap[data-theme="dark"] .k-check input::placeholder { color: #6b8295; }
+.k-wrap[data-theme="dark"] .k-check-row { border-bottom-color: #1e3040; }
+.k-wrap[data-theme="dark"] .k-result-msg { background: #0d2818; border-color: #1b5e20; color: #a5d6a7; }
+.k-wrap[data-theme="dark"] .k-result-countdown strong { color: #4db6ac; }
+.k-wrap[data-theme="dark"] .k-spinner { border-color: #1e3040; border-top-color: #26c6da; }
+.k-wrap[data-theme="dark"] .k-fb-face.selected.face-sad { background: #3e1a1a; border-color: #e53935 }
+.k-wrap[data-theme="dark"] .k-fb-face.selected.face-ok { background: #3e2e1a; border-color: #FB8C00 }
+.k-wrap[data-theme="dark"] .k-fb-face.selected.face-happy { background: #1a3e1f; border-color: #2e7d32 }
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .k-main-btn, .k-svc-card, .k-loc-card, .k-fb-face, .k-btn, .k-back { transition: none !important; }
+    .k-main-btn:hover, .k-svc-card:hover, .k-loc-card:hover, .k-fb-face:hover { transform: none !important; }
+    .k-result-check, .k-result-ticket { animation: none !important }
+    .k-spinner { animation-duration: 3s }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .k-inner { padding: 28px 16px }
+    .k-title { font-size: 36px }
+    .k-subtitle { font-size: 20px; margin-bottom: 32px }
+    .k-logo { width: 96px; height: 96px }
+    .k-logo svg { width: 48px; height: 48px }
+    .k-main-btn { padding: 28px 20px; min-height: 90px; border-radius: 20px }
+    .k-main-btn-icon { font-size: 44px; margin-bottom: 8px }
+    .k-main-btn-text { font-size: 26px }
+    .k-main-btn-sub { font-size: 18px }
+    .k-services { grid-template-columns: 1fr; gap: 16px }
+    .k-svc-card { padding: 24px 20px; min-height: 100px; border-radius: 20px }
+    .k-svc-icon { font-size: 36px; margin-bottom: 10px }
+    .k-svc-name { font-size: 24px }
+    .k-svc-info { font-size: 16px; gap: 14px }
+    .k-svc-info-item .num { font-size: 18px }
+    .k-result-ticket { font-size: 80px; letter-spacing: 3px }
+    .k-result-label { font-size: 24px }
+    .k-result-service { font-size: 20px }
+    .k-result-stats { gap: 28px }
+    .k-result-stat-val { font-size: 36px }
+    .k-result-stat-lbl { font-size: 15px }
+    .k-result-msg { padding: 20px 24px; font-size: 20px; border-radius: 16px }
+    .k-result-actions { flex-direction: column; align-items: stretch }
+    .k-result-check { width: 96px; height: 96px; margin-bottom: 20px }
+    .k-result-check svg { width: 44px; height: 44px }
+    .k-loc-grid { grid-template-columns: 1fr; gap: 16px }
+    .k-loc-card { padding: 28px 20px; min-height: 100px; border-radius: 20px }
+    .k-loc-card-icon { font-size: 40px; margin-bottom: 10px }
+    .k-loc-card-name { font-size: 24px }
+    .k-loc-card-type { font-size: 18px }
+    .k-info-btns { flex-direction: column; gap: 12px }
+    .k-fb-actions { flex-direction: column; gap: 12px }
+    .k-btn { width: 100%; text-align: center; justify-content: center;
+        padding: 20px 24px; font-size: 22px; min-height: 64px; border-radius: 16px }
+    .k-fb-faces { gap: 16px }
+    .k-fb-face { width: 110px; height: 130px; border-radius: 20px }
+    .k-fb-face-emoji { font-size: 48px }
+    .k-fb-face-label { font-size: 16px }
+    .k-fb-question { font-size: 28px; margin-bottom: 32px }
+    .k-fb-comment textarea { font-size: 18px; padding: 16px 18px; min-height: 100px }
+    .k-fb-comment label { font-size: 18px }
+    .k-header { margin-bottom: 24px; }
+    .k-header-text h2 { font-size: 28px }
+    .k-header-text p { font-size: 18px }
+    .k-header-spacer { width: 80px }
+    .k-called-heading { font-size: 28px }
+    .k-called-proceed { font-size: 26px }
+    .k-called-counter { font-size: 44px; letter-spacing: 1px }
+    .k-back { min-width: 80px; height: 52px; font-size: 16px; border-radius: 14px }
+    .k-back svg { width: 20px; height: 20px }
+    .k-info-step h2 { font-size: 30px }
+    .k-info-step p { font-size: 18px; margin-bottom: 24px }
+    .k-info-field input,
+    .k-info-field select,
+    .k-info-field textarea { font-size: 20px; padding: 16px 18px; min-height: 56px; border-radius: 14px }
+    .k-info-field label { font-size: 18px }
+    .k-check h2 { font-size: 30px }
+    .k-check p { font-size: 18px }
+    .k-check input { font-size: 28px; padding: 18px 20px; min-height: 68px; border-radius: 16px }
+    .k-check-row { font-size: 18px; padding: 12px 0 }
+    .k-countdown-time { font-size: 44px }
+    .k-countdown-label { font-size: 16px }
+    .k-progress-wrap { padding: 18px 20px; border-radius: 16px }
+    .k-countdown-card { padding: 18px 20px; border-radius: 16px }
+    .k-feed-row { font-size: 16px; padding: 10px 14px }
+    .k-feed-num { font-size: 18px }
+    .k-secondary-link a { font-size: 18px; padding: 14px 28px; min-height: 52px }
+    .k-change-loc a { font-size: 18px; padding: 12px 24px; min-height: 52px }
+    .k-offline-bar { font-size: 14px; padding: 10px 16px }
+    .k-error-msg { font-size: 18px; padding: 16px 18px }
+    .k-loading { padding: 48px 16px }
+    .k-loading-text { font-size: 20px }
+    .k-spinner { width: 48px; height: 48px }
+    .k-counter-chip { font-size: 15px; padding: 6px 14px }
+    .k-serving-counters-label { font-size: 16px }
+}
+@media (max-width: 480px) {
+    .k-inner { padding: 20px 12px }
+    .k-title { font-size: 30px }
+    .k-subtitle { font-size: 18px; margin-bottom: 24px }
+    .k-logo { width: 80px; height: 80px }
+    .k-logo svg { width: 40px; height: 40px }
+    .k-main-btn { padding: 22px 16px; min-height: 80px; border-radius: 16px }
+    .k-main-btn-text { font-size: 22px }
+    .k-main-btn-sub { font-size: 16px }
+    .k-main-btn-icon { font-size: 36px; margin-bottom: 6px }
+    .k-result-ticket { font-size: 64px; letter-spacing: 2px }
+    .k-result-stats { gap: 20px; flex-direction: column }
+    .k-result-stat-val { font-size: 32px }
+    .k-fb-faces { gap: 10px; flex-wrap: wrap }
+    .k-fb-face { width: 90px; height: 110px; border-radius: 16px }
+    .k-fb-face-emoji { font-size: 40px }
+    .k-fb-face-label { font-size: 14px }
+    .k-fb-question { font-size: 24px; margin-bottom: 24px }
+    .k-back { min-width: 64px; height: 48px; font-size: 14px; min-width: auto; padding: 0 14px }
+    .k-header-text h2 { font-size: 24px }
+    .k-header-text p { font-size: 16px }
+    .k-header-spacer { width: 64px }
+    .k-called-heading { font-size: 24px }
+    .k-called-proceed { font-size: 22px }
+    .k-called-counter { font-size: 36px; letter-spacing: 1px }
+    .k-svc-card { padding: 20px 16px; border-radius: 16px }
+    .k-svc-name { font-size: 22px }
+    .k-svc-icon { font-size: 32px; margin-bottom: 8px }
+    .k-countdown-time { font-size: 36px }
+    .k-check input { font-size: 24px; padding: 14px 16px; letter-spacing: 2px }
+    .k-loc-card { padding: 22px 16px; border-radius: 16px }
+    .k-loc-card-name { font-size: 22px }
+    .k-loc-card-icon { font-size: 36px }
+    .k-btn { padding: 18px 20px; font-size: 20px; min-height: 56px }
+    .k-info-field input,
+    .k-info-field select,
+    .k-info-field textarea { font-size: 18px; padding: 14px 16px; min-height: 52px }
+}
+/* Extra-small phones (iPhone SE, Galaxy S series mini) */
+@media (max-width: 360px) {
+    .k-inner { padding: 16px 10px }
+    .k-title { font-size: 26px }
+    .k-subtitle { font-size: 16px; margin-bottom: 20px }
+    .k-logo { width: 68px; height: 68px }
+    .k-logo svg { width: 34px; height: 34px }
+    .k-main-btn { padding: 18px 14px; min-height: 72px; border-width: 2px }
+    .k-main-btn-text { font-size: 20px }
+    .k-main-btn-sub { font-size: 15px }
+    .k-main-btn-icon { font-size: 30px }
+    .k-svc-card { padding: 16px 14px; border-width: 2px }
+    .k-svc-name { font-size: 20px }
+    .k-svc-info { flex-direction: column; gap: 4px; font-size: 14px }
+    .k-result-ticket { font-size: 52px }
+    .k-header-text h2 { font-size: 22px }
+    .k-header-text p { font-size: 14px }
+    .k-back { height: 44px; padding: 0 12px; font-size: 13px }
+    .k-header-spacer { width: 44px }
+    .k-called-heading { font-size: 22px }
+    .k-called-proceed { font-size: 20px }
+    .k-called-counter { font-size: 30px; letter-spacing: 0 }
+    .k-btn { padding: 16px 16px; font-size: 18px; min-height: 52px }
+    .k-fb-question { font-size: 22px }
+    .k-fb-face { width: 80px; height: 100px; border-width: 3px }
+    .k-fb-face-emoji { font-size: 34px }
+}
+/* iPhone safe-area (notch / dynamic island / home indicator) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .k-wrap {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* ── Accessibility: Focus-visible styles ─────────────────────── */
+.k-main-btn:focus-visible,
+.k-svc-card:focus-visible,
+.k-back:focus-visible,
+.k-fb-face:focus-visible,
+.k-appt-btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 3px solid #00838f;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(0,131,143,.25);
+}
+
+{% endraw %}
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="k-wrap" id="k-wrap" data-theme="light" data-hospital="{{ hospital_name | e }}">
+	<div class="k-offline-bar" id="k-offline-bar" style="display:none" role="alert">&#9888; Connection lost &mdash; trying to reconnect...</div>
+	<div class="k-inner" id="kiosk-root" aria-live="polite">
+		<div class="k-loading"><div class="k-spinner" role="status" aria-label="Loading"></div><div class="k-loading-text">Loading...</div></div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+{% raw %}
+(function() {
+	var _hospitalName = $('#k-wrap').attr('data-hospital') || 'Queue Management';
+
+	// ── URL Parameters ──
+	function getUrlArg(key) {
+		var params = new URLSearchParams(window.location.search);
+		return params.get(key) || '';
+	}
+
+	var _kioskLocation = getUrlArg('location');
+	var _resetTimer = null;
+	var _locationFromUrl = !!_kioskLocation;
+	var _isProcessing = false;
+	var _multipleLocations = false;
+
+	// ── Ticket state persistence (survives page refresh) ──
+	var TICKET_STORAGE_KEY = 'qms_active_ticket';
+	var TICKET_STORAGE_KEY_FALLBACK = 'qms_active_ticket_fallback';
+	function saveTicketState(data) {
+		var serialized = '';
+		try { serialized = JSON.stringify(data); } catch(e) { return; }
+		try { sessionStorage.setItem(TICKET_STORAGE_KEY, serialized); } catch(e) {}
+		try { localStorage.setItem(TICKET_STORAGE_KEY_FALLBACK, serialized); } catch(e) {}
+	}
+	function loadTicketState() {
+		var raw = null;
+		try { raw = sessionStorage.getItem(TICKET_STORAGE_KEY); } catch(e) {}
+		if (!raw) {
+			try { raw = localStorage.getItem(TICKET_STORAGE_KEY_FALLBACK); } catch(e) {}
+		}
+		if (!raw) return null;
+		try { return JSON.parse(raw); } catch(e) { return null; }
+	}
+	function clearTicketState() {
+		try { sessionStorage.removeItem(TICKET_STORAGE_KEY); } catch(e) {}
+		try { localStorage.removeItem(TICKET_STORAGE_KEY_FALLBACK); } catch(e) {}
+	}
+
+	// SVG icons
+	var ICONS = {
+		hospital: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M9 17h1"/></svg>',
+		ticket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2z"/></svg>',
+		back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+		check: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+		print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+	};
+
+	var SVC_ICONS = {
+		'Laboratory': '&#129514;', 'Blood Test': '&#129656;', 'Urine Test': '&#129514;',
+		'Reception': '&#128203;', 'Insurance': '&#128179;', 'Pharmacy': '&#128138;',
+		'Radiology': '&#128248;', 'Consultation': '&#129658;',
+	};
+
+	// Status config: emoji, label, badge CSS class, row CSS class
+	var STATUS_CFG = {
+		'Waiting':   { icon: '\u23F3',           label: 'Waiting',      badge: 'fs-waiting', row: 'row-waiting' },
+		'Called':    { icon: '\uD83D\uDCE3',     label: 'Go Now!',      badge: 'fs-called',  row: 'row-active'  },
+		'Serving':   { icon: '\uD83D\uDC68\u200D\u2695\uFE0F', label: 'Being Served', badge: 'fs-serving', row: 'row-active'  },
+		'Completed': { icon: '\u2705',           label: 'Done',         badge: 'fs-done',    row: 'row-served'  },
+		'On Hold':   { icon: '\u23F8\uFE0F',     label: 'On Hold',      badge: 'fs-hold',    row: 'row-waiting' },
+		'No Show':   { icon: '\uD83D\uDEAB',     label: 'No Show',      badge: 'fs-noshow',  row: 'row-served'  },
+		'Cancelled': { icon: '\u274C',           label: 'Cancelled',    badge: 'fs-noshow',  row: 'row-served'  },
+	};
+
+	var _calledPopupTimer = null;
+
+	function esc(v) { return String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+	function dismissCalledPopup() {
+		if (_calledPopupTimer) {
+			clearTimeout(_calledPopupTimer);
+			_calledPopupTimer = null;
+		}
+		$('#k-called-popup').remove();
+	}
+
+	function announceTicketNumber(ticketNumber) {
+		try {
+			if ('speechSynthesis' in window) {
+				window.speechSynthesis.cancel();
+				var num = ticketNumber.replace(/[^0-9]/g, ' ').trim().split('').join(' ');
+				var text = 'Your ticket number is ' + num + '. Please have a seat and wait.';
+				var utter = new SpeechSynthesisUtterance(text);
+				utter.lang = 'en-US';
+				utter.rate = 0.75; utter.pitch = 1; utter.volume = 1;
+				window.speechSynthesis.speak(utter);
+			}
+		} catch(e) {}
+	}
+
+	function showAlert(msg, indicator) {
+		if (window.frappe && frappe.show_alert) {
+			frappe.show_alert({message: msg, indicator: indicator || 'blue'});
+		} else {
+			alert(msg);
+		}
+	}
+
+	function apiCall(method, args, usePost) {
+		if (usePost) {
+			// POST with CSRF token for write operations
+			var csrfToken = (window.frappe && frappe.csrf_token) || $('meta[name="csrf-token"]').attr('content') || $('[name="csrf_token"]').attr('content') || '';
+			return $.ajax({
+				url: '/api/method/' + method,
+				type: 'POST',
+				data: JSON.stringify(args || {}),
+				contentType: 'application/json',
+				headers: {'X-Frappe-CSRF-Token': csrfToken},
+			}).then(function(r) { return r.message; });
+		}
+		// GET for read-only calls — no CSRF needed for guest
+		return $.ajax({
+			url: '/api/method/' + method,
+			type: 'GET',
+			data: args || {},
+		}).then(function(r) { return r.message; });
+	}
+
+	function normalizeFieldKey(value) {
+		return String(value || '')
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '_')
+			.replace(/^_+|_+$/g, '');
+	}
+
+	function inferBuiltinField(field) {
+		var key = normalizeFieldKey(field.field_name || field.field_label);
+		var type = String(field.field_type || '').toLowerCase();
+		if (type === 'email' || key.indexOf('email') !== -1) return 'email';
+		if (type === 'phone' || /(phone|mobile|contact|telephone)/.test(key)) return 'phone';
+		if (/(^name$|full_name|patient_name)/.test(key)) return 'name';
+		return '';
+	}
+
+	function renderPatientField(field, builtinKind) {
+		var label = esc(field.field_label || 'Field');
+		var key = normalizeFieldKey(field.field_name || field.field_label);
+		var required = !!field.is_required;
+		var requiredMark = required ? ' <span style="color:#c62828">*</span>' : '';
+		var attrs = builtinKind
+			? ' data-builtin="' + builtinKind + '"'
+			: ' data-field-name="' + esc(key) + '"';
+		attrs += required ? ' data-required="1"' : '';
+		var html = '<div class="k-info-field"><label>' + label + requiredMark + '</label>';
+		if ((field.field_type || 'Text') === 'Textarea') {
+			html += '<textarea class="k-dynamic-field"' + attrs + ' placeholder="Enter ' + label + '"></textarea>';
+		} else if (field.field_type === 'Select') {
+			html += '<select class="k-dynamic-field"' + attrs + '>';
+			html += '<option value="">Select ' + label + '</option>';
+			String(field.options || '').split(/\n+/).forEach(function(option) {
+				option = option.trim();
+				if (!option) return;
+				html += '<option value="' + esc(option) + '">' + esc(option) + '</option>';
+			});
+			html += '</select>';
+		} else {
+			var inputType = 'text';
+			if (field.field_type === 'Date') inputType = 'date';
+			else if (field.field_type === 'Number') inputType = 'number';
+			else if (field.field_type === 'Email') inputType = 'email';
+			else if (field.field_type === 'Phone') inputType = 'tel';
+			html += '<input class="k-dynamic-field" type="' + inputType + '"' + attrs + ' placeholder="Enter ' + label + '">';
+		}
+		html += '</div>';
+		return html;
+	}
+
+	function renderPatientFields(form) {
+		var fields = (form && form.fields) || [];
+		var html = '';
+		var seenBuiltins = { name: false, phone: false, email: false };
+		fields.forEach(function(field) {
+			var builtinKind = inferBuiltinField(field);
+			if (builtinKind) seenBuiltins[builtinKind] = true;
+			html += renderPatientField(field, builtinKind);
+		});
+		if (!fields.length) {
+			html += renderPatientField({ field_label: 'Full Name', field_name: 'patient_name', field_type: 'Text' }, 'name');
+			html += renderPatientField({ field_label: 'Phone Number', field_name: 'patient_phone', field_type: 'Phone' }, 'phone');
+			html += renderPatientField({ field_label: 'Email', field_name: 'patient_email', field_type: 'Email' }, 'email');
+			return html;
+		}
+		if (!seenBuiltins.name) html += renderPatientField({ field_label: 'Full Name', field_name: 'patient_name', field_type: 'Text' }, 'name');
+		if (!seenBuiltins.phone) html += renderPatientField({ field_label: 'Phone Number', field_name: 'patient_phone', field_type: 'Phone' }, 'phone');
+		if (!seenBuiltins.email) html += renderPatientField({ field_label: 'Email', field_name: 'patient_email', field_type: 'Email' }, 'email');
+		return html;
+	}
+
+	function collectPatientFormValues() {
+		var patientName = '';
+		var patientPhone = '';
+		var patientEmail = '';
+		var patientFormData = {};
+		var hasError = false;
+		$('#kiosk-root').find('.k-dynamic-field').each(function() {
+			var $field = $(this);
+			var value = String($field.val() || '').trim();
+			var isRequired = $field.attr('data-required') === '1';
+			var label = $field.closest('.k-info-field').find('label').text().replace('*', '').trim();
+			if (isRequired && !value && !hasError) {
+				hasError = true;
+				showAlert(label + ' is required', 'orange');
+				$field.focus();
+				return false;
+			}
+			var builtinKind = $field.attr('data-builtin');
+			if (builtinKind === 'name') patientName = value;
+			else if (builtinKind === 'phone') patientPhone = value;
+			else if (builtinKind === 'email') patientEmail = value;
+			else if (value) patientFormData[$field.attr('data-field-name')] = value;
+		});
+		if (hasError) return null;
+		return {
+			patientName: patientName,
+			patientPhone: patientPhone,
+			patientEmail: patientEmail,
+			patientFormData: Object.keys(patientFormData).length ? JSON.stringify(patientFormData) : '',
+		};
+	}
+
+	// ── LOCATION PICKER ──
+	function showLocationPicker() {
+		clearAutoReset();
+		_isProcessing = false;
+		apiCall('queue_management.qms_kiosk_api.get_locations').then(function(locs) {
+			_multipleLocations = locs.length > 1;
+			if (locs.length === 1) {
+				_kioskLocation = locs[0].name;
+				showWelcome();
+				return;
+			}
+			var h = '<div style="text-align:center">';
+			h += '<div class="k-logo">' + ICONS.hospital + '</div>';
+			h += '<h2 class="k-title">' + esc(_hospitalName) + '</h2>';
+			h += '<p class="k-subtitle">Select your location</p>';
+			h += '<div class="k-loc-grid">';
+			locs.forEach(function(l) {
+				h += '<div class="k-loc-card" data-loc="' + esc(l.name) + '">';
+				h += '<div class="k-loc-card-name">' + esc(l.location_name) + '</div>';
+				h += '<div class="k-loc-card-type">' + esc(l.location_type || '') + '</div>';
+				h += '</div>';
+			});
+			if (!locs.length) {
+				h += '<div class="k-no-services">No locations available</div>';
+			}
+			h += '</div></div>';
+			$('#kiosk-root').html(h);
+			$('#kiosk-root').find('.k-loc-card').on('click', function() {
+				_kioskLocation = $(this).attr('data-loc');
+				showWelcome();
+			});
+		});
+	}
+
+	// ── WELCOME SCREEN ──
+	function showWelcome() {
+		clearAutoReset();
+		clearPoll();
+		clearTicketState();
+		_isProcessing = false;
+		apiCall('queue_management.qms_kiosk_api.get_kiosk_info', {location: _kioskLocation}).then(function(info) {
+			var loc = info.location;
+			var h = '<div class="k-welcome">';
+			h += '<div class="k-logo">' + ICONS.hospital + '</div>';
+			h += '<h1 class="k-title">' + esc(loc.location_name) + '</h1>';
+			h += '<p class="k-subtitle">' + esc(loc.location_type || 'Welcome') + '</p>';
+			h += '<div class="k-main-actions">';
+			h += '<div class="k-main-btn primary" id="k-take-ticket">';
+			h += '<span class="k-main-btn-text">' + __("Get Your Number") + '</span>';
+			h += '<span class="k-main-btn-sub">' + __("Tap here to join the queue") + '</span>';
+			h += '</div>';
+			h += '</div>';
+			if (!_locationFromUrl && _multipleLocations) {
+				h += '<div class="k-change-loc">';
+				h += '<a href="#" id="k-change-loc">' + ICONS.back + ' Change Location</a>';
+				h += '</div>';
+			}
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			$('#k-take-ticket').on('click', function() { showServices(); });
+			if (!_locationFromUrl && _multipleLocations) {
+				$('#k-change-loc').on('click', function(e) { e.preventDefault(); _kioskLocation = ''; showLocationPicker(); });
+			}
+		});
+	}
+
+	// ── SERVICE SELECTION ──
+	function showServices() {
+		_isProcessing = false;
+		apiCall('queue_management.qms_kiosk_api.get_services', {location: _kioskLocation}).then(function(services) {
+			var h = '<div class="k-header">';
+			h += '<div class="k-back" id="k-back-welcome">' + ICONS.back + ' ' + __("Back") + '</div>';
+			h += '<div class="k-header-text"><h2>' + __("Select Your Service") + '</h2><p>' + __("Tap the service you need") + '</p></div>';
+			h += '<div class="k-header-spacer"></div>';
+			h += '</div>';
+			h += '<div class="k-services">';
+			if (!services.length) {
+				h += '<div class="k-no-services">' + __("No services available at this time") + '</div>';
+			}
+			services.forEach(function(s) {
+				var icon = SVC_ICONS[s.service_name] || '&#127915;';
+				var color = s.color || '#1976D2';
+				h += '<div class="k-svc-card" tabindex="0" role="button" aria-label="' + esc(s.service_name) + '" data-svc="' + esc(s.name) + '">';
+				h += '<div class="k-svc-accent" style="background:' + color + '"></div>';
+				h += '<div class="k-svc-icon">' + icon + '</div>';
+				h += '<div class="k-svc-name">' + esc(s.service_name) + '</div>';
+				h += '<div class="k-svc-info">';
+				h += '<div class="k-svc-info-item"><span class="num">' + s.waiting_count + '</span> ' + __("waiting") + '</div>';
+				var waitDisplay = s.avg_wait_mins ? ('~' + s.avg_wait_mins + ' ' + __("min")) : (s.estimated_wait ? '~' + s.estimated_wait + ' ' + __("min") : '--');
+				h += '<div class="k-svc-info-item"><span class="num">' + waitDisplay + '</span> ' + __("avg wait") + '</div>';
+				h += '</div>';
+				h += '</div>';
+			});
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			$('#k-back-welcome').on('click', function() { showWelcome(); });
+			$('#kiosk-root').find('.k-svc-card').on('click keydown', function(e) {
+				if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+				if (e.type === 'keydown') e.preventDefault();
+				if (_isProcessing) return;
+				_isProcessing = true;
+				$(this).addClass('loading');
+				showPatientInfo($(this).attr('data-svc'));
+			});
+		});
+	}
+
+	// ── OPTIONAL PATIENT INFO ──
+	function showPatientInfo(service) {
+		_isProcessing = false;
+		$('#kiosk-root').html('<div class="k-loading"><div class="k-spinner"></div><div class="k-loading-text">Loading form...</div></div>');
+		apiCall('queue_management.qms_kiosk_api.get_patient_form', {location: _kioskLocation, service: service}).then(function(form) {
+			var h = '<div class="k-header">';
+			h += '<div class="k-back" id="k-back-services">' + ICONS.back + ' Back</div>';
+			h += '<div class="k-header-text"><h2>' + esc((form && form.form_name) || 'Your Details') + '</h2><p>Optional — you can skip this step</p></div>';
+			h += '<div class="k-header-spacer"></div>';
+			h += '</div>';
+			h += '<div class="k-info-step">';
+			h += '<div class="k-info-fields">' + renderPatientFields(form) + '</div>';
+			h += '<div class="k-info-btns">';
+			h += '<button class="k-btn k-btn-ghost" id="k-skip-info">' + __("Skip") + '</button>';
+			h += '<button class="k-btn k-btn-primary" id="k-submit-info">' + __("Get My Ticket") + '</button>';
+			h += '</div>';
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			$('#k-back-services').on('click', function() { showServices(); });
+			$('#k-skip-info').on('click', function() {
+				if (_isProcessing) return;
+				_isProcessing = true;
+				issueTicket(service, '', '', '', '');
+			});
+			$('#k-submit-info').on('click', function() {
+				if (_isProcessing) return;
+				var formValues = collectPatientFormValues();
+				if (!formValues) return;
+				_isProcessing = true;
+				issueTicket(
+					service,
+					formValues.patientName,
+					formValues.patientPhone,
+					formValues.patientEmail,
+					formValues.patientFormData
+				);
+			});
+		}).catch(function() {
+			showServices();
+		});
+	}
+
+	// ── ISSUE TICKET ──
+	function issueTicket(service, patientName, patientPhone, patientEmail, patientFormData) {
+		$('#kiosk-root').html('<div class="k-loading"><div class="k-spinner"></div><div class="k-loading-text">' + __("Getting your ticket...") + '</div></div>');
+		var args = {service: service, location: _kioskLocation};
+		if (patientName) args.patient_name = patientName;
+		if (patientPhone) args.patient_phone = patientPhone;
+		if (patientEmail) args.patient_email = patientEmail;
+		if (patientFormData) args.patient_form_data = patientFormData;
+		apiCall('queue_management.qms_kiosk_api.submit_ticket', args, true).then(function(r) {
+			_isProcessing = false;
+			showResult(r);
+		}).catch(function(e) {
+			_isProcessing = false;
+			showAlert(e.message || 'Error issuing ticket', 'red');
+			showServices();
+		});
+	}
+
+	// ── TICKET RESULT (live-updating) ──
+	var _pollTimer = null;
+	var _realtimeBound = false;
+	var _realtimeRetryTimer = null;
+	var _evtDebounce = null;
+	var _activeResumeHandler = null;
+	function clearPoll() {
+		if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
+		if (_evtDebounce) { clearTimeout(_evtDebounce); _evtDebounce = null; }
+		if (_realtimeRetryTimer) { clearTimeout(_realtimeRetryTimer); _realtimeRetryTimer = null; }
+		if (_activeResumeHandler) {
+			window.removeEventListener('focus', _activeResumeHandler);
+			window.removeEventListener('pageshow', _activeResumeHandler);
+			document.removeEventListener('visibilitychange', _activeResumeHandler);
+			_activeResumeHandler = null;
+		}
+		if (_realtimeBound && window.frappe && frappe.realtime) {
+			frappe.realtime.off('qms_ticket_called_website', _onCalledEvent);
+			frappe.realtime.off('qms_ticket_completed_website', _onQmsEvent);
+			frappe.realtime.off('qms_ticket_cancelled_website', _onQmsEvent);
+			frappe.realtime.off('qms_ticket_no_show_website', _onNoShowEvent);
+			frappe.realtime.off('qms_new_ticket_website', _onQmsEvent);
+			frappe.realtime.off('qms_ticket_held_website', _onHeldEvent);
+			frappe.realtime.off('qms_ticket_requeued_website', _onQmsEvent);
+			frappe.realtime.off('qms_ticket_transferred_website', _onTransferEvent);
+			frappe.realtime.off('qms_ticket_serving_website', _onQmsEvent);
+			_realtimeBound = false;
+		}
+	}
+	function _onQmsEvent() {} // placeholder, replaced per ticket
+	var _onCalledEvent = function() {}; // placeholder, replaced per ticket
+	var _onNoShowEvent = function() {}; // placeholder, replaced per ticket
+	var _onTransferEvent = function() {}; // placeholder, replaced per ticket
+	var _onHeldEvent = function() {}; // placeholder, replaced per ticket
+
+	function bindTicketRealtime() {
+		if (_realtimeBound || !(window.frappe && frappe.realtime)) return;
+		if (!frappe.realtime.socket && typeof frappe.realtime.init === 'function' && window.socketio_port) {
+			frappe.realtime.init(window.socketio_port, true);
+		}
+		if (!frappe.realtime.socket) {
+			if (!_realtimeRetryTimer) {
+				_realtimeRetryTimer = setTimeout(function() {
+					_realtimeRetryTimer = null;
+					bindTicketRealtime();
+				}, 250);
+			}
+			return;
+		}
+		if (_realtimeRetryTimer) { clearTimeout(_realtimeRetryTimer); _realtimeRetryTimer = null; }
+		frappe.realtime.connect();
+		frappe.realtime.on('qms_ticket_called_website', _onCalledEvent);
+		frappe.realtime.on('qms_ticket_completed_website', _onQmsEvent);
+		frappe.realtime.on('qms_ticket_cancelled_website', _onQmsEvent);
+		frappe.realtime.on('qms_ticket_no_show_website', _onNoShowEvent);
+		frappe.realtime.on('qms_new_ticket_website', _onQmsEvent);
+		frappe.realtime.on('qms_ticket_held_website', _onHeldEvent);
+		frappe.realtime.on('qms_ticket_requeued_website', _onQmsEvent);
+		frappe.realtime.on('qms_ticket_transferred_website', _onTransferEvent);
+		frappe.realtime.on('qms_ticket_serving_website', _onQmsEvent);
+		_realtimeBound = true;
+	}
+
+	function showResult(r) {
+		clearAutoReset();
+		clearPoll();
+		var _isRestoredState = !!r.restored;
+		var ticketId = r.ticket;
+		var ticketNum = r.ticket_number;
+		var serviceName = r.service;
+		var _serviceId = r.service_id || '';
+		var _counterName = r.counter_name || '';
+		var _counterNumber = r.counter_number || '';
+
+		// Persist ticket so the page survives a browser refresh
+		saveTicketState({
+			ticket: ticketId, ticket_number: ticketNum, service: serviceName,
+			service_id: _serviceId, location: _kioskLocation,
+			queue_position: r.queue_position, estimated_wait: r.estimated_wait,
+			serving_counters: r.serving_counters || [], status: r.status || 'Waiting',
+			counter_name: _counterName, counter_number: _counterNumber,
+			called_time: r.called_time || null
+		});
+		var _servingCounters = r.serving_counters || [];
+		var _lastStatus = r.status || 'Waiting';
+		var _refreshing = false;
+		// On restore: use saved countdown remaining instead of resetting to full estimated wait
+		var _fullWaitSecs = (r.estimated_wait || 0) * 60;
+		var _countdownSecs = (r.restored && r.countdown_remaining != null && r.countdown_remaining >= 0)
+			? Math.min(r.countdown_remaining, _fullWaitSecs)
+			: _fullWaitSecs;
+		var _lastServerWait = (r.estimated_wait || 0);
+		var _countdownTimer = null;
+		var _lastCalledTime = r.called_time || null;
+
+		function persistCurrentState(extra) {
+			saveTicketState({
+				ticket: ticketId,
+				ticket_number: ticketNum,
+				service: serviceName,
+				service_id: _serviceId,
+				location: _kioskLocation,
+				queue_position: extra && extra.queue_position,
+				estimated_wait: extra && extra.estimated_wait,
+				serving_counters: _servingCounters || [],
+				status: (extra && extra.status) || _lastStatus,
+				counter_name: _counterName,
+				counter_number: _counterNumber,
+				called_time: _lastCalledTime,
+				countdown_remaining: _countdownSecs,
+			});
+		}
+
+		function eventMatchesLocation(data) {
+			if (!_kioskLocation || !data) return true;
+			// Always accept events about this specific ticket (e.g. cross-location transfers)
+			if (data.ticket === ticketId || data.ticket_number === ticketNum) return true;
+			var eventLocation = data.location || data.to_location || data.from_location || '';
+			return !eventLocation || eventLocation === _kioskLocation;
+		}
+
+		function refreshStatus() {
+			if (_refreshing) return;
+			_refreshing = true;
+			apiCall('queue_management.qms_kiosk_api.check_ticket_status', {ticket: ticketId}).then(function(s) {
+				_refreshing = false;
+				var previousCalledTime = _lastCalledTime;
+
+				// Keep local state in sync after transfers
+				if (s.serving_counters) _servingCounters = s.serving_counters;
+				if (s.location) _kioskLocation = s.location;
+				if (s.service_id) _serviceId = s.service_id;
+				if (s.service) serviceName = s.service;
+				if (s.counter_name !== undefined) _counterName = s.counter_name || '';
+				if (s.counter_number !== undefined) _counterNumber = s.counter_number || '';
+
+				if (s.status === 'Waiting') {
+					var newWait = (s.estimated_wait || 0);
+					var newPos = s.queue_position || 1;
+					if (newWait !== _lastServerWait) {
+						_countdownSecs = newWait * 60;
+						_lastServerWait = newWait;
+					}
+					var posEl = $('#k-live-pos');
+					if (posEl.length) {
+						posEl.text('#' + newPos);
+						// Update serving-counters display in case they changed
+						var scList = $('#kiosk-root .k-waiting-counters');
+						if (scList.length && _servingCounters.length) {
+							var chips = '<span class="k-waiting-counters-label">\uD83C\uDFE5 Serving at</span>';
+							_servingCounters.forEach(function(c) {
+								chips += '<span class="k-counter-chip">' + esc(c.counter_name || ('Counter ' + c.counter_number)) + '</span>';
+							});
+							scList.html(chips);
+						}
+					} else {
+						renderWaiting(newPos, newWait);
+					}
+					persistCurrentState({status: s.status, queue_position: newPos, estimated_wait: newWait});
+				} else if (s.status === 'Called' || s.status === 'Serving') {
+					if (_lastStatus === 'Waiting') {
+						renderCalled(s.counter_name, s.counter_number);
+						showCalledPopup(s.counter_name, s.counter_number);
+					} else if (s.called_time && previousCalledTime && s.called_time !== previousCalledTime) {
+						showRecallNotice(s.counter_name, s.counter_number);
+					}
+					persistCurrentState({status: s.status, queue_position: s.queue_position || 0, estimated_wait: (s.estimated_wait != null ? s.estimated_wait : 0)});
+				} else if (s.status === 'On Hold') {
+					if (_lastStatus !== 'On Hold') {
+						renderOnHold();
+					}
+					persistCurrentState({status: s.status, queue_position: 0, estimated_wait: 0});
+				} else if (s.status === 'Completed') {
+					renderCompleted();
+					persistCurrentState({status: s.status, queue_position: 0, estimated_wait: 0});
+				} else if (s.status === 'Cancelled') {
+					clearPoll();
+					if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+					dismissCalledPopup();
+					clearTicketState();
+					showWelcome();
+					return;
+				}
+				_lastCalledTime = s.called_time || _lastCalledTime;
+				_lastStatus = s.status;
+			}).catch(function() { _refreshing = false; });
+		}
+
+		function fmtCountdown(secs) {
+			if (secs <= 0) return __('Any moment now!');
+			var m = Math.floor(secs / 60);
+			var s = secs % 60;
+			return m + ':' + (s < 10 ? '0' : '') + s;
+		}
+
+		function speakEnglish(text, rate) {
+			try {
+				if ('speechSynthesis' in window) {
+					window.speechSynthesis.cancel();
+					var utter = new SpeechSynthesisUtterance(text);
+					utter.lang = 'en-US';
+					utter.rate = rate || 0.8;
+					utter.volume = 1;
+					window.speechSynthesis.speak(utter);
+				}
+			} catch(e) {}
+		}
+
+		function showRecallNotice(counterName, counterNumber) {
+			if (document.getElementById('k-recall-notice')) return;
+			var cDisplay = counterName || ('Counter ' + (counterNumber || ''));
+			var overlay = document.createElement('div');
+			overlay.id = 'k-recall-notice';
+			overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,15,28,0.72);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;';
+			overlay.innerHTML = '<div style="background:#fff3e0;border:3px solid #ef6c00;border-radius:20px;padding:32px;max-width:540px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.24)">' +
+				'<div style="font-size:48px;margin-bottom:16px">&#128227;</div>' +
+				'<div style="font-size:28px;font-weight:800;color:#e65100;margin-bottom:12px">' + __('You Have Been Recalled') + '</div>' +
+				'<div style="font-size:18px;line-height:1.55;color:#5d4037;margin-bottom:24px">Ticket <strong>' + esc(ticketNum) + '</strong> is being called again. Please proceed to <strong>' + esc(cDisplay) + '</strong> now.</div>' +
+				'<button id="k-recall-ok" class="k-btn k-btn-primary" style="margin:0 auto">OK</button>' +
+				'</div>';
+			document.body.appendChild(overlay);
+			$('#k-recall-ok').on('click', function() {
+				$('#k-recall-notice').remove();
+				renderCalled(counterName, counterNumber);
+				refreshStatus();
+				refreshQueueList();
+			});
+			speakEnglish('Your ticket is being recalled. Please proceed to ' + cDisplay + '.', 0.78);
+		}
+
+		function showCalledPopup(counterName, counterNumber) {
+			dismissCalledPopup();
+			var cDisplay = counterName || ('Counter ' + (counterNumber || ''));
+			var overlay = document.createElement('div');
+			overlay.id = 'k-called-popup';
+			overlay.style.cssText = 'position:fixed;inset:0;background:rgba(8,15,28,0.72);display:flex;align-items:center;justify-content:center;z-index:10001;padding:24px;';
+			overlay.innerHTML = '<div style="background:linear-gradient(135deg,#e3f2fd,#f8fbff);border:3px solid #1565C0;border-radius:22px;padding:30px;max-width:540px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.24)">' +
+				'<div style="font-size:52px;margin-bottom:14px">&#128266;</div>' +
+				'<div style="font-size:30px;font-weight:900;color:#1565C0;margin-bottom:10px">' + __('You Have Been Called') + '</div>' +
+				'<div style="font-size:48px;font-weight:900;color:#004d40;letter-spacing:1px;margin-bottom:10px">' + esc(ticketNum) + '</div>' +
+				'<div style="font-size:22px;line-height:1.5;color:#37474f">Please proceed to <strong>' + esc(cDisplay) + '</strong></div>' +
+				'</div>';
+			document.body.appendChild(overlay);
+			_calledPopupTimer = setTimeout(dismissCalledPopup, 5000);
+			overlay.addEventListener('click', dismissCalledPopup);
+		}
+
+		function startCountdown() {
+			if (_countdownTimer) clearInterval(_countdownTimer);
+			_countdownTimer = setInterval(function() {
+				if (_countdownSecs > 0) _countdownSecs--;
+				var el = $('#k-countdown-val');
+				if (el.length) {
+					el.text(fmtCountdown(_countdownSecs));
+					if (_countdownSecs <= 120) el.addClass('k-pulse');
+					else el.removeClass('k-pulse');
+				}
+			}, 1000);
+		}
+
+		var _skipCountdownReset = false; // set true on restore to avoid resetting countdown
+		function renderWaiting(pos, estWait) {
+			var ahead = Math.max(0, (pos || 1) - 1);
+			var aheadWord = ahead === 0 ? "You're next!" : (ahead === 1 ? '1 person ahead' : ahead + ' people ahead');
+			if (_skipCountdownReset) {
+				_skipCountdownReset = false; // only skip once (the initial render after restore)
+			} else {
+				_countdownSecs = (estWait || 0) * 60;
+			}
+
+			var h = '<div class="k-waiting-compact">';
+
+			// Top row: ticket + service
+			h += '<div class="k-waiting-header">';
+			h += '<div class="k-waiting-label">Your Number</div>';
+			h += '<div class="k-waiting-ticket">' + esc(ticketNum) + '</div>';
+			h += '<div class="k-waiting-service">' + esc(serviceName) + '</div>';
+			h += '</div>';
+
+			// Counters row
+			if (_servingCounters.length) {
+				h += '<div class="k-waiting-counters">';
+				h += '<span class="k-waiting-counters-label">\uD83C\uDFE5 Serving at</span>';
+				_servingCounters.forEach(function(c) {
+					h += '<span class="k-counter-chip">' + esc(c.counter_name || ('Counter ' + c.counter_number)) + '</span>';
+				});
+				h += '</div>';
+			}
+
+			// Info strip: estimated wait + position
+			h += '<div class="k-waiting-info-strip">';
+			h += '<div class="k-info-cell">';
+			h += '<div class="k-info-val" id="k-countdown-val">' + fmtCountdown(_countdownSecs) + '</div>';
+			h += '<div class="k-info-label">\u23F1\uFE0F Est. Wait</div>';
+			h += '</div>';
+			h += '<div class="k-info-divider"></div>';
+			h += '<div class="k-info-cell">';
+			h += '<div class="k-info-val" id="k-live-pos">#' + (pos || 1) + '</div>';
+			h += '<div class="k-info-label">\uD83D\uDC65 <span id="k-ahead-count">' + ahead + '</span> ' + (ahead === 1 ? 'person' : 'people') + ' ahead</div>';
+			h += '</div>';
+			h += '</div>';
+
+			// Live feed (compact)
+			h += '<div class="k-feed-title">\uD83D\uDCCB Live Queue</div>';
+			h += '<div class="k-feed" id="k-queue-feed"><div style="text-align:center;padding:12px;color:#6b7280">Loading...</div></div>';
+
+			// Leave button
+			h += '<div class="k-waiting-actions">';
+			h += '<button class="k-btn k-btn-ghost" id="k-leave-waitlist" style="color:#c62828;border-color:#ef9a9a">\u274C Leave Waitlist</button>';
+			h += '</div>';
+
+			h += '</div>';
+
+			$('#kiosk-root').html(h);
+			$('#k-leave-waitlist').on('click', function() {
+				if (_isProcessing) return;
+				_isProcessing = true;
+				clearPoll();
+				if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+				apiCall('queue_management.qms_kiosk_api.leave_waitlist', {ticket: ticketId}, true).then(function() {
+					_isProcessing = false;
+					showAlert('Your ticket has been cancelled.', 'green');
+					showWelcome();
+				}).catch(function(e) {
+					_isProcessing = false;
+					showAlert(e.message || 'Could not cancel ticket', 'red');
+				});
+			});
+			refreshQueueList();
+			startCountdown();
+		}
+
+		function renderCalled(counterName, counterNumber) {
+			dismissCalledPopup();
+			if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+			var cDisplay = counterName || ('Counter ' + (counterNumber || ''));
+			var h = '<div class="k-result" style="animation: k-pop .5s ease">';
+			h += '<div class="k-result-check" style="background:linear-gradient(135deg,#1565C0,#0D47A1);box-shadow:0 8px 32px rgba(21,101,192,.45)">';
+			h += '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+			h += '</div>';
+			h += '<div class="k-result-label k-called-heading">You Have Been Called!</div>';
+			h += '<div class="k-result-ticket">' + esc(ticketNum) + '</div>';
+			h += '<div class="k-called-proceed">Please proceed to</div>';
+			h += '<div class="k-called-counter">' + esc(cDisplay) + '</div>';
+			h += '<div class="k-result-msg" style="background:#e3f2fd;border-color:#90caf9;color:#0d47a1">';
+			h += 'Please go to <strong>' + esc(cDisplay) + '</strong> now.';
+			h += '</div>';
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			// No auto-reset — customer keeps this view on their phone
+			// No auto-reset — customer keeps this view on their phone
+			// Voice announcement
+			var num = ticketNum.replace(/[^0-9]/g, ' ').trim().split('').join(' ');
+			speakEnglish('Ticket ' + num + '. Please proceed to ' + cDisplay + '.', 0.75);
+		}
+
+		function renderCompleted() {
+			clearPoll();
+			if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+			var h = '<div class="k-result">';
+			h += '<div class="k-result-check">' + ICONS.check + '</div>';
+			h += '<div class="k-result-label">Service Complete</div>';
+			h += '<div class="k-result-ticket">' + esc(ticketNum) + '</div>';
+			h += '<div class="k-result-msg">Thank you! Your service has been completed.</div>';
+			h += '<div class="k-result-actions">';
+			h += '<button class="k-btn k-btn-primary" id="k-open-feedback">Leave Feedback</button>';
+			h += '<button class="k-btn k-btn-ghost" id="k-complete-home">Back to Home</button>';
+			h += '</div>';
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			$('#k-open-feedback').on('click', function() { showFeedback(ticketId); });
+			$('#k-complete-home').on('click', function() { showWelcome(); });
+		}
+
+		function renderOnHold() {
+			if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+			var h = '<div class="k-result" style="animation: k-pop .5s ease">';
+			h += '<div class="k-result-check" style="background:linear-gradient(135deg,#e65100,#fb8c00);box-shadow:0 8px 32px rgba(230,81,0,.35)">';
+			h += '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+			h += '</div>';
+			h += '<div class="k-result-label" style="color:#e65100">Your Ticket Is On Hold</div>';
+			h += '<div class="k-result-ticket">' + esc(ticketNum) + '</div>';
+			h += '<div class="k-result-msg" style="background:#fff3e0;border-color:#ffcc80;color:#e65100">';
+			h += 'Your ticket has been placed on hold. Please remain nearby &mdash; you will be called again shortly.';
+			h += '</div>';
+			h += '</div>';
+			$('#kiosk-root').html(h);
+			speakEnglish('Your ticket ' + ticketNum.replace(/[^0-9]/g, ' ').trim().split('').join(' ') + ' has been placed on hold. Please wait nearby.', 0.8);
+		}
+
+		_activeResumeHandler = function() {
+			if (document.visibilityState && document.visibilityState !== 'visible') return;
+			refreshStatus();
+			refreshQueueList();
+		};
+		window.addEventListener('focus', _activeResumeHandler);
+		window.addEventListener('pageshow', _activeResumeHandler);
+		document.addEventListener('visibilitychange', _activeResumeHandler);
+
+		function refreshQueueList() {
+			if (!_serviceId) return;
+			apiCall('queue_management.qms_kiosk_api.get_queue_list', {
+				service: _serviceId, location: _kioskLocation
+			}).then(function(tickets) {
+				var feed = $('#k-queue-feed');
+				if (!feed.length) return;
+				if (!tickets || !tickets.length) {
+					feed.html('<div style="text-align:center;padding:20px;color:#6b7280">Queue is empty</div>');
+					return;
+				}
+
+				// Categorize
+				var served = 0;
+				var myIndex = -1;
+				tickets.forEach(function(t, i) {
+					if (t.status === 'Completed' || t.status === 'Cancelled') served++;
+					if (t.ticket_number === ticketNum) myIndex = i;
+				});
+
+				// Update ahead count
+				var aheadLabelEl = $('#k-ahead-count').closest('.k-info-label');
+				if (aheadLabelEl.length && myIndex >= 0) {
+					var aheadOfMe = 0;
+					tickets.forEach(function(t, i) {
+						if (i < myIndex && t.status === 'Waiting') aheadOfMe++;
+					});
+					var word = aheadOfMe === 1 ? 'person' : 'people';
+					aheadLabelEl.html('\uD83D\uDC65 <span id="k-ahead-count">' + aheadOfMe + '</span> ' + word + ' ahead');
+				}
+
+				// Build feed — show last 2 served, then all active/waiting
+				var rows = '';
+				var activeTickets = tickets.filter(function(t) { return t.status !== 'Completed' && t.status !== 'Cancelled'; });
+				var waitNum = 0;
+				activeTickets.forEach(function(t) {
+					var cfg = STATUS_CFG[t.status] || STATUS_CFG['Waiting'];
+					var isYou = t.ticket_number === ticketNum;
+					var rowClass = isYou ? 'row-you' : cfg.row;
+					var posLabel;
+					if (t.status === 'Called' || t.status === 'Serving') {
+						posLabel = cfg.icon;
+					} else {
+						waitNum++;
+						posLabel = '#' + waitNum;
+					}
+					rows += '<div class="k-feed-row ' + rowClass + '">';
+					rows += '<div class="k-feed-pos">' + posLabel + '</div>';
+					rows += '<div class="k-feed-mid"><span class="k-feed-num">' + esc(t.ticket_number) + '</span>';
+					if (isYou) rows += '<span class="k-feed-you-tag">\u261D\uFE0F YOU</span>';
+					rows += '</div>';
+					rows += '<span class="k-feed-status ' + cfg.badge + '">' + cfg.icon + ' ' + cfg.label + '</span>';
+					rows += '</div>';
+				});
+				feed.html(rows);
+				// Scroll to user's row only on first load (don't fight manual scrolling)
+				if (!feed.data('scrolled')) {
+					var youRow = feed.find('.row-you');
+					if (youRow.length) {
+						var scrollPos = youRow[0].offsetTop - feed[0].offsetTop - 80;
+						feed.animate({scrollTop: Math.max(0, scrollPos)}, 300);
+						feed.data('scrolled', true);
+					}
+				}
+			}).catch(function() {});
+		}
+
+		// Initial render should respect the real current status, especially after a refresh restore.
+		if (_lastStatus === 'Called' || _lastStatus === 'Serving') {
+			renderCalled(_counterName, _counterNumber);
+		} else if (_lastStatus === 'Completed') {
+			renderCompleted();
+		} else if (_lastStatus === 'On Hold') {
+			renderOnHold();
+		} else {
+			if (_isRestoredState) _skipCountdownReset = true;
+			renderWaiting(r.queue_position, r.estimated_wait);
+		}
+		if (!_isRestoredState && _lastStatus === 'Waiting') announceTicketNumber(ticketNum);
+
+		// Listen for realtime events for instant updates
+		_onCalledEvent = function(data) {
+			if (!eventMatchesLocation(data)) return;
+			var isMyTicket = data && (data.ticket === ticketId || data.ticket_number === ticketNum);
+			if (isMyTicket && _lastStatus !== 'Waiting' && _lastStatus !== 'Completed' && _lastStatus !== 'Cancelled') {
+				showRecallNotice(data.counter_name, data.counter_number);
+			}
+			_onQmsEvent(data);
+		};
+		_onQmsEvent = function(data) {
+			if (!eventMatchesLocation(data)) return;
+			if (_evtDebounce) clearTimeout(_evtDebounce);
+			var isMyTicket = data && (data.ticket === ticketId || data.ticket_number === ticketNum);
+			_evtDebounce = setTimeout(function() {
+				refreshStatus();
+				refreshQueueList();
+			}, isMyTicket ? 50 : 300);
+		};
+		// Special handler for no-show: show notification if it's this ticket
+		_onNoShowEvent = function(data) {
+			if (!eventMatchesLocation(data)) return;
+			if (data && (data.ticket === ticketId || data.ticket_number === ticketNum) && data.requeued) {
+				// Show a prominent notification that they've been requeued
+				if (document.getElementById('k-noshow-notice')) {
+					_onQmsEvent(data);
+					return;
+				}
+				var overlay = document.createElement('div');
+				overlay.id = 'k-noshow-notice';
+				overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,15,28,0.72);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;';
+				overlay.innerHTML = '<div style="background:#fff8e1;border:3px solid #fb8c00;border-radius:20px;padding:32px;max-width:540px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.24)">' +
+					'<div style="font-size:48px;margin-bottom:16px">&#9888;&#65039;</div>' +
+					'<div style="font-size:28px;font-weight:800;color:#e65100;margin-bottom:12px">Your ticket was requeued</div>' +
+					'<div style="font-size:18px;line-height:1.55;color:#5d4037;margin-bottom:24px">Ticket <strong>' + esc(data.ticket_number || ticketNum) + '</strong> was marked as no-show and moved back into the queue. Please stay close to the counter so you do not miss the next call.</div>' +
+					'<button id="k-noshow-ok" class="k-btn k-btn-primary" style="margin:0 auto">OK</button>' +
+					'</div>';
+				document.body.appendChild(overlay);
+				$('#k-noshow-ok').on('click', function() {
+					$('#k-noshow-notice').remove();
+				});
+			}
+			_onQmsEvent(data);
+		};
+		// Special handler for transfer: show notification if it's this ticket
+		_onTransferEvent = function(data) {
+			if (!eventMatchesLocation(data)) return;
+			if (data && (data.ticket === ticketId || data.ticket_number === ticketNum) && !document.getElementById('k-transfer-notice')) {
+				var dest = data.to_counter_name || data.to_location_name || '';
+				var msg = 'Your ticket <strong>' + esc(data.ticket_number || ticketNum) + '</strong> has been transferred';
+				if (dest) msg += ' to <strong>' + esc(dest) + '</strong>';
+				msg += '. You have been placed in the new queue. Please wait for your number to be called.';
+
+				// Update local state from transfer event
+				if (data.to_location) _kioskLocation = data.to_location;
+
+				var overlay = document.createElement('div');
+				overlay.id = 'k-transfer-notice';
+				overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,15,28,0.72);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;';
+				overlay.innerHTML = '<div style="background:#e3f2fd;border:3px solid #1565C0;border-radius:20px;padding:32px;max-width:540px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.24)">' +
+					'<div style="font-size:48px;margin-bottom:16px">&#128260;</div>' +
+					'<div style="font-size:28px;font-weight:800;color:#1565C0;margin-bottom:12px">' + __('You Have Been Transferred') + '</div>' +
+					'<div style="font-size:18px;line-height:1.55;color:#37474f;margin-bottom:24px">' + msg + '</div>' +
+					'<button id="k-transfer-ok" class="k-btn k-btn-primary" style="margin:0 auto">OK</button>' +
+					'</div>';
+				document.body.appendChild(overlay);
+				$('#k-transfer-ok').on('click', function() {
+					$('#k-transfer-notice').remove();
+					// Force full re-render with fresh server data
+					refreshStatus();
+					refreshQueueList();
+				});
+				// Voice announcement
+				speakEnglish('Your ticket has been transferred' + (dest ? ' to ' + dest : '') + '. Please wait to be called.', 0.8);
+			}
+			_onQmsEvent(data);
+		};
+		// Special handler for on-hold: show notification if it's this ticket
+		_onHeldEvent = function(data) {
+			if (!eventMatchesLocation(data)) return;
+			if (data && (data.ticket === ticketId || data.ticket_number === ticketNum) && !document.getElementById('k-held-notice')) {
+				var overlay = document.createElement('div');
+				overlay.id = 'k-held-notice';
+				overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,15,28,0.72);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;';
+				overlay.innerHTML = '<div style="background:#fff3e0;border:3px solid #fb8c00;border-radius:20px;padding:32px;max-width:540px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.24)">' +
+					'<div style="font-size:48px;margin-bottom:16px">&#9208;&#65039;</div>' +
+					'<div style="font-size:28px;font-weight:800;color:#e65100;margin-bottom:12px">Your Ticket Is On Hold</div>' +
+					'<div style="font-size:18px;line-height:1.55;color:#5d4037;margin-bottom:24px">Ticket <strong>' + esc(data.ticket_number || ticketNum) + '</strong> has been placed on hold. Please remain nearby &mdash; you will be called again shortly.</div>' +
+					'<button id="k-held-ok" class="k-btn k-btn-primary" style="margin:0 auto">OK</button>' +
+					'</div>';
+				document.body.appendChild(overlay);
+				$('#k-held-ok').on('click', function() {
+					$('#k-held-notice').remove();
+				});
+				speakEnglish('Your ticket has been placed on hold. Please wait nearby.', 0.8);
+			}
+			_onQmsEvent(data);
+		};
+		bindTicketRealtime();
+
+		// Fallback poll (longer interval since realtime handles instant updates)
+		_pollTimer = setInterval(function() { refreshStatus(); refreshQueueList(); }, 15000);
+	}
+
+	// ── FEEDBACK ──
+	function showFeedback(ticketId) {
+		$('#kiosk-root').html('<div class="k-loading"><div class="k-spinner"></div><div class="k-loading-text">Loading...</div></div>');
+		apiCall('queue_management.qms_kiosk_api.get_feedback_form', {ticket: ticketId}).then(function(form) {
+			if (form.already_submitted) { showFeedbackMsg('Thank you! You have already submitted feedback.'); return; }
+			if (form.no_form) { showFeedbackMsg('Feedback is not available for this service.'); return; }
+			renderFeedbackForm(ticketId, form);
+		}).catch(function(e) { showFeedbackMsg(e.message || 'Unable to load feedback form.'); });
+	}
+
+	function showFeedbackMsg(msg) {
+		var h = '<div class="k-header">';
+		h += '<div class="k-back" id="k-fb-back">' + ICONS.back + ' Back</div>';
+		h += '<div class="k-header-text"><h2>Feedback</h2></div>';
+		h += '<div class="k-header-spacer"></div></div>';
+		h += '<div class="k-info-step"><p style="font-size:26px;font-weight:600">' + esc(msg) + '</p>';
+		h += '<button class="k-btn k-btn-primary" id="k-fb-home" style="margin-top:32px">Back to Home</button></div>';
+		$('#kiosk-root').html(h);
+		$('#k-fb-back, #k-fb-home').on('click', function() { showWelcome(); });
+	}
+
+	function renderFeedbackForm(ticketId, form) {
+		var h = '<div class="k-header">';
+		h += '<div class="k-back" id="k-fb-back">' + ICONS.back + ' Back</div>';
+		h += '<div class="k-header-text"><h2>Your Feedback</h2></div>';
+		h += '<div class="k-header-spacer"></div></div>';
+		h += '<div class="k-fb-wrap">';
+		h += '<div class="k-fb-question">How was your experience?</div>';
+		h += '<div class="k-fb-faces">';
+		h += '<div class="k-fb-face face-sad" data-rating="1"><span class="k-fb-face-emoji">&#128577;</span><span class="k-fb-face-label">Poor</span></div>';
+		h += '<div class="k-fb-face face-ok" data-rating="3"><span class="k-fb-face-emoji">&#128528;</span><span class="k-fb-face-label">Okay</span></div>';
+		h += '<div class="k-fb-face face-happy" data-rating="5"><span class="k-fb-face-emoji">&#128522;</span><span class="k-fb-face-label">Great</span></div>';
+		h += '</div>';
+		h += '<div class="k-fb-comment"><label>Any comments? (optional)</label>';
+		h += '<textarea id="k-fb-comments" placeholder="Tell us more..."></textarea></div>';
+		h += '<div class="k-fb-actions">';
+		h += '<button class="k-btn k-btn-ghost" id="k-fb-skip">Skip</button>';
+		h += '<button class="k-btn k-btn-primary" id="k-fb-submit">Submit</button>';
+		h += '</div></div>';
+		$('#kiosk-root').html(h);
+		var selectedRating = 0;
+		$('.k-fb-face').on('click', function() {
+			selectedRating = parseInt($(this).data('rating'));
+			$('.k-fb-face').removeClass('selected');
+			$(this).addClass('selected');
+		});
+		$('#k-fb-back, #k-fb-skip').on('click', function() { showWelcome(); });
+		$('#k-fb-submit').on('click', function() {
+			if (!selectedRating) { showAlert('Please tap a face to rate your experience', 'orange'); return; }
+			apiCall('queue_management.qms_kiosk_api.submit_feedback', {
+				ticket: ticketId, overall_rating: selectedRating,
+				comments: $('#k-fb-comments').val() || '', response_data: JSON.stringify({}),
+			}, true).then(function() { showFeedbackMsg('Thank you for your feedback!'); })
+			.catch(function(e) { showAlert(e.message || 'Error submitting feedback', 'red'); });
+		});
+	}
+
+
+
+	function clearAutoReset() {
+		if (_resetTimer) { clearTimeout(_resetTimer); _resetTimer = null; }
+	}
+	function startAutoReset(secs) {
+		clearAutoReset();
+		_resetTimer = setTimeout(function() { showWelcome(); }, (secs || 120) * 1000);
+	}
+
+	// Offline detection
+	window.addEventListener('online', function() { $('#k-offline-bar').fadeOut(300); });
+	window.addEventListener('offline', function() { $('#k-offline-bar').fadeIn(300); });
+
+	// ── START ──
+	function startFresh() {
+		clearTicketState();
+		if (_kioskLocation) showWelcome(); else showLocationPicker();
+	}
+
+	// If the user had an active ticket before refreshing, restore it
+	var _savedTicket = loadTicketState();
+	if (_savedTicket && _savedTicket.ticket) {
+		// Recover location from saved state if not in URL
+		if (!_kioskLocation && _savedTicket.location) _kioskLocation = _savedTicket.location;
+
+		// Safety timeout — if API doesn't respond in 5s, proceed to normal flow
+		var _restoreDone = false;
+		var _restoreTimer = setTimeout(function() {
+			if (_restoreDone) return;
+			_restoreDone = true;
+			startFresh();
+		}, 5000);
+
+		// Verify ticket is still active, then resume the result view
+		apiCall('queue_management.qms_kiosk_api.check_ticket_status', {ticket: _savedTicket.ticket}).then(function(s) {
+			if (_restoreDone) return; // timed out already
+			_restoreDone = true;
+			clearTimeout(_restoreTimer);
+
+			var active = s && s.status && s.status !== 'Cancelled' && s.status !== 'No Show' && s.status !== 'Completed';
+			if (active) {
+				// Use strict null check for estimated_wait (0 is valid = "you're next")
+				var serverWait = (s.estimated_wait != null) ? s.estimated_wait : (_savedTicket.estimated_wait || 0);
+				var restored = {
+					ticket: _savedTicket.ticket,
+					ticket_number: _savedTicket.ticket_number,
+					service: s.service || _savedTicket.service,
+					service_id: s.service_id || _savedTicket.service_id,
+					queue_position: s.queue_position || _savedTicket.queue_position || 1,
+					estimated_wait: serverWait,
+					serving_counters: s.serving_counters || _savedTicket.serving_counters || [],
+					restored: true,
+					countdown_remaining: _savedTicket.countdown_remaining,
+					status: s.status,
+					counter_name: s.counter_name || _savedTicket.counter_name || '',
+					counter_number: s.counter_number || _savedTicket.counter_number || '',
+					called_time: s.called_time || _savedTicket.called_time || null
+				};
+				if (s.location) _kioskLocation = s.location;
+				showResult(restored);
+			} else {
+				startFresh();
+			}
+		}).catch(function() {
+			if (_restoreDone) return;
+			_restoreDone = true;
+			clearTimeout(_restoreTimer);
+			startFresh();
+		});
+	} else if (_kioskLocation) {
+		showWelcome();
+	} else {
+		showLocationPicker();
+	}
+})();
+{% endraw %}
+</script>
+{% endblock %}
