@@ -1,0 +1,9 @@
+# Mark built frontend assets as generated so GitHub linguist ignores them
+employee_self_service/employee_self_service/public/** linguist-generated
+employee_self_service/frontend/** linguist-vendored
+queue_management/queue_management/public/** linguist-generated
+queue_management/queue_management/queue_management/page/** linguist-generated
+queue_management/queue_management/www/** linguist-generated
+*.min.js linguist-generated
+*.min.css linguist-generated
+*.map linguist-generated
