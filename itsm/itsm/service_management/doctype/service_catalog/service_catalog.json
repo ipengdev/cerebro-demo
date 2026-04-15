@@ -1,0 +1,81 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "catalog_name",
+    "description",
+    "is_active",
+    "section_items",
+    "items"
+  ],
+  "fields": [
+    {
+      "fieldname": "catalog_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Catalog Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Is Active"
+    },
+    {
+      "fieldname": "section_items",
+      "fieldtype": "Section Break",
+      "label": "Catalog Items"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "Service Catalog Item"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "Service Catalog",
+  "naming_rule": "By fieldname",
+  "autoname": "field:catalog_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    },
+    {
+      "read": 1,
+      "role": "Employee"
+    }
+  ],
+  "sort_field": "catalog_name",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}

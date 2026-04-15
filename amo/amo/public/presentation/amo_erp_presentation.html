@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMO ERP – Full Cycle Presentation</title>
+<style>
+  /* ── Reset & Base ────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 18px; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0a0a1a;
+    color: #e0e0e0;
+    overflow: hidden;
+  }
+
+  /* ── Slide Container ─────────────────────────────────── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 80px;
+    opacity: 0; visibility: hidden;
+    transition: opacity .55s ease, transform .55s ease;
+    transform: translateX(60px);
+    background: linear-gradient(135deg, #0a0a1a 0%, #141432 100%);
+  }
+  .slide.active {
+    opacity: 1; visibility: visible; transform: translateX(0);
+  }
+  .slide.exit {
+    opacity: 0; transform: translateX(-60px);
+  }
+
+  /* ── Typography ──────────────────────────────────────── */
+  h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: .3em; }
+  h2 { font-size: 2rem; font-weight: 600; margin-bottom: .3em; }
+  h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: .2em; color: #60a5fa; }
+  p, li { font-size: 1.05rem; line-height: 1.65; }
+
+  /* ── Accent colours ─────────────────────────────────── */
+  .accent  { color: #60a5fa; }
+  .accent2 { color: #34d399; }
+  .accent3 { color: #f59e0b; }
+  .accent4 { color: #f472b6; }
+  .accent5 { color: #a78bfa; }
+  .accent6 { color: #2dd4bf; }
+
+  /* ── Layout helpers ─────────────────────────────────── */
+  .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; }
+  .col3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; width: 100%; }
+  .col4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; width: 100%; }
+  .center { text-align: center; }
+  .left { text-align: left; }
+  .full { width: 100%; }
+  .mt { margin-top: 30px; }
+  .mt-sm { margin-top: 16px; }
+
+  ul { list-style: none; padding-left: 0; }
+  ul li::before { content: "▸ "; color: #60a5fa; font-weight: 700; }
+  ul.plain li::before { content: ""; }
+
+  /* ── Cards ───────────────────────────────────────────── */
+  .card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(96,165,250,.12);
+  }
+  .card h3 { margin-bottom: .4em; }
+  .card ul { margin-top: .4em; }
+
+  /* ── Flow diagram ────────────────────────────────────── */
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap; justify-content: center; margin-top: 20px;
+  }
+  .flow .step {
+    background: rgba(96,165,250,.12);
+    border: 1px solid rgba(96,165,250,.3);
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-weight: 600;
+    font-size: .95rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .flow .arrow {
+    font-size: 1.4rem; color: #60a5fa; padding: 0 6px;
+  }
+
+  /* ── Badge/Tag ───────────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: .82rem;
+    font-weight: 600;
+    margin: 3px 4px;
+  }
+  .badge.blue   { background: rgba(96,165,250,.18); color: #60a5fa; }
+  .badge.green  { background: rgba(52,211,153,.18); color: #34d399; }
+  .badge.amber  { background: rgba(245,158,11,.18); color: #f59e0b; }
+  .badge.pink   { background: rgba(244,114,182,.18); color: #f472b6; }
+  .badge.purple { background: rgba(167,139,250,.18); color: #a78bfa; }
+
+  /* ── Org chart circles ──────────────────────────────── */
+  .org-tree { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .org-node {
+    background: rgba(96,165,250,.12); border: 2px solid #60a5fa;
+    border-radius: 50%; width: 110px; height: 110px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; font-size: .78rem; font-weight: 600; padding: 8px;
+  }
+  .org-row { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+  .org-line {
+    width: 2px; height: 20px; background: #60a5fa; margin: 0 auto;
+  }
+  .org-branch {
+    width: 60%; height: 2px; background: #60a5fa; margin: 0 auto;
+  }
+
+  /* ── Table ───────────────────────────────────────────── */
+  table {
+    width: 100%; border-collapse: collapse; font-size: .92rem;
+  }
+  th {
+    background: rgba(96,165,250,.15); padding: 10px 14px;
+    text-align: left; font-weight: 600; color: #60a5fa;
+    border-bottom: 2px solid rgba(96,165,250,.25);
+  }
+  td {
+    padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  tr:hover td { background: rgba(255,255,255,.03); }
+
+  /* ── Progress bar ────────────────────────────────────── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, #60a5fa, #34d399);
+    z-index: 100; transition: width .35s ease;
+  }
+
+  /* ── Slide counter ───────────────────────────────────── */
+  #counter {
+    position: fixed; bottom: 20px; right: 30px;
+    font-size: .82rem; color: rgba(255,255,255,.35);
+    z-index: 100;
+  }
+
+  /* ── Nav buttons ─────────────────────────────────────── */
+  .nav-btn {
+    position: fixed; top: 50%; z-index: 100;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%; width: 48px; height: 48px;
+    color: #fff; font-size: 1.3rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    transform: translateY(-50%);
+  }
+  .nav-btn:hover { background: rgba(96,165,250,.2); }
+  #prev { left: 16px; }
+  #next { right: 16px; }
+
+  /* ── TOC sidebar ─────────────────────────────────────── */
+  #toc-toggle {
+    position: fixed; top: 16px; left: 16px; z-index: 200;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px; padding: 8px 12px;
+    color: #fff; cursor: pointer; font-size: .85rem;
+  }
+  #toc-toggle:hover { background: rgba(96,165,250,.2); }
+  #toc {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 300px;
+    background: rgba(10,10,26,.97); border-right: 1px solid rgba(255,255,255,.08);
+    z-index: 150; padding: 60px 20px 20px;
+    transform: translateX(-100%); transition: transform .3s ease;
+    overflow-y: auto;
+  }
+  #toc.open { transform: translateX(0); }
+  #toc h3 { color: #60a5fa; margin-bottom: 12px; }
+  #toc ul { list-style: none; padding: 0; }
+  #toc li {
+    padding: 6px 10px; cursor: pointer; border-radius: 6px;
+    font-size: .82rem; transition: background .15s;
+  }
+  #toc li::before { content: ""; }
+  #toc li:hover { background: rgba(96,165,250,.12); }
+  #toc li.section-head {
+    color: #60a5fa; font-weight: 700; margin-top: 10px;
+    pointer-events: none; font-size: .78rem; text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  /* ── Subtitle ────────────────────────────────────────── */
+  .subtitle {
+    font-size: 1.15rem; color: rgba(255,255,255,.55);
+    margin-bottom: 30px;
+  }
+
+  /* ── Diagram: hierarchy ─────────────────────────────── */
+  .hier { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .hier-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .hier-box {
+    border: 1px solid rgba(96,165,250,.3);
+    border-radius: 8px; padding: 8px 16px;
+    font-size: .82rem; font-weight: 600;
+    background: rgba(96,165,250,.08);
+    text-align: center;
+  }
+  .hier-box.root { background: rgba(96,165,250,.2); border-color: #60a5fa; }
+  .hier-line { width: 2px; height: 12px; background: #60a5fa; }
+  .hier-hline { height: 2px; background: #60a5fa; flex: 1; min-width: 40px; align-self: center; }
+
+  /* small text */
+  .small { font-size: .85rem; color: rgba(255,255,255,.5); }
+
+  /* screenshot image */
+  .screenshot {
+    width: 100%; max-height: 70vh; object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  }
+  .screenshot-wrap {
+    width: 100%; display: flex; justify-content: center; margin-top: 16px;
+  }
+  .screenshot-half {
+    max-width: 48%; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  }
+
+  /* icon number */
+  .icon-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(96,165,250,.15); color: #60a5fa;
+    font-weight: 700; font-size: .9rem; margin-right: 10px;
+  }
+
+  /* numbered list */
+  ol.steps { counter-reset: s; list-style: none; padding: 0; }
+  ol.steps li { counter-increment: s; display: flex; align-items: flex-start; margin-bottom: 10px; }
+  ol.steps li::before {
+    content: counter(s);
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(96,165,250,.15); color: #60a5fa;
+    font-weight: 700; font-size: .82rem; margin-right: 12px; margin-top: 2px;
+  }
+
+  /* stat box */
+  .stat {
+    text-align: center; padding: 20px;
+  }
+  .stat .num {
+    font-size: 2.8rem; font-weight: 800; line-height: 1;
+  }
+  .stat .label {
+    font-size: .85rem; color: rgba(255,255,255,.5); margin-top: 6px;
+  }
+
+  /* country grid */
+  .country-flag {
+    font-size: 2rem; margin-bottom: 6px; display: block;
+  }
+
+  /* ── Logo ──────────────────────────────────────────── */
+  #slide-logos {
+    position: fixed;
+    bottom: 16px;
+    left: 20px;
+    z-index: 100;
+    opacity: .55;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #slide-logos img {
+    height: 60px;
+  }
+  #slide-logos .antonine-logo {
+    filter: brightness(0) invert(1);
+    height: 50px;
+  }
+</style>
+</head>
+<body>
+
+<div id="slide-logos"><img src="ip_eng_pro_logo.png" alt="IP Engineering Pro"><img class="antonine-logo" src="antonine_logo.png" alt="Antonine Maronite Order"></div>
+<div id="progress"></div>
+<div id="counter"></div>
+<button class="nav-btn" id="prev">&#9664;</button>
+<button class="nav-btn" id="next">&#9654;</button>
+<button id="toc-toggle">&#9776; Menu</button>
+<div id="toc"></div>
+
+<div class="deck">
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE 1 – TITLE
+     ════════════════════════════════════════════════════════ -->
+<div class="slide active" data-section="Introduction" data-title="Title">
+  <div class="center">
+    <img src="cerebro_logo.png" alt="Cerebro ERP" style="height:140px;margin-bottom:10px;opacity:.85;">
+    <h1>AMO <span class="accent">Enterprise Resource Planning</span></h1>
+    <p class="subtitle">Antonine Maronite Order — A Comprehensive ERP Solution<br>
+      Built on <span class="accent2">Cerebro</span> &middot; <span class="accent">Finance</span> &middot; <span class="accent3">Inventory</span> &middot; <span class="accent6">Assets</span> &middot; <span class="accent5">Buying</span> &middot; <span class="accent4">Selling</span> &middot; <span class="accent4">HRMS</span> &middot; <span class="accent3">Payroll</span> &middot; <span class="accent5">Projects</span> &middot; <span class="accent">Reports</span></p>
+    <div class="mt">
+      <span class="badge blue">52 Companies</span>
+      <span class="badge green">7 Countries</span>
+      <span class="badge amber">Multi-Currency</span>
+      <span class="badge pink">Multilingual AR/FR/EN</span>
+      <span class="badge purple">Lebanese Compliance</span>
+    </div>
+    <p class="small mt" style="color:rgba(255,255,255,.3);">Use ← → arrow keys or click arrows to navigate &middot; Press M for menu</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE 2 – AGENDA
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Introduction" data-title="Agenda">
+  <h2 class="center" style="margin-bottom:0;">Agenda</h2>
+  <div class="col2" style="gap:18px;margin-top:14px;font-size:.92em;">
+    <div class="card" style="padding:16px 20px;">
+      <h3>Part 1 — Finance</h3>
+      <ul>
+        <li>Company Setup &amp; Multi-Company</li>
+        <li>Chart of Accounts (COA)</li>
+        <li>Cost Centers &amp; Dimensions</li>
+        <li>Budgets &amp; Budget Variance</li>
+        <li>Multi-Currency Accounting</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:16px 20px;">
+      <h3>Part 2 — Inventory &amp; Assets</h3>
+      <ul>
+        <li>Inventory &amp; Stock Management</li>
+        <li>Asset Management &amp; Depreciation</li>
+        <li>Asset Lifecycle &amp; Maintenance</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:16px 20px;">
+      <h3>Part 3 — Buying &amp; Selling</h3>
+      <ul>
+        <li>Full Buying Cycle</li>
+        <li>Full Selling Cycle</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:16px 20px;">
+      <h3>Part 4 — HRMS &amp; Payroll</h3>
+      <ul>
+        <li>Employee Lifecycle</li>
+        <li>Leave &amp; Attendance</li>
+        <li>Salary Structure &amp; Components</li>
+        <li>Payroll Entry &amp; Salary Slips</li>
+        <li>CNSS &amp; MOF Forms</li>
+      </ul>
+    </div>
+    <div class="card" style="padding:16px 20px;">
+      <h3>Part 5 — Projects &amp; Reports</h3>
+      <ul>
+        <li>Project Management &amp; Tasks</li>
+        <li>Progress Tracking &amp; Costing</li>
+        <li>Financial &amp; HR Reports</li>
+        <li>AMO Dashboard</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION: FINANCE — COMPANY SETUP
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Finance" data-title="AMO Organization Structure">
+  <h2 class="center">AMO Organization <span class="accent">Structure</span></h2>
+  <p class="center subtitle">52 companies across 4 divisions and 7 countries</p>
+  <div class="hier mt">
+    <div class="hier-row"><div class="hier-box root" style="font-size:1rem;">AMO (Parent)</div></div>
+    <div class="hier-line"></div>
+    <div class="hier-row">
+      <div class="hier-box" style="border-color:#34d399;">AMO - Monasteries<br><span class="small">31 entities</span></div>
+      <div class="hier-box" style="border-color:#f59e0b;">AMO - Schools<br><span class="small">12 entities</span></div>
+      <div class="hier-box" style="border-color:#f472b6;">AMO - University<br><span class="small">3 campuses</span></div>
+      <div class="hier-box" style="border-color:#a78bfa;">AMO - Social &amp; Cultural<br><span class="small">6 organizations</span></div>
+    </div>
+  </div>
+  <div class="col4 mt">
+    <div class="stat"><div class="num accent2">25</div><div class="label">Monasteries in Lebanon</div></div>
+    <div class="stat"><div class="num accent3">6</div><div class="label">Foreign Monasteries</div></div>
+    <div class="stat"><div class="num accent4">12</div><div class="label">Schools</div></div>
+    <div class="stat"><div class="num accent5">3</div><div class="label">University Campuses</div></div>
+  </div>
+</div>
+
+<!-- SLIDE – Organization Structure Screenshot -->
+<div class="slide" data-section="Finance" data-title="📸 Company Tree">
+  <h2 class="center">Company Tree</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/company_tree.jpg" alt="Company Tree"></div>
+</div>
+
+<!-- SLIDE – Multi-Company -->
+<div class="slide" data-section="Finance" data-title="Multi-Company Setup">
+  <h2 class="center">Multi-Company <span class="accent">Setup</span></h2>
+  <div class="col2 mt">
+    <div>
+      <h3>Hierarchical Company Tree</h3>
+      <ul>
+        <li>Parent company <strong>AMO</strong> with 4 group subsidiaries</li>
+        <li>Each subsidiary holds its own child companies</li>
+        <li>Consolidated financial statements roll up automatically</li>
+        <li>Inter-company transactions with journal entries</li>
+        <li>Per-company COA, warehouses, and cost centers</li>
+      </ul>
+      <h3 class="mt">Country Presence</h3>
+      <div class="mt-sm">
+        <span class="badge blue">🇱🇧 Lebanon (LBP)</span>
+        <span class="badge green">🇮🇹 Italy (EUR)</span>
+        <span class="badge amber">🇨🇦 Canada (CAD)</span>
+        <span class="badge pink">🇧🇪 Belgium (EUR)</span>
+        <span class="badge purple">🇦🇺 Australia (AUD)</span>
+        <span class="badge blue">🇨🇭 Switzerland (CHF)</span>
+        <span class="badge green">🇸🇾 Syria (SYP)</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Key Company Settings</h3>
+      <table>
+        <tr><th>Setting</th><th>Value</th></tr>
+        <tr><td>Default Currency</td><td>Per-country (LBP, EUR…)</td></tr>
+        <tr><td>Fiscal Year</td><td>Jan 1 – Dec 31</td></tr>
+        <tr><td>Timezone</td><td>Asia/Beirut, Europe/Rome…</td></tr>
+        <tr><td>Chart of Accounts</td><td>Country-localized</td></tr>
+        <tr><td>Default Warehouse</td><td>Per-company</td></tr>
+        <tr><td>Payroll Cost Center</td><td>Per-company</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Company Form Screenshot -->
+<div class="slide" data-section="Finance" data-title="📸 Company Form">
+  <h2 class="center">Company Form</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/company_form.jpg" alt="Company Form"></div>
+</div>
+
+<!-- SLIDE – Chart of Accounts -->
+<div class="slide" data-section="Finance" data-title="Chart of Accounts">
+  <h2 class="center">Chart of Accounts <span class="accent">(COA)</span></h2>
+  <div class="col2 mt">
+    <div>
+      <h3>Country-Localized Templates</h3>
+      <table>
+        <tr><th>Country</th><th>COA Template</th></tr>
+        <tr><td>🇱🇧 Lebanon</td><td>Lebanon - Chart of Accounts</td></tr>
+        <tr><td>🇨🇦 Canada</td><td>Canada - Chart of Accounts</td></tr>
+        <tr><td>🇦🇺 Australia</td><td>Australia - Chart of Accounts</td></tr>
+        <tr><td>🇧🇪 Belgium</td><td>Belgium - PCMN Chart of Accounts</td></tr>
+        <tr><td>🇮🇹 Italy</td><td>Italy - Piano dei Conti</td></tr>
+        <tr><td>🇨🇭 Switzerland</td><td>Switzerland - Chart of Accounts</td></tr>
+        <tr><td>🇸🇾 Syria</td><td>Syria - Chart of Accounts</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Additional Accounts (Auto-Created)</h3>
+      <ul>
+        <li><strong>Cash Accounts:</strong> Main Cash + USD Cash per company</li>
+        <li><strong>Bank Accounts:</strong> Local currency + Foreign currency</li>
+        <li><strong>Payroll Accounts:</strong> Salary, CNSS, Indemnity</li>
+        <li><strong>Education Accounts:</strong> Tuition, Scholarships (for schools/university)</li>
+      </ul>
+      <h3 class="mt">COA Structure</h3>
+      <ul>
+        <li>Assets → Current Assets, Fixed Assets, Investments</li>
+        <li>Liabilities → Current, Long-term, Provisions</li>
+        <li>Equity → Capital, Reserves, Retained Earnings</li>
+        <li>Income → Operating, Non-operating, Grants</li>
+        <li>Expenses → Operating, Administrative, Financial</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – COA Screenshot -->
+<div class="slide" data-section="Finance" data-title="📸 Chart of Accounts">
+  <h2 class="center">Chart of Accounts</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/chart_of_accounts.jpg" alt="Chart of Accounts"></div>
+</div>
+
+<!-- SLIDE – Cost Centers -->
+<div class="slide" data-section="Finance" data-title="Cost Centers & Dimensions">
+  <h2 class="center">Cost Centers &amp; <span class="accent">Accounting Dimensions</span></h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Cost Center Hierarchy</h3>
+      <div class="hier">
+        <div class="hier-row"><div class="hier-box root">Main - AMO</div></div>
+        <div class="hier-line"></div>
+        <div class="hier-row">
+          <div class="hier-box">Administration</div>
+          <div class="hier-box">Education</div>
+          <div class="hier-box">Pastoral</div>
+          <div class="hier-box">Agriculture</div>
+        </div>
+      </div>
+      <ul class="mt-sm">
+        <li>Each company has its own cost center tree</li>
+        <li>Cost centers allow departmental P&amp;L tracking</li>
+        <li>Budget monitoring per cost center</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Accounting Dimensions</h3>
+      <ul>
+        <li><strong>Company</strong> — mandatory on every transaction</li>
+        <li><strong>Cost Center</strong> — department-level tracking</li>
+        <li><strong>Project</strong> — for project-based costing</li>
+      </ul>
+      <h3 class="mt">Benefits</h3>
+      <ul>
+        <li>Multi-dimensional reporting &amp; analysis</li>
+        <li>Profitability analysis by dimension</li>
+        <li>Budget allocation at any dimension level</li>
+        <li>Dimension-wise balance reports</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Cost Center Screenshot -->
+<div class="slide" data-section="Finance" data-title="📸 Cost Center Tree">
+  <h2 class="center">Cost Center Tree</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/cost_center_tree.jpg" alt="Cost Center Tree"></div>
+</div>
+
+<!-- SLIDE – Budget -->
+<div class="slide" data-section="Finance" data-title="Budget Management">
+  <h2 class="center">Budget <span class="accent">Management</span></h2>
+  <div class="col2 mt">
+    <div>
+      <h3>Budget Setup</h3>
+      <ol class="steps">
+        <li>Define fiscal year and budget period</li>
+        <li>Create budget per Cost Center or Project</li>
+        <li>Allocate amounts per GL account</li>
+        <li>Set monthly distribution patterns</li>
+        <li>Configure action on budget exceed (Warn / Stop / Ignore)</li>
+      </ol>
+      <h3 class="mt">Automated Alerts</h3>
+      <ul>
+        <li>Monthly budget utilization checks</li>
+        <li>Warning when 80% consumed</li>
+        <li>Block transactions when 100% exceeded (if configured)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Budget Variance Report</h3>
+      <table>
+        <tr><th>Account</th><th>Budget</th><th>Actual</th><th>Variance</th></tr>
+        <tr><td>Office Supplies</td><td>50,000,000</td><td>42,500,000</td><td style="color:#34d399">-15%</td></tr>
+        <tr><td>Maintenance</td><td>120,000,000</td><td>135,000,000</td><td style="color:#f472b6">+12.5%</td></tr>
+        <tr><td>Salaries</td><td>800,000,000</td><td>795,000,000</td><td style="color:#34d399">-0.6%</td></tr>
+        <tr><td>Utilities</td><td>30,000,000</td><td>28,000,000</td><td style="color:#34d399">-6.7%</td></tr>
+      </table>
+      <p class="small mt-sm">Report available: Budget Variance Report, with monthly/quarterly/yearly grouping</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Budget Screenshot -->
+<div class="slide" data-section="Finance" data-title="📸 Budget List">
+  <h2 class="center">Budget List</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/budget_list.jpg" alt="Budget List"></div>
+</div>
+
+<!-- SLIDE – Multi-Currency -->
+<div class="slide" data-section="Finance" data-title="Multi-Currency Accounting">
+  <h2 class="center">Multi-Currency <span class="accent">Accounting</span></h2>
+  <div class="col3 mt">
+    <div class="card">
+      <h3>Currency Configuration</h3>
+      <ul>
+        <li>Company default currency (LBP, EUR, CAD…)</li>
+        <li>Transaction currency can differ from company currency</li>
+        <li>Automatic exchange rate fetching</li>
+        <li>Exchange rate revaluation tool</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Multi-Currency Features</h3>
+      <ul>
+        <li>Foreign currency bank accounts (USD, EUR)</li>
+        <li>Realized &amp; unrealized gain/loss tracking</li>
+        <li>Party accounts in foreign currency</li>
+        <li>Payment reconciliation across currencies</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Supported Currencies</h3>
+      <div style="text-align:center;margin-top:10px;">
+        <span class="badge blue">LBP</span>
+        <span class="badge green">USD</span>
+        <span class="badge amber">EUR</span>
+        <span class="badge pink">CAD</span>
+        <span class="badge purple">AUD</span>
+        <span class="badge blue">CHF</span>
+        <span class="badge green">SYP</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – INVENTORY / STOCK
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Inventory" data-title="Inventory & Stock">
+  <h2 class="center">Inventory &amp; <span class="accent2">Stock</span> Management</h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Stock Transactions</h3>
+      <div class="flow" style="margin-top:10px;flex-wrap:wrap;">
+        <div class="step" style="font-size:.8rem;">Purchase<br>Receipt</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Stock<br>Entry</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Delivery<br>Note</div>
+      </div>
+      <ul class="mt-sm">
+        <li>Material Receipt / Issue / Transfer</li>
+        <li>Multi-warehouse management</li>
+        <li>Batch &amp; serial number tracking</li>
+        <li>Stock reconciliation</li>
+        <li>Inventory aging reports</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Valuation Methods</h3>
+      <ul>
+        <li><strong>FIFO</strong> — First In, First Out</li>
+        <li><strong>Moving Average</strong> — weighted average cost</li>
+        <li>Landed cost allocation</li>
+        <li>Stock revaluation</li>
+      </ul>
+      <h3 class="mt">Stock Reports</h3>
+      <ul>
+        <li>Stock Balance / Stock Ledger</li>
+        <li>Stock Projected Quantity</li>
+        <li>Warehouse-wise Stock Balance</li>
+        <li>Item-wise Price List</li>
+        <li>Stock Ageing Report</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – ASSET MANAGEMENT
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Assets" data-title="Asset Management">
+  <h2 class="center">Asset <span class="accent4">Management</span></h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Asset Lifecycle</h3>
+      <div class="flow" style="margin-top:10px;flex-wrap:wrap;">
+        <div class="step" style="font-size:.8rem;">Purchase /<br>Receipt</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Capitalize<br>&amp; Submit</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Depreciate<br>&amp; Maintain</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Dispose /<br>Sell</div>
+      </div>
+      <ul class="mt-sm">
+        <li>Asset categories: Buildings, Vehicles, IT, Furniture, Lab Equipment, Library Books</li>
+        <li>Location-based tracking (Office, Classroom, Library, Parking Lot)</li>
+        <li>Asset movement between locations</li>
+        <li>Value adjustments &amp; capitalization</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Depreciation &amp; Maintenance</h3>
+      <ul>
+        <li><strong>Straight Line</strong> &amp; <strong>Declining Balance</strong> methods</li>
+        <li>Automatic depreciation scheduling</li>
+        <li>Asset Depreciation Ledger</li>
+        <li>Asset Depreciations &amp; Balances report</li>
+      </ul>
+      <h3 class="mt">Maintenance</h3>
+      <ul>
+        <li>Maintenance teams &amp; schedules</li>
+        <li>Maintenance logs &amp; repair tracking</li>
+        <li>Asset activity history</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Asset Screenshots -->
+<div class="slide" data-section="Assets" data-title="📸 Asset Module & List">
+  <h2 class="center">Assets</h2>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Asset Module</p><img class="screenshot" src="screenshots/asset_module.jpg" alt="Asset Module" style="max-height:55vh;"></div>
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Asset List</p><img class="screenshot" src="screenshots/asset_list.jpg" alt="Asset List" style="max-height:55vh;"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION: BUYING CYCLE
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Buying" data-title="Full Buying Cycle">
+  <h2 class="center">Full Buying <span class="accent2">Cycle</span></h2>
+  <div class="flow mt">
+    <div class="step">Material<br>Request</div>
+    <div class="arrow">→</div>
+    <div class="step">Request for<br>Quotation</div>
+    <div class="arrow">→</div>
+    <div class="step">Supplier<br>Quotation</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#34d399;">Purchase<br>Order</div>
+    <div class="arrow">→</div>
+    <div class="step">Purchase<br>Receipt</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f59e0b;">Purchase<br>Invoice</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f472b6;">Payment<br>Entry (Pay)</div>
+  </div>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Supplier Master Data</h3>
+      <table>
+        <tr><th>Supplier Group</th><th>Example</th></tr>
+        <tr><td>Office Suppliers</td><td>LibanPapier SARL</td></tr>
+        <tr><td>Cleaning Services</td><td>CleanTech Lebanon</td></tr>
+        <tr><td>Educational Publishers</td><td>Librairie Antoine</td></tr>
+        <tr><td>IT Vendors</td><td>TechVision Middle East</td></tr>
+        <tr><td>Religious Goods</td><td>BeitNour Religious Supplies</td></tr>
+        <tr><td>Agricultural Suppliers</td><td>Mount Lebanon Farms</td></tr>
+        <tr><td>Maintenance Contractors</td><td>Samir Maintenance Co.</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Key Buying Features</h3>
+      <ul>
+        <li>Multi-currency purchase orders (LBP, USD, EUR)</li>
+        <li>Supplier-wise price lists</li>
+        <li>Item-wise tax templates</li>
+        <li>Purchase return (debit notes)</li>
+        <li>Accounts Payable tracking &amp; aging</li>
+        <li>Three-way matching (PO/Receipt/Invoice)</li>
+        <li>Landed cost voucher</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Buying Screenshots -->
+<div class="slide" data-section="Buying" data-title="📸 Buying Module & Invoices">
+  <h2 class="center">Buying</h2>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Buying Module</p><img class="screenshot" src="screenshots/buying_module.jpg" alt="Buying Module" style="max-height:55vh;"></div>
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Purchase Invoice List</p><img class="screenshot" src="screenshots/purchase_invoice_list.jpg" alt="Purchase Invoice List" style="max-height:55vh;"></div>
+  </div>
+</div>
+
+<!-- SLIDE – Selling Cycle -->
+<div class="slide" data-section="Selling" data-title="Full Selling Cycle">
+  <h2 class="center">Full Selling <span class="accent3">Cycle</span></h2>
+  <div class="flow mt">
+    <div class="step">Lead /<br>Opportunity</div>
+    <div class="arrow">→</div>
+    <div class="step">Quotation</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#34d399;">Sales<br>Order</div>
+    <div class="arrow">→</div>
+    <div class="step">Delivery<br>Note</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f59e0b;">Sales<br>Invoice</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f472b6;">Payment Entry<br>(Receive)</div>
+  </div>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Customer Master Data</h3>
+      <table>
+        <tr><th>Customer</th><th>Type</th></tr>
+        <tr><td>Saint Joseph Parish - Beirut</td><td>Institutional</td></tr>
+        <tr><td>Notre Dame Parish - Jounieh</td><td>Institutional</td></tr>
+        <tr><td>Maronite Eparchy of Baalbek</td><td>Institutional</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Key Selling Features</h3>
+      <ul>
+        <li>Pricing rules &amp; discount structures</li>
+        <li>Multi-currency invoicing</li>
+        <li>Subscription/recurring invoices</li>
+        <li>Sales return (credit notes)</li>
+        <li>Accounts Receivable &amp; aging reports</li>
+        <li>Payment terms &amp; due date tracking</li>
+        <li>GST/VAT compliance per country</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Selling Screenshots -->
+<div class="slide" data-section="Selling" data-title="📸 Sales Orders & Invoices">
+  <h2 class="center">Selling</h2>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Sales Order List</p><img class="screenshot" src="screenshots/sales_order_list.jpg" alt="Sales Order List" style="max-height:55vh;"></div>
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Sales Invoice List</p><img class="screenshot" src="screenshots/sales_invoice_list.jpg" alt="Sales Invoice List" style="max-height:55vh;"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION: HR FULL CYCLE
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="HRMS" data-title="HR Overview">
+  <h2 class="center">HR <span class="accent4">Full Cycle</span> Overview</h2>
+  <div class="flow mt">
+    <div class="step">Staffing<br>Plan</div>
+    <div class="arrow">→</div>
+    <div class="step">Job<br>Opening</div>
+    <div class="arrow">→</div>
+    <div class="step">Job<br>Applicant</div>
+    <div class="arrow">→</div>
+    <div class="step">Interview</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#34d399;">Job<br>Offer</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f59e0b;">Onboarding</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f472b6;">Employee</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#a78bfa;">Separation</div>
+  </div>
+  <div class="col4 mt">
+    <div class="card">
+      <h3>Recruitment</h3>
+      <ul>
+        <li>Job Requisition</li>
+        <li>Job Opening</li>
+        <li>Job Applicant</li>
+        <li>Interview Rounds</li>
+        <li>Job Offer</li>
+        <li>Appointment Letter</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Employee Management</h3>
+      <ul>
+        <li>Employee Master</li>
+        <li>Employee Grade</li>
+        <li>Employment Type</li>
+        <li>Promotion</li>
+        <li>Transfer</li>
+        <li>Skill Map</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Leave &amp; Attendance</h3>
+      <ul>
+        <li>Leave Policy</li>
+        <li>Leave Allocation</li>
+        <li>Leave Application</li>
+        <li>Attendance</li>
+        <li>Shift Management</li>
+        <li>Overtime Slips</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Performance</h3>
+      <ul>
+        <li>Appraisal Cycle</li>
+        <li>Appraisal Template</li>
+        <li>Goal Setting (KRAs)</li>
+        <li>360° Feedback</li>
+        <li>Training Programs</li>
+        <li>Training Events</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Employee List Screenshot -->
+<div class="slide" data-section="HRMS" data-title="📸 Employee List">
+  <h2 class="center">Employee List</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/employee_list.jpg" alt="Employee List"></div>
+</div>
+
+<!-- SLIDE – Employee Lifecycle Detail -->
+<div class="slide" data-section="HRMS" data-title="Employee Lifecycle">
+  <h2 class="center">Employee <span class="accent4">Lifecycle</span></h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Onboarding</h3>
+      <ol class="steps">
+        <li>Create Employee Onboarding from Job Offer</li>
+        <li>Assign boarding activities (IT setup, documentation, training)</li>
+        <li>Track completion of each activity</li>
+        <li>Employee record auto-created on completion</li>
+      </ol>
+      <h3 class="mt">Employee Properties</h3>
+      <ul>
+        <li>Personal details, emergency contacts</li>
+        <li>Health insurance records</li>
+        <li>ID documents (CNSS, MOF, passport)</li>
+        <li>Education &amp; work history</li>
+        <li>Bank account for salary</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>During Employment</h3>
+      <ul>
+        <li><strong>Promotion</strong> — grade/designation change with effective date</li>
+        <li><strong>Transfer</strong> — move between companies/departments</li>
+        <li><strong>Property Update</strong> — batch update employee fields</li>
+        <li><strong>Expense Claims</strong> — submit &amp; approve with accounts posting</li>
+        <li><strong>Employee Advance</strong> — advance payments against expenses</li>
+        <li><strong>Travel Request</strong> — travel itinerary &amp; costing</li>
+      </ul>
+      <h3 class="mt">Separation</h3>
+      <ol class="steps">
+        <li>Create Employee Separation</li>
+        <li>Assign exit activities (return assets, clearance)</li>
+        <li>Exit Interview</li>
+        <li>Full &amp; Final Settlement</li>
+        <li>Gratuity / Indemnity calculation</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Leave & Attendance -->
+<div class="slide" data-section="HRMS" data-title="Leave & Attendance">
+  <h2 class="center">Leave &amp; <span class="accent4">Attendance</span> Management</h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Leave Management</h3>
+      <table>
+        <tr><th>Document</th><th>Purpose</th></tr>
+        <tr><td>Leave Type</td><td>Annual, Sick, Maternity, etc.</td></tr>
+        <tr><td>Leave Policy</td><td>Rules per employment type</td></tr>
+        <tr><td>Leave Period</td><td>Fiscal year period</td></tr>
+        <tr><td>Leave Allocation</td><td>Assign days to employees</td></tr>
+        <tr><td>Leave Application</td><td>Employee requests leave</td></tr>
+        <tr><td>Compensatory Leave</td><td>For working on holidays</td></tr>
+        <tr><td>Leave Encashment</td><td>Cash out unused leaves</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Attendance System</h3>
+      <ul>
+        <li><strong>Daily Attendance</strong> — manual or auto from biometric</li>
+        <li><strong>Attendance Request</strong> — for corrections/WFH</li>
+        <li><strong>Employee Checkin</strong> — biometric/GPS log</li>
+        <li><strong>Shift Type</strong> — define shifts with auto-attendance</li>
+        <li><strong>Shift Assignment</strong> — assign shifts to employees</li>
+        <li><strong>Shift Schedule</strong> — recurring shift patterns</li>
+      </ul>
+      <h3 class="mt">Overtime</h3>
+      <ul>
+        <li>Overtime Type definitions</li>
+        <li>Overtime Slip creation</li>
+        <li>Overtime salary components</li>
+        <li>Auto-calculation in payroll</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Leave Application Screenshot -->
+<div class="slide" data-section="HRMS" data-title="📸 Leave Applications">
+  <h2 class="center">Leave Applications</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/leave_application_list.jpg" alt="Leave Application List"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION: PAYROLL
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Payroll" data-title="Payroll Overview">
+  <h2 class="center">Payroll <span class="accent3">System</span> Overview</h2>
+  <div class="flow mt">
+    <div class="step">Salary<br>Component</div>
+    <div class="arrow">→</div>
+    <div class="step">Salary<br>Structure</div>
+    <div class="arrow">→</div>
+    <div class="step">Structure<br>Assignment</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f59e0b;">Payroll<br>Entry</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#34d399;">Salary<br>Slips</div>
+    <div class="arrow">→</div>
+    <div class="step" style="border-color:#f472b6;">Journal /<br>Payment</div>
+  </div>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Salary Components</h3>
+      <table>
+        <tr><th>Type</th><th>Examples</th></tr>
+        <tr><td>Earnings</td><td>Basic Salary, Housing Allowance, Transport</td></tr>
+        <tr><td>Deductions</td><td>CNSS Employee, Income Tax, Loans</td></tr>
+        <tr><td>Employer Costs</td><td>CNSS Employer, Family Allowance, EOS Provision</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Key Payroll Features</h3>
+      <ul>
+        <li>Formula-based salary components</li>
+        <li>Additional Salary (one-time bonuses/deductions)</li>
+        <li>Employee Benefits &amp; Tax Exemptions</li>
+        <li>Income Tax Slab configuration</li>
+        <li>Retention Bonus &amp; Incentives</li>
+        <li>Gratuity / End-of-Service calculation</li>
+        <li>Multi-company payroll processing</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Salary Structure Screenshot -->
+<div class="slide" data-section="Payroll" data-title="📸 Salary Structures">
+  <h2 class="center">Salary Structures</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/salary_structure_list.jpg" alt="Salary Structure List"></div>
+</div>
+
+<!-- SLIDE – Payroll Process -->
+<div class="slide" data-section="Payroll" data-title="Payroll Process Flow">
+  <h2 class="center">Payroll <span class="accent3">Process</span> Flow</h2>
+  <div class="col2 mt">
+    <div>
+      <h3>Monthly Payroll Steps</h3>
+      <ol class="steps">
+        <li>Create <strong>Payroll Entry</strong> — select company, department, dates</li>
+        <li><strong>Get Employees</strong> — auto-fetches eligible employees</li>
+        <li><strong>Create Salary Slips</strong> — generates individual salary slips</li>
+        <li>Review &amp; verify salary slips</li>
+        <li><strong>Submit Salary Slips</strong> — locks calculations</li>
+        <li><strong>Make Accrual Journal Entry</strong> — posts to GL</li>
+        <li><strong>Make Bank Entry</strong> — creates payment entry for bank transfer</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Salary Slip Breakdown</h3>
+      <table>
+        <tr><th>Component</th><th>Amount (LBP)</th></tr>
+        <tr><td>Basic Salary</td><td style="color:#34d399">+45,000,000</td></tr>
+        <tr><td>Housing Allowance</td><td style="color:#34d399">+6,750,000</td></tr>
+        <tr><td>Transport Allowance</td><td style="color:#34d399">+3,000,000</td></tr>
+        <tr><td>CNSS Employee</td><td style="color:#f472b6">-1,530,000</td></tr>
+        <tr><td>Income Tax</td><td style="color:#f472b6">-2,250,000</td></tr>
+        <tr style="font-weight:700;border-top:2px solid #60a5fa"><td>Net Pay</td><td style="color:#60a5fa">50,970,000</td></tr>
+      </table>
+      <h3 class="mt">Accounting Impact</h3>
+      <p class="small">Salary expense → GL &middot; CNSS liability → GL &middot; Tax liability → GL &middot; Net pay → Bank/Cash</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Payroll Process Screenshots -->
+<div class="slide" data-section="Payroll" data-title="📸 Payroll Entry & Salary Slips">
+  <h2 class="center">Payroll Processing</h2>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Payroll Entry List</p><img class="screenshot" src="screenshots/payroll_entry_list.jpg" alt="Payroll Entry List" style="max-height:55vh;"></div>
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Salary Slip List</p><img class="screenshot" src="screenshots/salary_slip_list.jpg" alt="Salary Slip List" style="max-height:55vh;"></div>
+  </div>
+</div>
+
+<!-- SLIDE – Lebanese Payroll Compliance -->
+<div class="slide" data-section="Payroll" data-title="Lebanese Payroll">
+  <h2 class="center">Lebanese <span class="accent3">Payroll</span> Compliance</h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>CNSS Forms (الضمان الاجتماعي)</h3>
+      <ul>
+        <li><strong>CNSS Form 2M</strong> — Monthly declaration of salaries</li>
+        <li><strong>CNSS Form 190A</strong> — Employee registration</li>
+        <li><strong>CNSS Form 351</strong> — Quarterly family compensation</li>
+        <li><strong>CNSS Leaving Form</strong> — Employee termination notice</li>
+        <li><strong>CNSS Monthly Declaration</strong> report</li>
+        <li><strong>CNSS Yearly Declaration</strong> report</li>
+      </ul>
+      <h3 class="mt">Payroll Constants &amp; Variables</h3>
+      <ul>
+        <li>Configurable CNSS rates and ceilings</li>
+        <li>Income tax slabs per Lebanese law</li>
+        <li>Family allowance rates</li>
+        <li>Indemnity calculation parameters</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>MOF Forms (وزارة المالية)</h3>
+      <ul>
+        <li><strong>R3 Form</strong> — Monthly salary tax declaration</li>
+        <li><strong>R4 Form</strong> — Annual salary statement</li>
+        <li><strong>R5 Form</strong> — Annual income tax recap</li>
+        <li><strong>R6 Form</strong> — Tax withholding certificate</li>
+        <li><strong>R10 Form</strong> — Annual indemnity declaration</li>
+      </ul>
+      <h3 class="mt">PDF Generation</h3>
+      <ul>
+        <li>All CNSS &amp; MOF forms generated as PDF overlays</li>
+        <li>Arabic text rendering with proper RTL layout</li>
+        <li>French language support for francophone institutions</li>
+        <li>Ready for official submission to authorities</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – PROJECT MANAGEMENT
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Projects" data-title="Project Management">
+  <h2 class="center">Project <span class="accent3">Management</span></h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Project Lifecycle</h3>
+      <div class="flow" style="margin-top:10px;flex-wrap:wrap;">
+        <div class="step" style="font-size:.8rem;">Create<br>Project</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Define<br>Tasks</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Track<br>Progress</div>
+        <div class="arrow">→</div>
+        <div class="step" style="font-size:.8rem;">Complete<br>&amp; Close</div>
+      </div>
+      <ul class="mt-sm">
+        <li>38 active projects across all entities</li>
+        <li>190 tasks with status tracking</li>
+        <li>Chapel Restorations, Faculty Development, Campus Expansion</li>
+        <li>Student Portal Development, Accreditation Preparation</li>
+        <li>Agricultural Development, Community Outreach</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Key Features</h3>
+      <ul>
+        <li><strong>Task Management</strong> — create, assign, and track tasks per project</li>
+        <li><strong>Gantt Chart</strong> — visual timeline for task scheduling</li>
+        <li><strong>Time Tracking</strong> — timesheets linked to projects</li>
+        <li><strong>Project Costing</strong> — track expenses against project budgets</li>
+        <li><strong>% Completion</strong> — automatic progress from task completion</li>
+        <li><strong>Dependencies</strong> — task dependencies and milestones</li>
+      </ul>
+      <h3 class="mt">Project Reports</h3>
+      <ul>
+        <li>Project Summary &amp; Profitability</li>
+        <li>Delayed Tasks Report</li>
+        <li>Project-wise Stock Tracking</li>
+        <li>Billing Summary by Project</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Project Screenshots -->
+<div class="slide" data-section="Projects" data-title="📸 Projects & Tasks">
+  <h2 class="center">Projects</h2>
+  <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Project List (38 projects)</p><img class="screenshot" src="screenshots/project_list.jpg" alt="Project List" style="max-height:55vh;"></div>
+    <div style="flex:1;min-width:45%;text-align:center;"><p style="margin-bottom:8px;font-weight:600;">Task List (190 tasks)</p><img class="screenshot" src="screenshots/task_list.jpg" alt="Task List" style="max-height:55vh;"></div>
+  </div>
+</div>
+
+<!-- SLIDE – Financial Reports -->
+<div class="slide" data-section="Reports" data-title="Financial Reports">
+  <h2 class="center">Financial <span class="accent">Reports</span></h2>
+  <div class="col3 mt">
+    <div class="card">
+      <h3>Core Statements</h3>
+      <ul>
+        <li>Balance Sheet</li>
+        <li>Profit &amp; Loss Statement</li>
+        <li>Cash Flow Statement</li>
+        <li>Trial Balance</li>
+        <li>General Ledger</li>
+        <li>Consolidated Financial Statement</li>
+        <li>Consolidated Trial Balance</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Receivables &amp; Payables</h3>
+      <ul>
+        <li>Accounts Receivable</li>
+        <li>Accounts Receivable Summary</li>
+        <li>Accounts Payable</li>
+        <li>Accounts Payable Summary</li>
+        <li>Customer Ledger Summary</li>
+        <li>Supplier Ledger Summary</li>
+        <li>Payment Ledger</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Analytical Reports</h3>
+      <ul>
+        <li>Budget Variance Report</li>
+        <li>Profitability Analysis</li>
+        <li>Gross &amp; Net Profit Report</li>
+        <li>Financial Ratios</li>
+        <li>Dimension-wise Account Balance</li>
+        <li>Purchase / Sales Register</li>
+        <li>Item-wise Purchase/Sales Register</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Financial Reports Screenshots -->
+<div class="slide" data-section="Reports" data-title="📸 Financial Reports">
+  <h2 class="center">Financial Reports</h2>
+  <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:30%;text-align:center;"><p style="margin-bottom:6px;font-weight:600;font-size:.9rem;">General Ledger</p><img class="screenshot" src="screenshots/general_ledger.jpg" alt="General Ledger" style="max-height:48vh;"></div>
+    <div style="flex:1;min-width:30%;text-align:center;"><p style="margin-bottom:6px;font-weight:600;font-size:.9rem;">Balance Sheet</p><img class="screenshot" src="screenshots/balance_sheet.jpg" alt="Balance Sheet" style="max-height:48vh;"></div>
+    <div style="flex:1;min-width:30%;text-align:center;"><p style="margin-bottom:6px;font-weight:600;font-size:.9rem;">Profit & Loss</p><img class="screenshot" src="screenshots/profit_and_loss.jpg" alt="Profit and Loss" style="max-height:48vh;"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SECTION: REPORTS
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Reports" data-title="HR Reports">
+  <h2 class="center">HR &amp; Payroll <span class="accent5">Reports</span></h2>
+  <div class="col3 mt">
+    <div class="card">
+      <h3>HR Reports</h3>
+      <ul>
+        <li>Employee Information</li>
+        <li>Employee Analytics</li>
+        <li>Employee Birthday</li>
+        <li>Employee Leave Balance</li>
+        <li>Leave Balance Summary</li>
+        <li>Leave Ledger</li>
+        <li>Monthly Attendance Sheet</li>
+        <li>Shift Attendance</li>
+        <li>Recruitment Analytics</li>
+        <li>Appraisal Overview</li>
+        <li>Employee Exits</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Payroll Reports</h3>
+      <ul>
+        <li>Salary Register</li>
+        <li>Income Tax Computation</li>
+        <li>Income Tax Deductions</li>
+        <li>Bank Remittance</li>
+        <li>Salary Payments by Mode</li>
+        <li>Salary Payments via ECS</li>
+        <li>Accrued Earnings Report</li>
+        <li>Provident Fund Deductions</li>
+        <li>Professional Tax Deductions</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>AMO-Specific Reports</h3>
+      <ul>
+        <li>CNSS Monthly Declaration</li>
+        <li>CNSS Yearly Declaration</li>
+        <li>Employee Joining Report</li>
+        <li>Employee Leaving Report</li>
+        <li>MOF R3/R4/R5/R6/R10</li>
+        <li>Unpaid Expense Claims</li>
+        <li>Employee Advance Summary</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Salary Register Screenshot -->
+<div class="slide" data-section="Reports" data-title="📸 Salary Register">
+  <h2 class="center">Salary Register</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/salary_register.jpg" alt="Salary Register"></div>
+</div>
+
+<!-- SLIDE – Financial Reports Detail -->
+<div class="slide" data-section="Reports" data-title="Financial Reports Detail">
+  <h2 class="center">Financial Reports <span class="accent">Dashboard</span></h2>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Primary Statements</h3>
+      <table>
+        <tr><th>Report</th><th>Description</th></tr>
+        <tr><td>Balance Sheet</td><td>Assets, Liabilities, Equity at a date</td></tr>
+        <tr><td>Profit &amp; Loss</td><td>Income vs Expenses for a period</td></tr>
+        <tr><td>Cash Flow</td><td>Operating, investing, financing activities</td></tr>
+        <tr><td>Trial Balance</td><td>All GL balances verification</td></tr>
+        <tr><td>General Ledger</td><td>Detailed transaction-level ledger</td></tr>
+        <tr><td>Consolidated Statement</td><td>Multi-company consolidated view</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Operational Reports</h3>
+      <table>
+        <tr><th>Report</th><th>Description</th></tr>
+        <tr><td>Accounts Receivable Aging</td><td>Outstanding customer invoices</td></tr>
+        <tr><td>Accounts Payable Aging</td><td>Outstanding supplier invoices</td></tr>
+        <tr><td>Budget Variance</td><td>Budget vs actual comparison</td></tr>
+        <tr><td>Gross Profit</td><td>Margin analysis by item/customer</td></tr>
+        <tr><td>Profitability Analysis</td><td>By cost center / project</td></tr>
+        <tr><td>Purchase / Sales Register</td><td>Tax-wise transaction register</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – AMO Dashboard Screenshot -->
+<div class="slide" data-section="Reports" data-title="📸 AMO Dashboard">
+  <h2 class="center">AMO Dashboard</h2>
+  <div class="screenshot-wrap"><img class="screenshot" src="screenshots/amo_dashboard.jpg" alt="AMO Dashboard"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – INTEGRATION OVERVIEW
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Integration" data-title="System Integration">
+  <h2 class="center">System <span class="accent5">Integration</span> &amp; Architecture</h2>
+  <div class="col3 mt">
+    <div class="card">
+      <h3 class="accent">Cerebro (Core ERP)</h3>
+      <ul>
+        <li>Accounts &amp; Finance</li>
+        <li>Buying &amp; Selling</li>
+        <li>Stock &amp; Inventory</li>
+        <li>Projects</li>
+        <li>Assets Management</li>
+        <li>CRM</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent4">HRMS</h3>
+      <ul>
+        <li>Employee Management</li>
+        <li>Leave &amp; Attendance</li>
+        <li>Recruitment</li>
+        <li>Payroll Processing</li>
+        <li>Expense Claims</li>
+        <li>Performance Mgmt</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent3">Payroll</h3>
+      <ul>
+        <li>Lebanese Payroll Settings</li>
+        <li>CNSS Forms &amp; PDFs</li>
+        <li>MOF Tax Forms &amp; PDFs</li>
+        <li>Multi-company COA Setup</li>
+        <li>Custom Payroll Constants</li>
+        <li>52-Company Configuration</li>
+      </ul>
+    </div>
+  </div>
+  <div class="center mt">
+    <p class="small">All modules share a single database &middot; Real-time data flow &middot; Role-based access control &middot; Audit trail on every document &middot; Powered by Cerebro</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – DEMO WALKTHROUGH
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Demo" data-title="Demo Walkthrough">
+  <h2 class="center">Demo <span class="accent">Walkthrough</span></h2>
+  <p class="center subtitle">End-to-end demonstration of the AMO ERP cycle</p>
+  <div class="col2 mt">
+    <div class="card">
+      <h3>Finance Demo</h3>
+      <ol class="steps">
+        <li>Navigate Company Tree — see all 52 companies</li>
+        <li>Open Chart of Accounts for a monastery</li>
+        <li>View Cost Center hierarchy</li>
+        <li>Show Budget document &amp; variance report</li>
+        <li>Create a Journal Entry across companies</li>
+        <li>Run consolidated Balance Sheet</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>HR &amp; Payroll Demo</h3>
+      <ol class="steps">
+        <li>Browse Employee list across companies</li>
+        <li>Show Leave Application workflow</li>
+        <li>Create Payroll Entry for a company</li>
+        <li>Review generated Salary Slips</li>
+        <li>Generate CNSS Form 2M (PDF)</li>
+        <li>Generate MOF R3 Form (PDF)</li>
+        <li>Run Salary Register report</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SLIDE – SUMMARY
+     ════════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Summary" data-title="Summary">
+  <h2 class="center">Summary &amp; <span class="accent">Key Takeaways</span></h2>
+  <div class="col2 mt">
+    <div>
+      <div class="col2">
+        <div class="stat"><div class="num accent">52</div><div class="label">Companies Managed</div></div>
+        <div class="stat"><div class="num accent2">7</div><div class="label">Countries Supported</div></div>
+        <div class="stat"><div class="num accent3">7</div><div class="label">Currencies</div></div>
+        <div class="stat"><div class="num accent4">11</div><div class="label">CNSS &amp; MOF Forms</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Why AMO ERP?</h3>
+      <ul>
+        <li>✅ <strong>Unified platform</strong> — Finance, HR, Payroll in one system</li>
+        <li>✅ <strong>Multi-company</strong> — consolidated reporting across 52 entities</li>
+        <li>✅ <strong>Lebanese compliance</strong> — CNSS &amp; MOF forms built-in</li>
+        <li>✅ <strong>Multi-currency</strong> — 7 currencies with auto exchange rates</li>
+        <li>✅ <strong>Multilingual</strong> — Arabic, French &amp; English interface</li>
+        <li>✅ <strong>Asset &amp; Project tracking</strong> — full lifecycle management</li>
+        <li>✅ <strong>Open source</strong> — built on Cerebro/Frappe framework</li>
+        <li>✅ <strong>Customizable</strong> — education, monastery, NGO workflows</li>
+        <li>✅ <strong>Audit trail</strong> — every document versioned &amp; tracked</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE – Thank You -->
+<div class="slide" data-section="Summary" data-title="Thank You">
+  <div class="center">
+    <h1>Thank <span class="accent">You</span></h1>
+    <p class="subtitle mt">Antonine Maronite Order — A Comprehensive ERP Solution</p>
+    <div class="mt">
+      <span class="badge blue">Finance</span>
+      <span class="badge green">Inventory</span>
+      <span class="badge amber">Assets</span>
+      <span class="badge purple">Buying</span>
+      <span class="badge pink">Selling</span>
+      <span class="badge blue">HRMS</span>
+      <span class="badge green">Payroll</span>
+      <span class="badge amber">Projects</span>
+      <span class="badge purple">Reports</span>
+    </div>
+    <p class="small mt" style="color:rgba(255,255,255,.35);">Antonine Maronite Order &middot; Powered by IP Engineering Pro &ldquo;Cerebro&rdquo;</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let cur = 0;
+
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    setTimeout(() => slides[cur === n ? cur : cur].classList.remove('exit'), 600);
+    const prev = cur;
+    cur = n;
+    slides[cur].classList.add('active');
+    setTimeout(() => slides[prev].classList.remove('exit'), 550);
+    progress.style.width = ((cur + 1) / total * 100) + '%';
+    counter.textContent = (cur + 1) + ' / ' + total;
+    buildTOC();
+  }
+
+  // nav
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  document.getElementById('next').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'Home') { e.preventDefault(); go(0); }
+    if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+    if (e.key === 'm' || e.key === 'M') toggleTOC();
+  });
+
+  // swipe
+  let sx = 0;
+  document.addEventListener('touchstart', e => sx = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 60) dx < 0 ? go(cur + 1) : go(cur - 1);
+  });
+
+  // TOC
+  const toc = document.getElementById('toc');
+  const tocToggle = document.getElementById('toc-toggle');
+  function toggleTOC() { toc.classList.toggle('open'); }
+  tocToggle.onclick = toggleTOC;
+
+  function buildTOC() {
+    let html = '<h3>Contents</h3><ul>';
+    let lastSection = '';
+    slides.forEach((s, i) => {
+      const sec = s.dataset.section || '';
+      const title = s.dataset.title || ('Slide ' + (i + 1));
+      if (sec !== lastSection) {
+        html += `<li class="section-head">${sec}</li>`;
+        lastSection = sec;
+      }
+      const active = i === cur ? 'background:rgba(96,165,250,.18);color:#60a5fa;font-weight:600;' : '';
+      html += `<li style="${active}" onclick="window._goSlide(${i})">${title}</li>`;
+    });
+    html += '</ul>';
+    toc.innerHTML = html;
+  }
+  window._goSlide = function(n) { go(n); toc.classList.remove('open'); };
+
+  // init
+  progress.style.width = (1 / total * 100) + '%';
+  counter.textContent = '1 / ' + total;
+  buildTOC();
+})();
+</script>
+
+</body>
+</html>

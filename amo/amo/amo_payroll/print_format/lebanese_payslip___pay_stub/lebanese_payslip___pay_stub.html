@@ -1,0 +1,476 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set currency = doc.currency or "LBP" -%}
+{%- set emp = frappe.get_doc("Employee", doc.employee) -%}
+{%- set fmt = frappe.utils.fmt_money -%}
+
+{#── Separate earnings: regular vs statistical ──#}
+{%- set regular_earnings = [] -%}
+{%- set stat_earnings = [] -%}
+{%- for e in doc.earnings -%}
+  {%- if e.statistical_component -%}
+    {%- set _ = stat_earnings.append(e) -%}
+  {%- else -%}
+    {%- set _ = regular_earnings.append(e) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{#── Separate deductions: employee vs employer (statistical) vs tax ──#}
+{%- set employee_deductions = [] -%}
+{%- set employer_deductions = [] -%}
+{%- set tax_deductions = [] -%}
+{%- for d in doc.deductions -%}
+  {%- if d.statistical_component -%}
+    {%- set _ = employer_deductions.append(d) -%}
+  {%- elif 'tax' in d.salary_component|lower or 'income' in d.salary_component|lower or 'irpef' in d.salary_component|lower -%}
+    {%- set _ = tax_deductions.append(d) -%}
+  {%- else -%}
+    {%- set _ = employee_deductions.append(d) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<style>
+/* ══════════════════════════════════════════════════════
+   PAY STUB — Plain B&W Tabular (matching reference)
+   Prefix: .st
+   ══════════════════════════════════════════════════════ */
+.st {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 0;
+  color: #000;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+.st *, .st *::before, .st *::after { box-sizing: border-box; }
+
+/* ── Top blue bar (thin) ──────────────────────────── */
+.st-bar {
+  height: 5px;
+  background: #1a5276;
+}
+
+/* ── Title ────────────────────────────────────────── */
+.st-title-area {
+  padding: 18px 24px 10px;
+}
+.st-title {
+  font-size: 28px;
+  font-weight: 400;
+  color: #000;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* ── Top-right pay period ─────────────────────────── */
+.st-period-block {
+  float: right;
+  text-align: right;
+  margin-top: -38px;
+  margin-right: 24px;
+  font-size: 10px;
+}
+.st-period-block div { margin-bottom: 2px; }
+.st-period-label { font-weight: 700; }
+
+/* ── Employee info (bold label: value) ────────────── */
+.st-emp-info {
+  padding: 6px 24px 14px;
+  clear: both;
+}
+.st-emp-line {
+  margin-bottom: 3px;
+  font-size: 10.5px;
+}
+.st-emp-line b {
+  font-weight: 700;
+}
+
+/* ── Main table ───────────────────────────────────── */
+.st-main {
+  width: calc(100% - 48px);
+  margin: 0 24px;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+.st-main th,
+.st-main td {
+  padding: 5px 8px;
+  vertical-align: middle;
+}
+
+/* Column widths */
+.st-main .st-c-desc { width: 42%; text-align: left; }
+.st-main .st-c-unit  { width: 14%; text-align: right; }
+.st-main .st-c-rate  { width: 14%; text-align: right; }
+.st-main .st-c-total { width: 15%; text-align: right; }
+.st-main .st-c-emp   { width: 15%; text-align: right; }
+.st-main .st-c-er    { width: 15%; text-align: right; }
+
+/* Column header row */
+.st-main thead th {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  border-bottom: 1px solid #000;
+  padding-bottom: 4px;
+  background: transparent;
+}
+
+/* Section header rows */
+.st-sec-hd td {
+  font-weight: 700;
+  font-size: 10.5px;
+  padding-top: 10px;
+  padding-bottom: 4px;
+  background: #eee;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Data rows */
+.st-main tbody td {
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 10px;
+  color: #222;
+}
+.st-main tbody td:first-child {
+  padding-left: 16px;
+}
+
+/* Amount cells */
+.st-amt {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* N/A cells */
+.st-na {
+  color: #999;
+  font-size: 9px;
+}
+
+/* Total rows (per section) */
+.st-total-row td {
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  font-weight: 700;
+  font-size: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: transparent;
+}
+.st-total-row td:first-child {
+  text-align: right;
+  padding-right: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 9px;
+}
+
+/* Gross pay row */
+.st-gross-row td {
+  border-top: 2px solid #000;
+  font-weight: 700;
+  font-size: 10.5px;
+  text-align: right;
+  padding: 6px 8px;
+  background: transparent;
+}
+
+/* Reimbursement total */
+.st-reimb-total td {
+  border-top: 1px solid #999;
+  font-weight: 700;
+  font-size: 10px;
+  text-align: right;
+  padding: 5px 8px;
+}
+
+/* ── Net Payment bar ──────────────────────────────── */
+.st-net-row td {
+  background: #333;
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  text-align: right;
+  padding: 8px 8px;
+  border: none;
+}
+.st-net-row td:first-child {
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Amount in words */
+.st-words-row td {
+  font-size: 9px;
+  font-style: italic;
+  color: #555;
+  padding: 5px 8px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+/* ── Notes section ────────────────────────────────── */
+.st-notes-sec td {
+  padding-top: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-top: 1px solid #999;
+  background: #eee;
+}
+.st-notes-body td {
+  padding: 8px 8px 4px;
+  font-size: 9px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* ── Signatures ───────────────────────────────────── */
+.st-sigs {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 24px;
+  padding-top: 34px;
+}
+.st-sig {
+  text-align: center;
+  width: 170px;
+}
+.st-sig-line {
+  border-top: 1px solid #000;
+  margin-top: 44px;
+  padding-top: 4px;
+}
+.st-sig-en {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #333;
+}
+.st-sig-ar {
+  font-size: 9px;
+  color: #999;
+  direction: rtl;
+  margin-top: 1px;
+}
+
+/* ── Disclaimer ───────────────────────────────────── */
+.st-disclaimer {
+  text-align: center;
+  padding: 10px 24px 8px;
+  font-size: 7.5px;
+  color: #bbb;
+  margin-top: 8px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ── Print ────────────────────────────────────────── */
+@media print {
+  .st-bar, .st-net-row td, .st-sec-hd td, .st-notes-sec td {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+</style>
+
+<div class="st">
+
+  <!-- Thin top bar -->
+  <div class="st-bar"></div>
+
+  <!-- PAY STUB title -->
+  <div class="st-title-area">
+    <h1 class="st-title">PAY STUB</h1>
+  </div>
+
+  <!-- Pay period (top right) -->
+  <div class="st-period-block">
+    <div><span class="st-period-label">Pay period:</span>&nbsp; {{ frappe.utils.formatdate(doc.start_date, "dd/MM/yyyy") }} &nbsp;<b>to</b>&nbsp; {{ frappe.utils.formatdate(doc.end_date, "dd/MM/yyyy") }}</div>
+    <div><span class="st-period-label">Date of payment:</span>&nbsp; {{ frappe.utils.formatdate(doc.posting_date, "dd/MM/yyyy") }}</div>
+  </div>
+
+  <!-- Employee info lines -->
+  <div class="st-emp-info">
+    <div class="st-emp-line"><b>Employee's name:</b>&nbsp; {{ doc.employee_name }}</div>
+    <div class="st-emp-line"><b>Employer's name:</b>&nbsp; {{ doc.company }}</div>
+    <div class="st-emp-line"><b>Employee's CNSS No.:</b>&nbsp; {{ emp.ctc or "—" }}</div>
+  </div>
+
+  <!-- ═══ MAIN TABLE ═══ -->
+  <table class="st-main">
+
+    {# ─── Column headers (earnings phase) ─── #}
+    <thead>
+      <tr>
+        <th class="st-c-desc"></th>
+        <th class="st-c-unit">UNIT</th>
+        <th class="st-c-rate">RATE</th>
+        <th class="st-c-total">TOTAL</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    {# ════ EARNINGS ════ #}
+    <tr class="st-sec-hd">
+      <td colspan="4"><b>EARNINGS</b></td>
+    </tr>
+    {% for e in regular_earnings %}
+    <tr>
+      <td>{{ e.salary_component }}</td>
+      {% if e.depends_on_payment_days %}
+        <td class="st-c-unit st-amt">{{ doc.payment_days or doc.total_working_days }} days</td>
+      {% else %}
+        <td class="st-c-unit st-na">—</td>
+      {% endif %}
+      <td class="st-c-rate st-na">—</td>
+      <td class="st-c-total st-amt">{{ fmt(e.amount, currency=currency) }}</td>
+    </tr>
+    {% endfor %}
+    {% if stat_earnings %}
+    {% for se in stat_earnings %}
+    <tr>
+      <td>{{ se.salary_component }} <span style="font-size:8px;color:#999">(info)</span></td>
+      <td class="st-c-unit st-na">N/A</td>
+      <td class="st-c-rate st-na">N/A</td>
+      <td class="st-c-total st-amt">{{ fmt(se.amount, currency=currency) }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+
+    {# Gross Pay #}
+    <tr class="st-gross-row">
+      <td colspan="3" style="text-align:right;font-size:10px;letter-spacing:0.5px;">GROSS PAY</td>
+      <td class="st-amt">{{ fmt(doc.gross_pay, currency=currency) }}</td>
+    </tr>
+
+    {# ─── Switch column headers for deductions ─── #}
+    <tr>
+      <td style="border:none;padding-top:12px;"></td>
+      <td style="border:none;padding-top:12px;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;">Employee<br/>Amount</td>
+      <td style="border:none;padding-top:12px;text-align:right;font-size:9px;font-weight:700;text-transform:uppercase;">Employer<br/>Amount</td>
+      <td style="border:none;"></td>
+    </tr>
+
+    {# ════ PRE-TAX DEDUCTIONS ════ #}
+    {% if employee_deductions %}
+    <tr class="st-sec-hd">
+      <td colspan="4"><b>PRE-TAX DEDUCTIONS</b></td>
+    </tr>
+    {% for d in employee_deductions %}
+    <tr>
+      <td>{{ d.salary_component }}</td>
+      <td class="st-c-unit st-amt">{{ fmt(d.amount, currency=currency) }}</td>
+      <td class="st-c-rate st-na">—</td>
+      <td class="st-c-total"></td>
+    </tr>
+    {% endfor %}
+    <tr class="st-total-row">
+      <td colspan="1" style="text-align:right;">TOTAL</td>
+      <td class="st-amt" style="text-align:right;">{{ fmt(employee_deductions|sum(attribute='amount'), currency=currency) }}</td>
+      <td style="text-align:right;color:#999;">—</td>
+      <td></td>
+    </tr>
+    {% endif %}
+
+    {# ════ TAX ════ #}
+    {% if tax_deductions %}
+    <tr class="st-sec-hd">
+      <td colspan="4"><b>TAX</b></td>
+    </tr>
+    {% for t in tax_deductions %}
+    <tr>
+      <td>{{ t.salary_component }}</td>
+      <td class="st-c-unit st-amt">{{ fmt(t.amount, currency=currency) }}</td>
+      <td class="st-c-rate st-na">N/A</td>
+      <td class="st-c-total"></td>
+    </tr>
+    {% endfor %}
+    <tr class="st-total-row">
+      <td colspan="1" style="text-align:right;">TOTAL</td>
+      <td class="st-amt" style="text-align:right;">{{ fmt(tax_deductions|sum(attribute='amount'), currency=currency) }}</td>
+      <td style="text-align:right;color:#999;">—</td>
+      <td></td>
+    </tr>
+    {% endif %}
+
+    {# ════ EMPLOYER CONTRIBUTIONS ════ #}
+    {% if employer_deductions %}
+    <tr class="st-sec-hd">
+      <td colspan="4"><b>EMPLOYER CONTRIBUTIONS</b></td>
+    </tr>
+    {% for ec in employer_deductions %}
+    <tr>
+      <td>{{ ec.salary_component }}</td>
+      <td class="st-c-unit st-na">N/A</td>
+      <td class="st-c-rate st-amt">{{ fmt(ec.amount, currency=currency) }}</td>
+      <td class="st-c-total"></td>
+    </tr>
+    {% endfor %}
+    <tr class="st-total-row">
+      <td colspan="1" style="text-align:right;">TOTAL</td>
+      <td style="text-align:right;color:#999;">—</td>
+      <td class="st-amt" style="text-align:right;">{{ fmt(employer_deductions|sum(attribute='amount'), currency=currency) }}</td>
+      <td></td>
+    </tr>
+    {% endif %}
+
+    {# ════ TOTAL DEDUCTIONS ════ #}
+    <tr class="st-reimb-total">
+      <td colspan="3" style="text-align:right;text-transform:uppercase;letter-spacing:0.5px;font-size:9px;">Total Deductions</td>
+      <td class="st-amt">{{ fmt(doc.total_deduction, currency=currency) }}</td>
+    </tr>
+
+    {# ════ NET PAYMENT ════ #}
+    <tr class="st-net-row">
+      <td colspan="3">NET PAYMENT</td>
+      <td class="st-amt">{{ fmt(doc.net_pay, currency=currency) }}</td>
+    </tr>
+
+    {# Amount in words #}
+    {% if doc.total_in_words %}
+    <tr class="st-words-row">
+      <td colspan="4">{{ doc.total_in_words }}</td>
+    </tr>
+    {% endif %}
+
+    {# ════ NOTES ════ #}
+    <tr class="st-notes-sec">
+      <td colspan="4">NOTES</td>
+    </tr>
+    <tr class="st-notes-body">
+      <td colspan="4">
+        This pay stub is computer-generated and is a confidential document intended solely for the named employee.<br/>
+        <span style="direction:rtl;display:inline-block">.هذا البيان صادر آلياً وهو وثيقة سرية مخصصة حصرياً للموظف المسمى أعلاه</span>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
+  <!-- Signatures -->
+  <div class="st-sigs">
+    <div class="st-sig">
+      <div class="st-sig-line">
+        <div class="st-sig-en">Employer Signature</div>
+        <div class="st-sig-ar">توقيع صاحب العمل</div>
+      </div>
+    </div>
+    <div class="st-sig">
+      <div class="st-sig-line">
+        <div class="st-sig-en">Employee Signature</div>
+        <div class="st-sig-ar">توقيع الموظف</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="st-disclaimer">
+    Confidential — This document is the property of {{ doc.company }} and is provided for informational purposes only.
+  </div>
+
+</div>

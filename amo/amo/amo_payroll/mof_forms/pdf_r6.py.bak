@@ -1,0 +1,246 @@
+"""R6 — كشف سنوي إفرادي بإجمالي إيرادات المستخدم/الأجير — Annual Individual Income.
+
+Per-employee annual income breakdown with 18 income line items and deductions.
+"""
+
+from reportlab.lib.units import mm
+from reportlab.lib.colors import black
+
+from .pdf_utils import (
+    FormPDF, PAGE_W, PAGE_H, MARGIN, GREEN, LIGHT_GREEN, GRAY, ar, ar_or_latin,
+)
+
+
+def build_r6_pdf(data):
+    """Build R6 PDF and return bytes.
+
+    Args:
+        data: dict from get_r6_data() with company, employee, year, lines,
+              line_310, line_330, line_340, line_350, line_360, etc.
+    """
+    pdf = FormPDF()
+    c = pdf.c
+    comp = data["company"]
+    emp = data["employee"]
+    year = data["year"]
+    lines = data["lines"]
+    nf = pdf.number_format
+
+    R = PAGE_W - MARGIN
+    L = MARGIN
+    W = R - L
+    row_h = 13
+    col1_r = R - 5
+    col2_r = PAGE_W / 2 - 10
+
+    # ── Header ───────────────────────────────────────────────────
+    y = PAGE_H - MARGIN
+    pdf.text_ar(L + 20, y, "ر ٦", size=16, bold=True)
+
+    pdf.text_ar(R, y, "الجمهورية اللبنانيـــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "وزارة الماليــــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية المالية العامة", size=8)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية الواردات – ضريبة الرواتب والأجور", size=8)
+
+    title_y = PAGE_H - MARGIN - 18
+    pdf.text_center(PAGE_W / 2, title_y,
+                    "كشف سنوي إفرادي بإجمالي إيرادات المستخدم/الأجير", size=11, bold=True)
+
+    # ── Company info ─────────────────────────────────────────────
+    y = PAGE_H - MARGIN - 58
+    pdf.text_ar(col1_r, y, "إسم الشركة/المؤسسة", size=8)
+    pdf.dotted_line(col2_r - 40, y - 2, col1_r - col2_r + 20)
+    pdf.text_value(col2_r - 35, y, comp.get("company_name", ""), size=8, bold=True)
+
+    pdf.text_ar(col2_r - 50, y, "السنة", size=8)
+    pdf.text_value(L + 10, y, str(year), size=10, bold=True)
+
+    y -= row_h
+    pdf.text_ar(col1_r, y, "رقم التسجيل", size=8)
+    tax_id = str(comp.get("tax_id") or "")
+    pdf.field_boxes_ltr(R - 240, y - 4, 12, box_size=12, values=tax_id)
+
+    # ── Employee info ────────────────────────────────────────────
+    y -= row_h + 6
+    sec_top = y + 12
+    pdf.section_header(L, y, W, "معلومات عن المستخدم / الأجير", size=9)
+    y -= 4
+
+    # Name row
+    pdf.text_ar(col1_r, y, "الإسم", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 40)
+    pdf.text_value(col2_r + 15, y, emp.get("first_name", ""), size=9)
+
+    pdf.text_ar(col2_r, y, "إسم الأب", size=8)
+    pdf.dotted_line(L + 60, y - 2, col2_r - L - 100)
+    pdf.text_value(L + 65, y, emp.get("father_name", ""), size=9)
+
+    pdf.text_ar(L + 55, y, "الشهرة", size=8)
+    pdf.dotted_line(L + 5, y - 2, 40)
+    pdf.text_value(L + 7, y, emp.get("last_name", ""), size=8)
+
+    y -= row_h
+    # Financial number / work type
+    pdf.text_ar(col1_r, y, "الرقم المالي الشخصي", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 100)
+    pdf.text_value(col2_r + 15, y, emp.get("financial_number", ""), size=9)
+
+    pdf.text_ar(col2_r, y, "نوع العمل", size=8)
+    pdf.dotted_line(L + 5, y - 2, col2_r - L - 60)
+    pdf.text_value(L + 10, y, emp.get("designation", ""), size=8)
+
+    y -= row_h
+    # Salary type / dependents / marital
+    salary_type = data.get("salary_type", "Monthly")
+    pdf.text_ar(col1_r, y, "نوع الأجرة", size=8)
+    cx = col1_r - 60
+    pdf.checkbox(cx, y - 3, checked=(salary_type == "Monthly"), size=7)
+    pdf.text_ar(cx - 2, y, "شهري", size=7)
+    pdf.checkbox(cx - 35, y - 3, checked=(salary_type == "Daily"), size=7)
+    pdf.text_ar(cx - 37, y, "يومي", size=7)
+
+    pdf.text_ar(col2_r, y, "عدد المعالين", size=8)
+    pdf.dotted_line(col2_r - 80, y - 2, 35)
+    pdf.text_value(col2_r - 77, y, str(data.get("dep_count", 0)), size=9)
+
+    marital = data.get("marital_status", "")
+    pdf.text_ar(L + 115, y, "الوضع العائلي", size=8)
+    pdf.text_value(L + 10, y, marital, size=8)
+
+    y -= row_h
+    # Work period
+    pdf.text_ar(col1_r, y, "فترة العمل من", size=8)
+    work_from = data.get("work_from", "")
+    work_to = data.get("work_to", "")
+    pdf.text_value(col1_r - 80, y, str(work_from), size=8)
+    pdf.text_ar(col1_r - 140, y, "إلى", size=8)
+    pdf.text_value(col1_r - 165, y, str(work_to), size=8)
+
+    sec_bottom = y - 6
+    pdf.rect(L, sec_bottom, W, sec_top - sec_bottom, line_width=0.8)
+
+    # ══════════════════════════════════════════════════════════════
+    #  INCOME TABLE
+    # ══════════════════════════════════════════════════════════════
+    y -= 14
+
+    # Column widths
+    code_w = 30
+    desc_w = W * 0.38
+    total_w = (W - code_w - desc_w) / 3
+    nontax_w = total_w
+    tax_w = total_w
+
+    def draw_income_row(yy, code, desc, total, nontax, taxable, bold_row=False, is_hdr=False):
+        fill = LIGHT_GREEN if is_hdr else None
+        lw = 0.5
+
+        # Code
+        pdf.rect(L, yy, code_w, row_h, fill=is_hdr, fill_color=fill, line_width=lw)
+        pdf.text_center(L + code_w / 2, yy + 3, code, size=6, bold=is_hdr,
+                        color=GREEN if is_hdr else black)
+
+        # Description
+        pdf.rect(L + code_w, yy, desc_w, row_h, fill=is_hdr, fill_color=fill, line_width=lw)
+        pdf.text_ar(L + code_w + desc_w - 3, yy + 3, desc, size=6,
+                    bold=bold_row or is_hdr, color=GREEN if is_hdr else black)
+
+        # Total
+        cx = L + code_w + desc_w
+        pdf.rect(cx, yy, total_w, row_h, fill=is_hdr, fill_color=fill, line_width=lw)
+        v = total if is_hdr else nf(total)
+        pdf.text_center(cx + total_w / 2, yy + 3, v, size=6, bold=is_hdr,
+                        color=GREEN if is_hdr else black)
+
+        # Non-taxable
+        cx += total_w
+        pdf.rect(cx, yy, nontax_w, row_h, fill=is_hdr, fill_color=fill, line_width=lw)
+        v = nontax if is_hdr else nf(nontax)
+        pdf.text_center(cx + nontax_w / 2, yy + 3, v, size=6, bold=is_hdr,
+                        color=GREEN if is_hdr else black)
+
+        # Taxable
+        cx += nontax_w
+        pdf.rect(cx, yy, tax_w, row_h, fill=is_hdr, fill_color=fill, line_width=lw)
+        v = taxable if is_hdr else nf(taxable)
+        pdf.text_center(cx + tax_w / 2, yy + 3, v, size=6, bold=is_hdr,
+                        color=GREEN if is_hdr else black)
+
+    # Header
+    draw_income_row(y - row_h, "الرقم", "البيان", "إجمالي المبلغ", "غير خاضع", "خاضع للضريبة",
+                    is_hdr=True)
+    y -= row_h
+
+    # Income line items
+    income_lines = [
+        ("100", "الراتب / الأجرة الأساسية"),
+        ("110", "بدل تمثيل"),
+        ("120", "مكافآت وحوافز"),
+        ("130", "تعويض عائلي (الزوجة)"),
+        ("140", "تعويض عائلي (الأولاد)"),
+        ("150", "بدل نقل"),
+        ("160", "بدل سيارة"),
+        ("170", "بدل سكن"),
+        ("180", "بدل طعام"),
+        ("190", "بدل ألبسة"),
+        ("200", "تعويض صندوق"),
+        ("210", "تأمينات صحية"),
+        ("220", "منح تعليم"),
+        ("230", "منح زواج"),
+        ("240", "منح ولادة"),
+        ("250", "مساعدات مرضية"),
+        ("260", "مساعدات وفاة"),
+        ("300", "أخرى"),
+    ]
+
+    for code, desc in income_lines:
+        y -= row_h
+        ln = lines.get(code, {"total": 0, "non_taxable": 0, "taxable": 0})
+        draw_income_row(y, code, desc, ln["total"], ln["non_taxable"], ln["taxable"])
+
+    # Line 310 - Total
+    y -= row_h
+    ln310 = data["line_310"]
+    draw_income_row(y, "310", "المجموع", ln310["total"], ln310["non_taxable"], ln310["taxable"],
+                    bold_row=True)
+
+    # ── Deductions ───────────────────────────────────────────────
+    y -= row_h + 4
+    ded_desc_w = W * 0.70
+    ded_val_w = W - ded_desc_w
+
+    ded_rows = [
+        ("330", "تنزيل عائلي", data.get("line_330", 0)),
+        ("340", "تنزيلات أخرى (CNSS)", data.get("line_340", 0)),
+        ("350", "صافي المبلغ الخاضع للضريبة", data.get("line_350", 0)),
+        ("360", "الضريبة السنوية المتوجبة", data.get("line_360", 0)),
+    ]
+
+    for code, desc, val in ded_rows:
+        pdf.rect(L, y, ded_desc_w, row_h, line_width=0.5)
+        pdf.text_ar(L + ded_desc_w - 3, y + 3, f"{code} - {desc}", size=7,
+                    bold=(code in ("350", "360")))
+        pdf.rect(L + ded_desc_w, y, ded_val_w, row_h, line_width=0.5)
+        pdf.text_center(L + ded_desc_w + ded_val_w / 2, y + 3, nf(val), size=7,
+                        bold=(code in ("350", "360")))
+        y -= row_h
+
+    # Tax withheld
+    y -= 4
+    pdf.text_ar(R, y, "الضريبة المقتطعة خلال السنة:", size=8, bold=True)
+    pdf.text_value(L + 10, y, nf(data.get("total_tax_withheld", 0)), size=9, bold=True)
+
+    # ── Declaration ──────────────────────────────────────────────
+    y -= 20
+    pdf.text_ar(R, y, "إفادة", size=9, bold=True, color=GREEN)
+    y -= 12
+    pdf.text_ar(R, y,
+                "أصرّح بأن المعلومات الواردة أعلاه صحيحة ودقيقة.", size=7)
+    y -= 12
+    pdf.text_ar(R, y, "التاريخ .................... التوقيع ....................", size=8)
+    pdf.text_ar(R - 250, y, "الإسم ..................... الصفة ....................", size=8)
+
+    return pdf.save()

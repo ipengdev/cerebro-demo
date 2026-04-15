@@ -1,0 +1,410 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "taxpayer",
+  "taxpayer_name",
+  "tax_identification_number",
+  "column_break_1",
+  "fiscal_year",
+  "filing_date",
+  "tax_year",
+  "section_employment",
+  "employment_income",
+  "other_employment_benefits",
+  "column_break_e1",
+  "employer_name",
+  "employer_tin",
+  "section_other_income",
+  "business_income",
+  "rental_income",
+  "investment_income",
+  "other_income",
+  "section_deductions",
+  "social_security_contributions",
+  "pension_contributions",
+  "insurance_premiums",
+  "charitable_donations",
+  "other_deductions",
+  "section_calculation",
+  "total_income",
+  "total_deductions",
+  "taxable_income",
+  "column_break_c1",
+  "tax_rate",
+  "tax_computed",
+  "tax_withheld",
+  "tax_payable",
+  "tax_refund",
+  "section_incomes",
+  "incomes",
+  "section_status",
+  "status",
+  "submitted_date",
+  "approved_by",
+  "remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ETX-PIT-.YYYY.-",
+   "default": "ETX-PIT-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "taxpayer",
+   "fieldtype": "Link",
+   "label": "Taxpayer",
+   "options": "Taxpayer",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "taxpayer_name",
+   "fieldtype": "Data",
+   "label": "Taxpayer Name",
+   "fetch_from": "taxpayer.taxpayer_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "tax_identification_number",
+   "fieldtype": "Data",
+   "label": "TIN",
+   "fetch_from": "taxpayer.tax_identification_number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "default": "USD",
+   "hidden": 1,
+   "no_copy": 0
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Tax Fiscal Year",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "filing_date",
+   "fieldtype": "Date",
+   "label": "Filing Date",
+   "default": "Today",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_year",
+   "fieldtype": "Data",
+   "label": "Tax Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_employment",
+   "fieldtype": "Section Break",
+   "label": "Employment Income"
+  },
+  {
+   "fieldname": "employment_income",
+   "fieldtype": "Currency",
+   "label": "Employment Income",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "other_employment_benefits",
+   "fieldtype": "Currency",
+   "label": "Other Employment Benefits",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_e1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employer_name",
+   "fieldtype": "Data",
+   "label": "Employer Name"
+  },
+  {
+   "fieldname": "employer_tin",
+   "fieldtype": "Data",
+   "label": "Employer TIN"
+  },
+  {
+   "fieldname": "section_other_income",
+   "fieldtype": "Section Break",
+   "label": "Other Income"
+  },
+  {
+   "fieldname": "business_income",
+   "fieldtype": "Currency",
+   "label": "Business Income",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "rental_income",
+   "fieldtype": "Currency",
+   "label": "Rental Income",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "investment_income",
+   "fieldtype": "Currency",
+   "label": "Investment Income",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "other_income",
+   "fieldtype": "Currency",
+   "label": "Other Income",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_deductions",
+   "fieldtype": "Section Break",
+   "label": "Deductions & Allowances"
+  },
+  {
+   "fieldname": "social_security_contributions",
+   "fieldtype": "Currency",
+   "label": "Social Security Contributions",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "pension_contributions",
+   "fieldtype": "Currency",
+   "label": "Pension Contributions",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "insurance_premiums",
+   "fieldtype": "Currency",
+   "label": "Insurance Premiums",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "charitable_donations",
+   "fieldtype": "Currency",
+   "label": "Charitable Donations",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "other_deductions",
+   "fieldtype": "Currency",
+   "label": "Other Deductions",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_calculation",
+   "fieldtype": "Section Break",
+   "label": "Tax Calculation"
+  },
+  {
+   "fieldname": "total_income",
+   "fieldtype": "Currency",
+   "label": "Total Income",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_deductions",
+   "fieldtype": "Currency",
+   "label": "Total Deductions",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "taxable_income",
+   "fieldtype": "Currency",
+   "label": "Taxable Income",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_c1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tax_rate",
+   "fieldtype": "Percent",
+   "label": "Tax Rate (%)",
+   "default": "20"
+  },
+  {
+   "fieldname": "tax_computed",
+   "fieldtype": "Currency",
+   "label": "Tax Computed",
+   "read_only": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_withheld",
+   "fieldtype": "Currency",
+   "label": "Tax Already Withheld",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_payable",
+   "fieldtype": "Currency",
+   "label": "Tax Payable",
+   "read_only": 1,
+   "bold": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_refund",
+   "fieldtype": "Currency",
+   "label": "Tax Refund Due",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_incomes",
+   "fieldtype": "Section Break",
+   "label": "Income Details"
+  },
+  {
+   "fieldname": "incomes",
+   "fieldtype": "Table",
+   "label": "Income Sources",
+   "options": "Personal Income Tax Income"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nUnder Review\nApproved\nRejected",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "submitted_date",
+   "fieldtype": "Date",
+   "label": "Submitted Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Personal Income Tax",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax Administration",
+ "name": "Personal Income Tax",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Officer",
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Filer",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "title": "Draft",
+   "color": "gray"
+  },
+  {
+   "title": "Submitted",
+   "color": "blue"
+  },
+  {
+   "title": "Under Review",
+   "color": "orange"
+  },
+  {
+   "title": "Approved",
+   "color": "green"
+  },
+  {
+   "title": "Rejected",
+   "color": "red"
+  }
+ ],
+ "title_field": "taxpayer_name",
+ "search_fields": "taxpayer_name,tax_identification_number,fiscal_year"
+}

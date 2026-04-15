@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "income_source",
+  "income_type",
+  "amount",
+  "tax_withheld"
+ ],
+ "fields": [
+  {
+   "fieldname": "income_source",
+   "fieldtype": "Data",
+   "label": "Income Source",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "income_type",
+   "fieldtype": "Select",
+   "label": "Income Type",
+   "options": "\nEmployment\nBusiness\nRental\nInvestment\nOther",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "tax_withheld",
+   "fieldtype": "Currency",
+   "label": "Tax Withheld",
+   "default": "0",
+   "in_list_view": 1,
+   "options": "currency"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax Administration",
+ "name": "Personal Income Tax Income",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

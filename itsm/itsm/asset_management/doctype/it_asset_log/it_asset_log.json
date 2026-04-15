@@ -1,0 +1,101 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "asset",
+    "action",
+    "timestamp",
+    "user",
+    "details",
+    "column_break_1",
+    "old_value",
+    "new_value",
+    "field_changed"
+  ],
+  "fields": [
+    {
+      "fieldname": "asset",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Asset",
+      "options": "IT Asset",
+      "reqd": 1
+    },
+    {
+      "fieldname": "action",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Action",
+      "options": "Created\nUpdated\nAssigned\nUnassigned\nMoved\nStatus Changed\nMaintenance\nDiscovered\nHeartbeat",
+      "reqd": 1
+    },
+    {
+      "fieldname": "timestamp",
+      "fieldtype": "Datetime",
+      "in_list_view": 1,
+      "label": "Timestamp",
+      "reqd": 1
+    },
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "label": "User",
+      "options": "User"
+    },
+    {
+      "fieldname": "details",
+      "fieldtype": "Small Text",
+      "label": "Details"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "old_value",
+      "fieldtype": "Data",
+      "label": "Old Value"
+    },
+    {
+      "fieldname": "new_value",
+      "fieldtype": "Data",
+      "label": "New Value"
+    },
+    {
+      "fieldname": "field_changed",
+      "fieldtype": "Data",
+      "label": "Field Changed"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Management",
+  "name": "IT Asset Log",
+  "naming_rule": "Expression",
+  "autoname": "ITAL-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "read": 1,
+      "role": "System Manager"
+    },
+    {
+      "read": 1,
+      "role": "IT Manager"
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "timestamp",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

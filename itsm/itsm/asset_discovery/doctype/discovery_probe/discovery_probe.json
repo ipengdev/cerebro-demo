@@ -1,0 +1,262 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "probe_name",
+    "probe_type",
+    "status",
+    "column_break_1",
+    "target_network",
+    "target_hosts",
+    "section_config",
+    "use_snmp",
+    "snmp_community",
+    "snmp_version",
+    "column_break_c",
+    "use_wmi",
+    "wmi_username",
+    "wmi_password",
+    "section_ssh",
+    "use_ssh",
+    "ssh_username",
+    "ssh_key",
+    "column_break_ssh",
+    "ssh_port",
+    "section_api",
+    "api_endpoint",
+    "api_key",
+    "api_type",
+    "section_schedule",
+    "is_scheduled",
+    "cron_expression",
+    "last_run",
+    "next_run",
+    "section_results",
+    "total_discovered",
+    "last_result_summary"
+  ],
+  "fields": [
+    {
+      "fieldname": "probe_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Probe Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "probe_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Probe Type",
+      "options": "Network Scan (Ping)\nPort Scan\nSNMP Discovery\nWMI Discovery\nSSH Discovery\nAPI Integration\nAgent Based",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Active\nInactive\nRunning\nFailed",
+      "default": "Active"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "target_network",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Target Network (CIDR)",
+      "description": "e.g., 192.168.1.0/24"
+    },
+    {
+      "fieldname": "target_hosts",
+      "fieldtype": "Small Text",
+      "label": "Target Hosts",
+      "description": "One IP or hostname per line"
+    },
+    {
+      "fieldname": "section_config",
+      "fieldtype": "Section Break",
+      "label": "SNMP Configuration",
+      "collapsible": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "use_snmp",
+      "fieldtype": "Check",
+      "label": "Use SNMP"
+    },
+    {
+      "fieldname": "snmp_community",
+      "fieldtype": "Password",
+      "label": "SNMP Community String"
+    },
+    {
+      "fieldname": "snmp_version",
+      "fieldtype": "Select",
+      "label": "SNMP Version",
+      "options": "\nv1\nv2c\nv3"
+    },
+    {
+      "fieldname": "column_break_c",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "use_wmi",
+      "fieldtype": "Check",
+      "label": "Use WMI"
+    },
+    {
+      "fieldname": "wmi_username",
+      "fieldtype": "Data",
+      "label": "WMI Username"
+    },
+    {
+      "fieldname": "wmi_password",
+      "fieldtype": "Password",
+      "label": "WMI Password"
+    },
+    {
+      "fieldname": "section_ssh",
+      "fieldtype": "Section Break",
+      "label": "SSH Configuration",
+      "collapsible": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "use_ssh",
+      "fieldtype": "Check",
+      "label": "Use SSH"
+    },
+    {
+      "fieldname": "ssh_username",
+      "fieldtype": "Data",
+      "label": "SSH Username"
+    },
+    {
+      "fieldname": "ssh_key",
+      "fieldtype": "Attach",
+      "label": "SSH Private Key"
+    },
+    {
+      "fieldname": "column_break_ssh",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "ssh_port",
+      "fieldtype": "Int",
+      "label": "SSH Port",
+      "default": "22"
+    },
+    {
+      "fieldname": "section_api",
+      "fieldtype": "Section Break",
+      "label": "API Integration",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "api_endpoint",
+      "fieldtype": "Data",
+      "label": "API Endpoint",
+      "options": "URL"
+    },
+    {
+      "fieldname": "api_key",
+      "fieldtype": "Password",
+      "label": "API Key"
+    },
+    {
+      "fieldname": "api_type",
+      "fieldtype": "Select",
+      "label": "API Type",
+      "options": "\nREST\nGraphQL\nvCenter\nAzure\nAWS\nGCP\nVMware\nHyper-V"
+    },
+    {
+      "fieldname": "section_schedule",
+      "fieldtype": "Section Break",
+      "label": "Schedule"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_scheduled",
+      "fieldtype": "Check",
+      "label": "Is Scheduled"
+    },
+    {
+      "fieldname": "cron_expression",
+      "fieldtype": "Data",
+      "label": "Cron Expression",
+      "description": "e.g., 0 */6 * * * (every 6 hours)"
+    },
+    {
+      "fieldname": "last_run",
+      "fieldtype": "Datetime",
+      "label": "Last Run",
+      "read_only": 1
+    },
+    {
+      "fieldname": "next_run",
+      "fieldtype": "Datetime",
+      "label": "Next Run",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_results",
+      "fieldtype": "Section Break",
+      "label": "Results Summary"
+    },
+    {
+      "fieldname": "total_discovered",
+      "fieldtype": "Int",
+      "label": "Total Hosts Discovered",
+      "read_only": 1
+    },
+    {
+      "fieldname": "last_result_summary",
+      "fieldtype": "Small Text",
+      "label": "Last Result Summary",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [
+    {
+      "group": "Results",
+      "link_doctype": "Discovery Result",
+      "link_fieldname": "probe"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Discovery",
+  "name": "Discovery Probe",
+  "naming_rule": "By fieldname",
+  "autoname": "field:probe_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

@@ -1,0 +1,236 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "ci_name",
+    "ci_type",
+    "status",
+    "criticality",
+    "column_break_1",
+    "asset",
+    "environment",
+    "owner_team",
+    "managed_by",
+    "section_details",
+    "description",
+    "configuration_data",
+    "section_service",
+    "business_service",
+    "service_tier",
+    "column_break_s",
+    "impact",
+    "risk_level",
+    "section_monitoring",
+    "monitoring_enabled",
+    "monitoring_url",
+    "health_check_url",
+    "column_break_m",
+    "last_health_check",
+    "health_status"
+  ],
+  "fields": [
+    {
+      "fieldname": "ci_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "CI Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "ci_type",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "CI Type",
+      "options": "CI Type",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Active\nPlanned\nIn Development\nIn Transition\nRetired\nArchived",
+      "default": "Active"
+    },
+    {
+      "fieldname": "criticality",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Criticality",
+      "options": "Critical\nHigh\nMedium\nLow",
+      "default": "Medium"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "asset",
+      "fieldtype": "Link",
+      "label": "Linked IT Asset",
+      "options": "IT Asset"
+    },
+    {
+      "fieldname": "environment",
+      "fieldtype": "Select",
+      "in_standard_filter": 1,
+      "label": "Environment",
+      "options": "Production\nStaging\nDevelopment\nTest\nDR"
+    },
+    {
+      "fieldname": "owner_team",
+      "fieldtype": "Data",
+      "label": "Owner Team"
+    },
+    {
+      "fieldname": "managed_by",
+      "fieldtype": "Link",
+      "label": "Managed By",
+      "options": "User"
+    },
+    {
+      "fieldname": "section_details",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Description"
+    },
+    {
+      "fieldname": "configuration_data",
+      "fieldtype": "Code",
+      "label": "Configuration Data (JSON/YAML)",
+      "options": "JSON"
+    },
+    {
+      "fieldname": "section_service",
+      "fieldtype": "Section Break",
+      "label": "Service Impact"
+    },
+    {
+      "fieldname": "business_service",
+      "fieldtype": "Data",
+      "label": "Business Service"
+    },
+    {
+      "fieldname": "service_tier",
+      "fieldtype": "Select",
+      "label": "Service Tier",
+      "options": "\nTier 1 - Mission Critical\nTier 2 - Business Critical\nTier 3 - Business Operational\nTier 4 - Administrative"
+    },
+    {
+      "fieldname": "column_break_s",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "impact",
+      "fieldtype": "Select",
+      "label": "Impact",
+      "options": "\nHigh\nMedium\nLow"
+    },
+    {
+      "fieldname": "risk_level",
+      "fieldtype": "Select",
+      "label": "Risk Level",
+      "options": "\nCritical\nHigh\nMedium\nLow"
+    },
+    {
+      "fieldname": "section_monitoring",
+      "fieldtype": "Section Break",
+      "label": "Monitoring",
+      "collapsible": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "monitoring_enabled",
+      "fieldtype": "Check",
+      "label": "Monitoring Enabled"
+    },
+    {
+      "fieldname": "monitoring_url",
+      "fieldtype": "Data",
+      "label": "Monitoring URL",
+      "options": "URL"
+    },
+    {
+      "fieldname": "health_check_url",
+      "fieldtype": "Data",
+      "label": "Health Check URL",
+      "options": "URL"
+    },
+    {
+      "fieldname": "column_break_m",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "last_health_check",
+      "fieldtype": "Datetime",
+      "label": "Last Health Check",
+      "read_only": 1
+    },
+    {
+      "fieldname": "health_status",
+      "fieldtype": "Select",
+      "label": "Health Status",
+      "options": "\nHealthy\nDegraded\nDown\nUnknown",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [
+    {
+      "group": "Relationships",
+      "link_doctype": "CI Relationship",
+      "link_fieldname": "source_ci"
+    },
+    {
+      "group": "Tickets",
+      "link_doctype": "Service Ticket",
+      "link_fieldname": "configuration_item"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "CMDB",
+  "name": "Configuration Item",
+  "naming_rule": "Expression",
+  "autoname": "CI-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "show_name_in_global_search": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "ci_name",
+  "track_changes": 1
+}

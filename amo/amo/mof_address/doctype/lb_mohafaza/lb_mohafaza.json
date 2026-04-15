@@ -1,0 +1,132 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:mohafaza_name_en",
+ "creation": "2026-06-10 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "mohafaza_name_en",
+  "mohafaza_name_ar",
+  "column_break_1",
+  "pcode",
+  "iso_code",
+  "hasc_code",
+  "fips_code",
+  "section_details",
+  "capital",
+  "area_km2",
+  "column_break_2",
+  "population",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "mohafaza_name_en",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mohafaza Name (EN)",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "mohafaza_name_ar",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mohafaza Name (AR)"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pcode",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "P-Code",
+   "description": "OCHA UN P-Code (e.g. LB1 for Beirut)",
+   "unique": 1
+  },
+  {
+   "fieldname": "iso_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ISO Code",
+   "description": "ISO 3166-2:LB code (e.g. LB-BA)"
+  },
+  {
+   "fieldname": "hasc_code",
+   "fieldtype": "Data",
+   "label": "HASC Code",
+   "description": "Hierarchical Administrative Subdivision Code"
+  },
+  {
+   "fieldname": "fips_code",
+   "fieldtype": "Data",
+   "label": "FIPS Code"
+  },
+  {
+   "fieldname": "section_details",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "capital",
+   "fieldtype": "Data",
+   "label": "Capital"
+  },
+  {
+   "fieldname": "area_km2",
+   "fieldtype": "Float",
+   "label": "Area (km\u00b2)"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "population",
+   "fieldtype": "Int",
+   "label": "Population"
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "default": "1"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-06-10 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MoF Address",
+ "name": "LB Mohafaza",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "mohafaza_name_ar, pcode, iso_code",
+ "sort_field": "mohafaza_name_en",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "mohafaza_name_en",
+ "track_changes": 1
+}

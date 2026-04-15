@@ -1,0 +1,300 @@
+{
+  "charts": [],
+  "content": "[{\"id\":\"hero\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>IT Assets &amp; Services Management</b></span>\",\"col\":12}},{\"id\":\"shortcuts\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"IT Asset\",\"col\":4}},{\"id\":\"shortcuts2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Ticket\",\"col\":4}},{\"id\":\"shortcuts3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Discovery Probe\",\"col\":4}}]",
+  "creation": "2026-04-08 00:00:00.000000",
+  "custom_blocks": [],
+  "doctype": "Workspace",
+  "for_user": "",
+  "hide_custom": 0,
+  "icon": "tool",
+  "idx": 0,
+  "is_hidden": 0,
+  "label": "ITSM",
+  "links": [
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Asset Management",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "IT Asset",
+      "link_count": 0,
+      "link_to": "IT Asset",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "IT Asset Category",
+      "link_count": 0,
+      "link_to": "IT Asset Category",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "IT Asset Location",
+      "link_count": 0,
+      "link_to": "IT Asset Location",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Software License",
+      "link_count": 0,
+      "link_to": "Software License",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "IT Asset Log",
+      "link_count": 0,
+      "link_to": "IT Asset Log",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Service Management",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Service Ticket",
+      "link_count": 0,
+      "link_to": "Service Ticket",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Ticket Type",
+      "link_count": 0,
+      "link_to": "Ticket Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "SLA Policy",
+      "link_count": 0,
+      "link_to": "SLA Policy",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Knowledge Base Article",
+      "link_count": 0,
+      "link_to": "Knowledge Base Article",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Service Catalog",
+      "link_count": 0,
+      "link_to": "Service Catalog",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "CMDB",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Configuration Item",
+      "link_count": 0,
+      "link_to": "Configuration Item",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "CI Type",
+      "link_count": 0,
+      "link_to": "CI Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "CI Relationship",
+      "link_count": 0,
+      "link_to": "CI Relationship",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "CI Relationship Type",
+      "link_count": 0,
+      "link_to": "CI Relationship Type",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Discovery & Monitoring",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Discovery Probe",
+      "link_count": 0,
+      "link_to": "Discovery Probe",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Discovery Result",
+      "link_count": 0,
+      "link_to": "Discovery Result",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Discovery Schedule",
+      "link_count": 0,
+      "link_to": "Discovery Schedule",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Contracts & Vendors",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "IT Contract",
+      "link_count": 0,
+      "link_to": "IT Contract",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Vendor",
+      "link_count": 0,
+      "link_to": "Vendor",
+      "link_type": "DocType",
+      "onboard": 0,
+      "type": "Link"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "Settings & Tools",
+      "link_count": 0,
+      "onboard": 0,
+      "type": "Card Break"
+    },
+    {
+      "hidden": 0,
+      "is_query_report": 0,
+      "label": "ITSM Settings",
+      "link_count": 0,
+      "link_to": "ITSM Settings",
+      "link_type": "DocType",
+      "onboard": 1,
+      "type": "Link",
+      "description": "Demo data, auto discovery, and app settings"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ITSM",
+  "name": "ITSM",
+  "owner": "Administrator",
+  "parent_page": "",
+  "public": 1,
+  "restrict_to_domain": "",
+  "roles": [],
+  "sequence_id": 25,
+  "shortcuts": [
+    {
+      "color": "Blue",
+      "doc_view": "List",
+      "label": "IT Asset",
+      "link_to": "IT Asset",
+      "stats_filter": "",
+      "type": "DocType"
+    },
+    {
+      "color": "Red",
+      "doc_view": "List",
+      "label": "Service Ticket",
+      "link_to": "Service Ticket",
+      "stats_filter": "{\"status\":[\"in\",[\"Open\",\"In Progress\",\"Pending\"]]}",
+      "type": "DocType"
+    },
+    {
+      "color": "Green",
+      "doc_view": "List",
+      "label": "Discovery Probe",
+      "link_to": "Discovery Probe",
+      "type": "DocType"
+    }
+  ],
+  "title": "ITSM"
+}

@@ -1,0 +1,263 @@
+"""R5 — تصريح سنوي عن ضريبة الدخل على الرواتب والأجور — Annual Tax Declaration.
+
+Company-level annual form with calculation tables for board/employee/lump-sum categories.
+"""
+
+from reportlab.lib.units import mm
+
+from reportlab.lib.colors import black
+
+from .pdf_utils import (
+    FormPDF, PAGE_W, PAGE_H, MARGIN, GREEN, LIGHT_GREEN, GRAY, ar, ar_or_latin,
+)
+
+
+def build_r5_pdf(data):
+    """Build R5 PDF and return bytes.
+
+    Args:
+        data: dict from get_r5_data() containing company, year, board, employees,
+              lump_sum, totals, payments, etc.
+    """
+    pdf = FormPDF()
+    c = pdf.c
+    comp = data["company"]
+    year = data["year"]
+    board = data["board"]
+    employees = data["employees"]
+    lump_sum = data["lump_sum"]
+    totals = data["totals"]
+    payments = data.get("payments", [])
+    nf = pdf.number_format
+
+    R = PAGE_W - MARGIN
+    L = MARGIN
+    W = R - L
+    row_h = 14
+
+    # ── Header ───────────────────────────────────────────────────
+    y = PAGE_H - MARGIN
+    pdf.text_ar(L + 20, y, "ر ٥", size=16, bold=True)
+
+    pdf.text_ar(R, y, "الجمهورية اللبنانيـــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "وزارة الماليــــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية المالية العامة", size=8)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية الواردات – ضريبة الرواتب والأجور", size=8)
+
+    title_y = PAGE_H - MARGIN - 18
+    pdf.text_center(PAGE_W / 2, title_y,
+                    "تصريح سنوي عن ضريبة الدخل على الرواتب والأجور", size=12, bold=True)
+
+    # ── Company info ─────────────────────────────────────────────
+    y = PAGE_H - MARGIN - 60
+    col1_r = R - 5
+    col2_r = PAGE_W / 2 - 10
+
+    pdf.text_ar(col1_r, y, "إسم الشركة/المؤسسة", size=8)
+    pdf.dotted_line(L + 5, y - 2, R - L - 120)
+    pdf.text_value(L + 10, y, comp.get("company_name", ""), size=9, bold=True)
+    y -= row_h
+
+    pdf.text_ar(col1_r, y, "رقم التسجيل لدى وزارة المالية", size=8)
+    tax_id = str(comp.get("tax_id") or "")
+    pdf.field_boxes_ltr(R - 280, y - 4, 12, box_size=13, values=tax_id)
+    y -= row_h + 2
+
+    pdf.text_ar(col1_r, y, "السنة المالية", size=8)
+    pdf.text_value(col1_r - 100, y, str(year), size=10, bold=True)
+    pdf.text_ar(col2_r, y, "من", size=8)
+    pdf.text_value(col2_r - 20, y, data["start_date"], size=9)
+    pdf.text_ar(col2_r - 80, y, "إلى", size=8)
+    pdf.text_value(col2_r - 100, y, data["end_date"], size=9)
+
+    # ── Address sections ─────────────────────────────────────────
+    y -= row_h + 4
+    addr = comp.get("address", {})
+    pdf.text_ar(col1_r, y, "عنوان المركز الرئيسي:", size=8, bold=True)
+    y -= row_h
+    for label, val in [("المنطقة", addr.get("city", "")),
+                       ("الشارع", addr.get("address_line1", "")),
+                       ("الهاتف", addr.get("phone", "") or comp.get("phone_no", ""))]:
+        pdf.text_ar(col1_r, y, label, size=7)
+        pdf.dotted_line(L + 5, y - 2, R - L - 60)
+        if val:
+            pdf.text_value(L + 10, y, val, size=8)
+        y -= row_h - 2
+
+    y -= 6
+    pdf.text_ar(col1_r, y, "عنوان الإبلاغ:", size=8, bold=True)
+    y -= row_h
+    pdf.text_ar(col1_r, y, "البريد الإلكتروني", size=7)
+    pdf.dotted_line(L + 5, y - 2, R - L - 100)
+    pdf.text_value(L + 10, y, comp.get("email", "") or addr.get("email_id", ""), size=8)
+
+    # ── Counts ───────────────────────────────────────────────────
+    y -= row_h + 6
+    pdf.text_ar(col1_r, y, "٧٠- عدد أعضاء مجلس الإدارة", size=8)
+    pdf.dotted_line(R - 220, y - 2, 40)
+    pdf.text_value(R - 215, y, str(board.get("count", 0)), size=9)
+
+    pdf.text_ar(col2_r, y, "٨٠- عدد المستخدمين/الأجراء", size=8)
+    pdf.dotted_line(L + 5, y - 2, 40)
+    pdf.text_value(L + 10, y, str(employees.get("count", 0)), size=9)
+    y -= row_h
+    pdf.text_ar(col1_r, y, "٩٠- عدد المستفيدين من مبالغ مقطوعة", size=8)
+    pdf.dotted_line(R - 260, y - 2, 40)
+    pdf.text_value(R - 255, y, "0", size=9)
+
+    # ══════════════════════════════════════════════════════════════
+    #  CALCULATION TABLE
+    # ══════════════════════════════════════════════════════════════
+    y -= row_h + 8
+
+    # Column definitions (from right to left in the form, but drawn left to right)
+    # | Description | Code | Board (1) | Employees (2) |
+    desc_w = W * 0.50
+    code_w = 35
+    col_board_w = (W - desc_w - code_w) / 2
+    col_emp_w = col_board_w
+
+    def draw_calc_row(yy, code, desc, val_board, val_emp, bold_row=False, is_header=False):
+        """Draw one calculation row."""
+        fill = LIGHT_GREEN if is_header else None
+        lw = 0.5
+
+        # Description cell
+        pdf.rect(L, yy, desc_w, row_h, fill=is_header, fill_color=fill, line_width=lw)
+        pdf.text_ar(L + desc_w - 3, yy + 3, desc, size=7, bold=bold_row or is_header,
+                    color=GREEN if is_header else black)
+
+        # Code cell
+        pdf.rect(L + desc_w, yy, code_w, row_h, fill=is_header, fill_color=fill, line_width=lw)
+        pdf.text_center(L + desc_w + code_w / 2, yy + 3, code, size=7,
+                        bold=is_header, color=GREEN if is_header else black)
+
+        # Board column
+        bx = L + desc_w + code_w
+        pdf.rect(bx, yy, col_board_w, row_h, fill=is_header, fill_color=fill, line_width=lw)
+        if not is_header:
+            pdf.text_center(bx + col_board_w / 2, yy + 3, nf(val_board), size=7)
+        else:
+            pdf.text_center(bx + col_board_w / 2, yy + 3, str(val_board), size=7,
+                            bold=True, color=GREEN)
+
+        # Employees column
+        ex = bx + col_board_w
+        pdf.rect(ex, yy, col_emp_w, row_h, fill=is_header, fill_color=fill, line_width=lw)
+        if not is_header:
+            pdf.text_center(ex + col_emp_w / 2, yy + 3, nf(val_emp), size=7)
+        else:
+            pdf.text_center(ex + col_emp_w / 2, yy + 3, str(val_emp), size=7,
+                            bold=True, color=GREEN)
+
+    # Header row
+    draw_calc_row(y - row_h, "الرقم", "البيان", "أعضاء مجلس الإدارة (١)", "المستخدمون/الأجراء (٢)",
+                  is_header=True)
+    y -= row_h
+
+    # Data rows
+    calc_rows = [
+        ("100", "مجموع الرواتب والأجور والمكافآت والتعويضات والبدلات والمنافع النقدية", "line_100"),
+        ("110", "المنافع العينية", "line_110"),
+        ("120", "مجموع المبالغ المدفوعة (١٠٠ + ١١٠)", "line_120"),
+        ("130", "تنزيل بدل نقل", "line_130"),
+        ("140", "تنزيل بدل تمثيل", "line_140"),
+        ("150", "تنزيلات أخرى (ضمان اجتماعي ...)", "line_150"),
+        ("160", "صافي المبالغ (١٢٠ - ١٣٠ - ١٤٠ - ١٥٠)", "line_160"),
+        ("170", "مجموع التنزيلات العائلية", "line_170"),
+        ("180", "المبلغ الخاضع للضريبة (١٦٠ - ١٧٠)", "line_180"),
+        ("190", "الضريبة المتوجبة", "line_190"),
+    ]
+
+    for code, desc, key in calc_rows:
+        y -= row_h
+        draw_calc_row(y, code, desc, board.get(key, 0), employees.get(key, 0),
+                      bold_row=(code in ("120", "160", "180", "190")))
+
+    # ── Lump sum section ─────────────────────────────────────────
+    y -= row_h + 8
+    pdf.text_ar(R, y + 4, "المبالغ المقطوعة", size=8, bold=True, color=GREEN)
+    y -= row_h
+
+    ls_desc_w = W * 0.70
+    ls_val_w = W - ls_desc_w
+
+    pdf.rect(L, y, ls_desc_w, row_h, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+    pdf.text_ar(L + ls_desc_w - 3, y + 3, "البيان", size=7, bold=True, color=GREEN)
+    pdf.rect(L + ls_desc_w, y, ls_val_w, row_h, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+    pdf.text_center(L + ls_desc_w + ls_val_w / 2, y + 3, "المبلغ", size=7, bold=True, color=GREEN)
+
+    for code, desc, key in [("240", "مجموع المبالغ المقطوعة", "line_240"),
+                            ("250", "الضريبة المتوجبة عليها", "line_250")]:
+        y -= row_h
+        pdf.rect(L, y, ls_desc_w, row_h, line_width=0.5)
+        pdf.text_ar(L + ls_desc_w - 3, y + 3, f"{code} - {desc}", size=7)
+        pdf.rect(L + ls_desc_w, y, ls_val_w, row_h, line_width=0.5)
+        pdf.text_center(L + ls_desc_w + ls_val_w / 2, y + 3, nf(lump_sum.get(key, 0)), size=7)
+
+    # ── Totals section ───────────────────────────────────────────
+    y -= row_h + 8
+    pdf.text_ar(R, y + 4, "المجاميع", size=8, bold=True, color=GREEN)
+    y -= row_h
+
+    pdf.rect(L, y, ls_desc_w, row_h, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+    pdf.text_ar(L + ls_desc_w - 3, y + 3, "البيان", size=7, bold=True, color=GREEN)
+    pdf.rect(L + ls_desc_w, y, ls_val_w, row_h, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+    pdf.text_center(L + ls_desc_w + ls_val_w / 2, y + 3, "المبلغ", size=7, bold=True, color=GREEN)
+
+    total_rows = [
+        ("251", "مجموع المبالغ الخاضعة للضريبة", "line_251"),
+        ("260", "مجموع الضريبة المتوجبة (١٩٠ + ٢٥٠)", "line_260"),
+        ("261", "مجموع الضريبة المسددة بموجب بيانات دورية", "line_261"),
+        ("262", "الرصيد (٢٦٠ - ٢٦١)", "line_262"),
+        ("270", "غرامة تحقق", "line_270"),
+        ("280", "غرامة تحصيل", "line_280"),
+        ("290", "الرصيد المتوجب (٢٦٢ + ٢٧٠ + ٢٨٠)", "line_290"),
+        ("300", "الرصيد القابل للرد", "line_300"),
+    ]
+
+    for code, desc, key in total_rows:
+        y -= row_h
+        pdf.rect(L, y, ls_desc_w, row_h, line_width=0.5)
+        pdf.text_ar(L + ls_desc_w - 3, y + 3, f"{code} - {desc}", size=7,
+                    bold=(code in ("260", "290", "300")))
+        pdf.rect(L + ls_desc_w, y, ls_val_w, row_h, line_width=0.5)
+        pdf.text_center(L + ls_desc_w + ls_val_w / 2, y + 3, nf(totals.get(key, 0)), size=7,
+                        bold=(code in ("260", "290", "300")))
+
+    # ── Periodic payments ────────────────────────────────────────
+    y -= row_h + 12
+    pdf.text_ar(R, y + 4, "التسديدات الدورية", size=8, bold=True, color=GREEN)
+    y -= row_h
+
+    q_headers = ["الفترة", "المبلغ المسدد"]
+    q_col_w = W / 2
+    for i, hdr in enumerate(q_headers):
+        pdf.rect(L + i * q_col_w, y, q_col_w, row_h, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+        pdf.text_center(L + i * q_col_w + q_col_w / 2, y + 3, hdr, size=7, bold=True, color=GREEN)
+
+    quarters = ["الفصل الأول (كانون٢ - آذار)", "الفصل الثاني (نيسان - حزيران)",
+                "الفصل الثالث (تموز - أيلول)", "الفصل الرابع (تشرين١ - كانون١)"]
+
+    for i, q_name in enumerate(quarters):
+        y -= row_h
+        pdf.rect(L, y, q_col_w, row_h, line_width=0.5)
+        pdf.text_ar(L + q_col_w - 3, y + 3, q_name, size=7)
+        pdf.rect(L + q_col_w, y, q_col_w, row_h, line_width=0.5)
+        amt = payments[i]["amount"] if i < len(payments) else 0
+        pdf.text_center(L + q_col_w + q_col_w / 2, y + 3, nf(amt), size=7)
+
+    # ── Declaration ──────────────────────────────────────────────
+    y -= row_h + 15
+    pdf.text_ar(R, y, "إفادة", size=9, bold=True, color=GREEN)
+    y -= 12
+    pdf.text_ar(R, y,
+                "أنا الموقع أدناه أصرّح بأن المعلومات الواردة في هذا التصريح صحيحة ودقيقة.", size=7)
+    y -= 12
+    pdf.text_ar(R, y, "التاريخ .................... التوقيع ....................", size=8)
+    pdf.text_ar(R - 250, y, "الإسم ..................... الصفة ....................", size=8)
+
+    return pdf.save()

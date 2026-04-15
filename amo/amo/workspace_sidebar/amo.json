@@ -1,0 +1,363 @@
+{
+	"doctype": "Workspace Sidebar",
+	"name": "amo",
+	"title": "AMO",
+	"module": "AMO Setup",
+	"app": "amo",
+	"standard": 1,
+	"header_icon": "",
+	"items": [
+		{
+			"label": "AMO Dashboard",
+			"type": "Link",
+			"link_type": "Page",
+			"link_to": "amo-dashboard",
+			"icon": "dashboard",
+			"child": 0,
+			"indent": 0
+		},
+		{
+			"label": "Organization",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Company",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Company",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Cost Center",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Cost Center",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Accounting",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Chart of Accounts",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Account",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Journal Entry",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Journal Entry",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Payment Entry",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Payment Entry",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Bank Account",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Bank Account",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Budget",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Budget",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Assets",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Asset",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Asset",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Asset Category",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Asset Category",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Location",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Location",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Projects",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Project",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Project",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Task",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Task",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "HR & Payroll",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Employee",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Employee",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Salary Component",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Salary Component",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Salary Structure",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Salary Structure",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Salary Structure Assignment",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Salary Structure Assignment",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Payroll Entry",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Payroll Entry",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Salary Slip",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Salary Slip",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Income Tax Slab",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Income Tax Slab",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Lebanese Payroll Setup",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Lebanese Payroll Settings",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Lebanese Payroll Settings",
+			"icon": "setting-gear",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Payroll Constants",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Payroll Constants",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Payroll Variables",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Payroll Variables",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Lebanese Reports - CNSS",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "CNSS Reports",
+			"type": "Link",
+			"link_type": "Page",
+			"link_to": "cnss-reports",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Lebanese Reports - MoF",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "MoF Tax Forms",
+			"type": "Link",
+			"link_type": "Page",
+			"link_to": "mof-forms",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Inventory",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "Item",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Item",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Stock Entry",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "Stock Entry",
+			"icon": "",
+			"child": 1,
+			"indent": 1
+		},
+		{
+			"label": "Settings",
+			"type": "Section Break",
+			"link_type": "",
+			"link_to": "",
+			"icon": "",
+			"child": 0,
+			"indent": 0,
+			"collapsible": 1
+		},
+		{
+			"label": "AMO Settings",
+			"type": "Link",
+			"link_type": "DocType",
+			"link_to": "AMO Settings",
+			"icon": "setting-gear",
+			"child": 1,
+			"indent": 1
+		}
+	]
+}

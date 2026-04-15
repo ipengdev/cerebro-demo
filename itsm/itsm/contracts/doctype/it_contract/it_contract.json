@@ -1,0 +1,246 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "contract_name",
+    "contract_type",
+    "status",
+    "column_break_1",
+    "vendor",
+    "primary_asset",
+    "company",
+    "section_dates",
+    "start_date",
+    "end_date",
+    "column_break_dates",
+    "auto_renew",
+    "renewal_notice_days",
+    "section_cost",
+    "contract_value",
+    "currency",
+    "payment_frequency",
+    "column_break_cost",
+    "annual_cost",
+    "next_payment_date",
+    "section_items",
+    "items",
+    "section_sla",
+    "sla_uptime_pct",
+    "sla_response_hours",
+    "sla_resolution_hours",
+    "section_notes",
+    "terms",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "contract_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Contract Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "contract_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Contract Type",
+      "options": "Warranty\nMaintenance\nSupport\nSubscription\nLease\nService Level Agreement\nManaged Service\nLicensing",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Draft\nActive\nExpiring Soon\nExpired\nCancelled\nRenewed",
+      "default": "Draft"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "vendor",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Vendor",
+      "options": "Vendor"
+    },
+    {
+      "fieldname": "primary_asset",
+      "fieldtype": "Link",
+      "label": "Primary Asset",
+      "options": "IT Asset"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company"
+    },
+    {
+      "fieldname": "section_dates",
+      "fieldtype": "Section Break",
+      "label": "Contract Period"
+    },
+    {
+      "fieldname": "start_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Start Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "end_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "End Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_dates",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "auto_renew",
+      "fieldtype": "Check",
+      "label": "Auto Renew"
+    },
+    {
+      "fieldname": "renewal_notice_days",
+      "fieldtype": "Int",
+      "label": "Renewal Notice (Days)",
+      "default": "30"
+    },
+    {
+      "fieldname": "section_cost",
+      "fieldtype": "Section Break",
+      "label": "Cost"
+    },
+    {
+      "fieldname": "contract_value",
+      "fieldtype": "Currency",
+      "label": "Contract Value"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "default": "USD"
+    },
+    {
+      "fieldname": "payment_frequency",
+      "fieldtype": "Select",
+      "label": "Payment Frequency",
+      "options": "\nOne-Time\nMonthly\nQuarterly\nAnnually"
+    },
+    {
+      "fieldname": "column_break_cost",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "annual_cost",
+      "fieldtype": "Currency",
+      "label": "Annual Cost"
+    },
+    {
+      "fieldname": "next_payment_date",
+      "fieldtype": "Date",
+      "label": "Next Payment Date"
+    },
+    {
+      "fieldname": "section_items",
+      "fieldtype": "Section Break",
+      "label": "Contract Items"
+    },
+    {
+      "fieldname": "items",
+      "fieldtype": "Table",
+      "label": "Items",
+      "options": "IT Contract Item"
+    },
+    {
+      "fieldname": "section_sla",
+      "fieldtype": "Section Break",
+      "label": "Service Level Terms",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "sla_uptime_pct",
+      "fieldtype": "Percent",
+      "label": "SLA Uptime %"
+    },
+    {
+      "fieldname": "sla_response_hours",
+      "fieldtype": "Float",
+      "label": "SLA Response (Hours)"
+    },
+    {
+      "fieldname": "sla_resolution_hours",
+      "fieldtype": "Float",
+      "label": "SLA Resolution (Hours)"
+    },
+    {
+      "fieldname": "section_notes",
+      "fieldtype": "Section Break",
+      "label": "Terms & Notes"
+    },
+    {
+      "fieldname": "terms",
+      "fieldtype": "Text Editor",
+      "label": "Terms & Conditions"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Contracts",
+  "name": "IT Contract",
+  "naming_rule": "Expression",
+  "autoname": "ITCON-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "contract_name",
+  "track_changes": 1
+}

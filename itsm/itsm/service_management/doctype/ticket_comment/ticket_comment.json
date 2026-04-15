@@ -1,0 +1,58 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "comment_by",
+    "comment_date",
+    "is_internal",
+    "comment"
+  ],
+  "fields": [
+    {
+      "fieldname": "comment_by",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Comment By",
+      "options": "User",
+      "reqd": 1,
+      "default": "__user"
+    },
+    {
+      "fieldname": "comment_date",
+      "fieldtype": "Datetime",
+      "in_list_view": 1,
+      "label": "Date",
+      "default": "Now",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_internal",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "Internal Note"
+    },
+    {
+      "fieldname": "comment",
+      "fieldtype": "Text Editor",
+      "in_list_view": 1,
+      "label": "Comment",
+      "reqd": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "Ticket Comment",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

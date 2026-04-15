@@ -1,0 +1,537 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-04-09 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "employee_relation_section",
+  "employee",
+  "employee_name",
+  "column_break_er1",
+  "relationship_type",
+  "is_primary",
+  "naming_series",
+  "personal_information_section",
+  "first_name",
+  "middle_name",
+  "last_name",
+  "full_name",
+  "column_break_pi1",
+  "salutation",
+  "maiden_name",
+  "last_name_after_marriage",
+  "identification_section",
+  "date_of_birth",
+  "gender",
+  "column_break_id1",
+  "nationality",
+  "marital_status",
+  "origin_section",
+  "country_of_birth",
+  "town_of_birth",
+  "column_break_or1",
+  "region",
+  "education_level",
+  "parent_information_section",
+  "father_first_name",
+  "father_last_name",
+  "column_break_fi1",
+  "mother_first_name",
+  "mother_last_name",
+  "contact_section",
+  "phone",
+  "email",
+  "column_break_ct1",
+  "address",
+  "medical_insurance_tab",
+  "medical_insurance_section",
+  "medical_insurance_detail",
+  "personal_tab",
+  "marital_status_section",
+  "marital_status_details",
+  "profession_history_section",
+  "profession_history",
+  "national_id_section",
+  "national_id",
+  "passport_section",
+  "passport_detail",
+  "second_nationality_section",
+  "second_nationality",
+  "religion_section",
+  "religion_detail",
+  "payroll_tab",
+  "payroll_history_section",
+  "payroll_history",
+  "additional_information_section",
+  "financial_number",
+  "column_break_addl1",
+  "social_security_number",
+  "education_section",
+  "educational_institution_type",
+  "educational_institution",
+  "column_break_edu1",
+  "grade",
+  "profession",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "employee_relation_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Relation"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_er1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Spouse",
+   "fieldname": "relationship_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Relationship Type",
+   "options": "Spouse\nChild\nParent\nSibling\nOther",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_primary",
+   "fieldtype": "Check",
+   "label": "Primary"
+  },
+  {
+   "default": "DEP-.employee.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "DEP-.employee.-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "personal_information_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Information"
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "First Name",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "middle_name",
+   "fieldtype": "Data",
+   "label": "Middle Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_pi1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "salutation",
+   "fieldtype": "Link",
+   "label": "Salutation",
+   "options": "Salutation"
+  },
+  {
+   "fieldname": "maiden_name",
+   "fieldtype": "Data",
+   "label": "Maiden Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "last_name_after_marriage",
+   "fieldtype": "Data",
+   "label": "Last Name After Marriage",
+   "translatable": 1
+  },
+  {
+   "fieldname": "identification_section",
+   "fieldtype": "Section Break",
+   "label": "Identification"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "column_break_id1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Data",
+   "label": "Nationality",
+   "translatable": 1
+  },
+  {
+   "fieldname": "marital_status",
+   "fieldtype": "Select",
+   "label": "Marital Status",
+   "options": "\nSingle\nMarried\nDivorced\nWidowed"
+  },
+  {
+   "fieldname": "origin_section",
+   "fieldtype": "Section Break",
+   "label": "Origin"
+  },
+  {
+   "fieldname": "country_of_birth",
+   "fieldtype": "Data",
+   "label": "Country of Birth",
+   "translatable": 1
+  },
+  {
+   "fieldname": "town_of_birth",
+   "fieldtype": "Data",
+   "label": "Town of Birth",
+   "translatable": 1
+  },
+  {
+   "fieldname": "column_break_or1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Data",
+   "label": "Region",
+   "translatable": 1
+  },
+  {
+   "fieldname": "education_level",
+   "fieldtype": "Data",
+   "label": "Education Level"
+  },
+  {
+   "fieldname": "parent_information_section",
+   "fieldtype": "Section Break",
+   "label": "Parent Information"
+  },
+  {
+   "fieldname": "father_first_name",
+   "fieldtype": "Data",
+   "label": "Father First Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "father_last_name",
+   "fieldtype": "Data",
+   "label": "Father Last Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "column_break_fi1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mother_first_name",
+   "fieldtype": "Data",
+   "label": "Mother First Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "mother_last_name",
+   "fieldtype": "Data",
+   "label": "Mother Last Name",
+   "translatable": 1
+  },
+  {
+   "fieldname": "contact_section",
+   "fieldtype": "Section Break",
+   "label": "Contact"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_ct1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "medical_insurance_tab",
+   "fieldtype": "Tab Break",
+   "label": "Medical Insurance Details"
+  },
+  {
+   "fieldname": "medical_insurance_section",
+   "fieldtype": "Section Break",
+   "label": "Medical Insurance Details"
+  },
+  {
+   "fieldname": "medical_insurance_detail",
+   "fieldtype": "Table",
+   "label": "Medical Insurance Detail",
+   "options": "Dependant Medical Insurance Detail"
+  },
+  {
+   "fieldname": "personal_tab",
+   "fieldtype": "Tab Break",
+   "label": "Personal"
+  },
+  {
+   "fieldname": "marital_status_section",
+   "fieldtype": "Section Break",
+   "label": "Marital Status"
+  },
+  {
+   "fieldname": "marital_status_details",
+   "fieldtype": "Table",
+   "label": "Marital Status Details",
+   "options": "Dependant Marital Status"
+  },
+  {
+   "fieldname": "profession_history_section",
+   "fieldtype": "Section Break",
+   "label": "Profession History"
+  },
+  {
+   "fieldname": "profession_history",
+   "fieldtype": "Table",
+   "label": "Profession",
+   "options": "Dependant Profession"
+  },
+  {
+   "fieldname": "national_id_section",
+   "fieldtype": "Section Break",
+   "label": "National ID Details"
+  },
+  {
+   "fieldname": "national_id",
+   "fieldtype": "Table",
+   "label": "National ID Detail",
+   "options": "Employee National ID"
+  },
+  {
+   "fieldname": "passport_section",
+   "fieldtype": "Section Break",
+   "label": "Passport Details"
+  },
+  {
+   "fieldname": "passport_detail",
+   "fieldtype": "Table",
+   "label": "Passport Details",
+   "options": "Employee Passport Detail"
+  },
+  {
+   "fieldname": "second_nationality_section",
+   "fieldtype": "Section Break",
+   "label": "Second Nationality"
+  },
+  {
+   "fieldname": "second_nationality",
+   "fieldtype": "Table",
+   "label": "Second Nationality",
+   "options": "Employee Second Passport Nationality"
+  },
+  {
+   "fieldname": "religion_section",
+   "fieldtype": "Section Break",
+   "label": "Religion Details"
+  },
+  {
+   "fieldname": "religion_detail",
+   "fieldtype": "Table",
+   "label": "Religion Detail",
+   "options": "Employee Religion Detail"
+  },
+  {
+   "fieldname": "payroll_tab",
+   "fieldtype": "Tab Break",
+   "label": "Payroll"
+  },
+  {
+   "fieldname": "payroll_history_section",
+   "fieldtype": "Section Break",
+   "label": "Payroll History"
+  },
+  {
+   "fieldname": "payroll_history",
+   "fieldtype": "Table",
+   "label": "History",
+   "options": "Dependant Payroll History"
+  },
+  {
+   "fieldname": "additional_information_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "fieldname": "financial_number",
+   "fieldtype": "Data",
+   "label": "Financial Number"
+  },
+  {
+   "fieldname": "column_break_addl1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "social_security_number",
+   "fieldtype": "Data",
+   "label": "Social Security Number"
+  },
+  {
+   "fieldname": "education_section",
+   "fieldtype": "Section Break",
+   "label": "Education"
+  },
+  {
+   "default": "School",
+   "fieldname": "educational_institution_type",
+   "fieldtype": "Select",
+   "label": "Educational Institution Type",
+   "options": "School\nUniversity\nInstitute\nOther"
+  },
+  {
+   "fieldname": "educational_institution",
+   "fieldtype": "Data",
+   "label": "Educational Institution"
+  },
+  {
+   "fieldname": "column_break_edu1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade"
+  },
+  {
+   "fieldname": "profession",
+   "fieldtype": "Data",
+   "label": "Profession",
+   "translatable": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Dependant",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-04-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Employee Self Service Portal",
+ "name": "Dependant",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Employee Self Service",
+   "write": 1
+  }
+ ],
+ "search_fields": "employee,employee_name,first_name,last_name,relationship_type",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "full_name",
+ "track_changes": 1
+}

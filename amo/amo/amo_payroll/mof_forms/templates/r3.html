@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8">
+{% include "base_style.html" %}
+</head>
+<body>
+<div class="mof-page">
+  <!-- Form number -->
+  <div class="form-number">ر ٣</div>
+
+  <!-- Header -->
+  <div class="mof-header-row">
+    <div class="mof-header-right">
+      الجمهورية اللبنانيـــــة<br>
+      وزارة الماليــــــة<br>
+      مديرية المالية العامة<br>
+      مديرية الواردات – ضريبة الرواتب والأجور
+    </div>
+    <div class="mof-header-center">
+      <div class="mof-title">طلب تسجيل مستخدم/أجير جديد</div>
+    </div>
+    <div class="mof-header-left"></div>
+  </div>
+
+  <!-- Company Section -->
+  <div class="section-border">
+    <div class="field-row">
+      <span class="field-label">إسم الشركة/المؤسسة</span>
+      <span class="field-value">{{ company.company_name or '' }}</span>
+      <span class="field-label" style="margin-right:20px;">الشهرة التجارية</span>
+      <span class="field-value" style="max-width:150px;">{{ company.abbr or '' }}</span>
+    </div>
+    <div class="field-row" style="margin-top:4px;">
+      <span class="field-label">رقم تسجيل الشركة/المؤسسة</span>
+      <span style="margin-right:4px;">
+        <span class="reg-boxes">
+          {% set tax_id = (company.tax_id or '')|string %}
+          {% for i in range(12) %}
+            <span class="reg-box">{{ tax_id[i] if i < tax_id|length else '' }}</span>
+          {% endfor %}
+        </span>
+      </span>
+      <span class="field-label" style="margin-right:10px;">(لدى وزارة المالية)</span>
+    </div>
+  </div>
+
+  <!-- Employee Definition Section -->
+  <div class="section-border" style="margin-top:4px;">
+    <div class="section-title accent">تعريف المستخدم / الأجير <span style="font-size:10px;">هل لديه رقم مالي شخصي؟*</span></div>
+    <div class="field-row">
+      <span class="field-label">(لدى وزارة المالية)</span>
+      <span class="checkbox {{ 'checked' if employee.financial_number else '' }}">{% if employee.financial_number %}×{% endif %}</span> نعم
+      <span style="margin-right:10px;"></span>
+      <span class="checkbox {{ '' if employee.financial_number else 'checked' }}">{% if not employee.financial_number %}×{% endif %}</span> كلا
+      <span style="margin-right:10px;"></span>
+      {% if employee.financial_number %}
+      <span class="field-label">في حال نعم، أذكر الرقم</span>
+      <span class="reg-boxes">
+        {% set fin = (employee.financial_number or '')|string %}
+        {% for i in range(12) %}
+          <span class="reg-box">{{ fin[i] if i < fin|length else '' }}</span>
+        {% endfor %}
+      </span>
+      {% endif %}
+    </div>
+
+    <div class="two-col" style="margin-top:6px;">
+      <div>
+        <div class="field-row">
+          <span class="field-label-num">١.</span>
+          <span class="field-label">الإسم</span>
+          <span class="field-value">{{ employee.first_name or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٣.</span>
+          <span class="field-label">إسم الأب</span>
+          <span class="field-value">{{ employee.father_first_name or '' }} {{ employee.father_last_name or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٥.</span>
+          <span class="field-label">الجنس*</span>
+          <span class="checkbox {{ 'checked' if employee.gender == 'Male' else '' }}">{% if employee.gender == 'Male' %}×{% endif %}</span> ذكر
+          <span style="margin-right:8px;"></span>
+          <span class="checkbox {{ 'checked' if employee.gender == 'Female' else '' }}">{% if employee.gender == 'Female' %}×{% endif %}</span> أنثى
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٧.</span>
+          <span class="field-label">محل الولادة</span>
+          <span class="field-value">{{ employee.town_of_birth or '' }}{% if employee.country_of_birth %} - {{ employee.country_of_birth }}{% endif %}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٩.</span>
+          <span class="field-label">رقم السجل</span>
+          <span class="field-value">{{ employee.register_number or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١١.</span>
+          <span class="field-label">رقم بطاقة الهوية</span>
+          <span class="field-value">{{ employee.national_id_number or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٣.</span>
+          <span class="field-label">عدد الأولاد</span>
+          <span class="field-value">{{ employee.get('number_of_dependent_children', '') }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٥.</span>
+          <span class="field-label">رقم الضمان الاجتماعي</span>
+          <span class="field-value">{{ employee.social_security_number or '' }}</span>
+        </div>
+      </div>
+      <div>
+        <div class="field-row">
+          <span class="field-label-num">٢.</span>
+          <span class="field-label">الشهرة</span>
+          <span class="field-value">{{ employee.last_name or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٤.</span>
+          <span class="field-label">إسم الأم وشهرتها قبل الزواج</span>
+          <span class="field-value">{{ employee.mother_first_name or '' }} {{ employee.mother_last_name or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٦.</span>
+          <span class="field-label">الجنسية</span>
+          <span class="field-value">{{ employee.nationality or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٨.</span>
+          <span class="field-label">تاريخ الولادة</span>
+          <span class="field-value">{{ employee.date_of_birth|fmt_date }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٠.</span>
+          <span class="field-label">مكان السجل</span>
+          <span class="field-value">{{ employee.register_place or '' }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٢.</span>
+          <span class="field-label">الوضع العائلي*</span>
+          <span class="checkbox {{ 'checked' if employee.marital_status == 'Single' else '' }}">{% if employee.marital_status == 'Single' %}×{% endif %}</span> أعزب
+          <span class="checkbox {{ 'checked' if employee.marital_status == 'Married' else '' }}">{% if employee.marital_status == 'Married' %}×{% endif %}</span> متزوج
+          <span class="checkbox {{ 'checked' if employee.marital_status == 'Widowed' else '' }}">{% if employee.marital_status == 'Widowed' %}×{% endif %}</span> أرمل
+          <span class="checkbox {{ 'checked' if employee.marital_status == 'Divorced' else '' }}">{% if employee.marital_status == 'Divorced' %}×{% endif %}</span> مطلّق
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٤.</span>
+          <span class="field-label">تاريخ ابتداء العمل</span>
+          <span class="field-value">{{ employee.date_of_joining|fmt_date }}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٦.</span>
+          <span class="field-label">نوع الأجر*</span>
+          <span class="checkbox {{ 'checked' if employee.get('payroll_frequency','') == 'Monthly' or employee.salary_mode == 'Bank' else '' }}">{% if employee.get('payroll_frequency','') == 'Monthly' or employee.salary_mode == 'Bank' %}×{% endif %}</span> شهري
+          <span class="checkbox">{% if employee.get('payroll_frequency','') == 'Daily' %}×{% endif %}</span> يومي
+          <span class="checkbox">{% if employee.get('payroll_frequency','') == 'Hourly' %}×{% endif %}</span> بالساعة
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spouse Section -->
+  <div class="section-border" style="margin-top:4px;">
+    <div class="section-title accent">معلومات خاصة بالزوج/الزوجة</div>
+    <div class="two-col">
+      <div>
+        <div class="field-row">
+          <span class="field-label-num">١.</span>
+          <span class="field-label">إسم الزوج/الزوجة</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٣.</span>
+          <span class="field-label">إسم الأب</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٥.</span>
+          <span class="field-label">الجنسية</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٧.</span>
+          <span class="field-label">تاريخ الولادة</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٩.</span>
+          <span class="field-label">عدد الأشخاص الذين يستفيدون من التنزيل العائلي</span>
+          <span class="field-value"></span>
+        </div>
+      </div>
+      <div>
+        <div class="field-row">
+          <span class="field-label-num">٢.</span>
+          <span class="field-label">الشهرة قبل الزواج</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٤.</span>
+          <span class="field-label">إسم الأم وشهرتها قبل الزواج</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٦.</span>
+          <span class="field-label">محل الولادة</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">٨.</span>
+          <span class="field-label">رقم بطاقة الهوية</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="field-row">
+          <span class="field-label-num">١٠.</span>
+          <span class="field-label">هل الزوج/الزوجة يعمل؟*</span>
+          <span class="checkbox"></span> نعم
+          <span class="checkbox"></span> لا
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Address Section -->
+  <div class="section-border" style="margin-top:4px;">
+    <div class="section-title accent">عنوان السكن**</div>
+    <div class="addr-grid">
+      <div class="field-row"><span class="field-label">محافظة</span><span class="field-value">{{ employee.mohafaza or '' }}</span></div>
+      <div class="field-row"><span class="field-label">قضاء</span><span class="field-value">{{ employee.caza or '' }}</span></div>
+      <div class="field-row"><span class="field-label">منطقة - بلدة</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الشارع</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الحي</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">المنطقة العقارية</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">المبنى</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">رقم العقار / القسم</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الطابق</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value">{{ employee.cell_number or '' }}</span></div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">فاكس</span><span class="field-value"></span></div>
+    </div>
+    <div class="field-row" style="margin-top:2px;">
+      <span class="field-label">صندوق البريد : رقم</span><span class="field-value" style="max-width:80px;"></span>
+      <span class="field-label" style="margin-right:10px;">المنطقة</span><span class="field-value" style="max-width:80px;"></span>
+    </div>
+    <div class="field-row">
+      <span class="field-label">البريد الإلكتروني (e-mail):</span>
+      <span class="field-value">{{ employee.personal_email or employee.company_email or '' }}</span>
+    </div>
+  </div>
+
+  <!-- Admin Section -->
+  <div class="section-border" style="margin-top:4px;">
+    <div class="two-col">
+      <div>
+        <div class="section-title">إفادة</div>
+        <p style="font-size:9px; line-height:1.5;">
+          أنا الموقع أدناه أفيد بأن هذه المعلومات هي مطابقة لتلك المدونة<br>
+          في بيان المعلومات من المستخدم / الأجير إلى صاحب العمل.
+        </p>
+        <div class="field-row" style="margin-top:4px;">
+          <span class="field-label">إسم صاحب العمل</span>
+          <span class="field-value">{{ company.company_name or '' }}</span>
+        </div>
+        <div class="field-row"><span class="field-label">الصفة</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">التوقيع</span><span class="field-value"></span></div>
+        <div class="field-row">
+          <span class="field-label">التاريخ</span>
+          <span class="field-value" style="max-width:40px;">اليوم</span> /
+          <span class="field-value" style="max-width:40px;">الشهر</span> /
+          <span class="field-value" style="max-width:60px;">السنة</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">خاص بالإدارة</div>
+        <div class="field-row">
+          <span class="field-label">الرقم المالي الشخصي للمستخدم/الأجير</span>
+        </div>
+        <div style="margin-top:4px;">
+          <span class="reg-boxes">
+            {% set fin2 = (employee.financial_number or '')|string %}
+            {% for i in range(12) %}
+              <span class="reg-box">{{ fin2[i] if i < fin2|length else '' }}</span>
+            {% endfor %}
+          </span>
+          <span style="font-size:9px;">(لدى وزارة المالية)</span>
+        </div>
+        <div class="field-row" style="margin-top:6px;">
+          <span class="field-label">تاريخ التسجيل</span>
+          <span class="field-value" style="max-width:40px;">اليوم</span> /
+          <span class="field-value" style="max-width:40px;">الشهر</span> /
+          <span class="field-value" style="max-width:60px;">السنة</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">أو سبب رفض التسجيل</span>
+          <span class="field-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:8px; margin-top:4px; line-height:1.6;">
+    * توضع علامة × في المربع المناسب<br>
+    ** في حال تغيير عنوان السكن، يرجى تعبئة نموذج تعديل معلومات أفراد –م٥.<br>
+    - يستعمل هذا النموذج لتسجيل المستخدمين والأجراء الذين ليس لديهم رقم مالي شخصي لدى وزارة المالية ويقدم لدى الدائرة المالية المختصة.<br>
+    - يرفق بهذا الطلب صورة عن اخراج قيد عائلي للأجير المتزوج أو صورة عن بطاقة الهوية أواخراج قيد إفرادي للعازب.
+  </div>
+</div>
+</body>
+</html>

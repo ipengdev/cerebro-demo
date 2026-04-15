@@ -1,0 +1,458 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set currency = doc.currency or "LBP" -%}
+{%- set emp = frappe.get_doc("Employee", doc.employee) -%}
+{%- set month_label = frappe.utils.formatdate(doc.start_date, "MMMM yyyy") -%}
+<style>
+  /* ═══════════════════════════════════════════════════
+     MODERN — Ultra-clean, airy, whitespace-driven
+     Inspired by Deel / Gusto / Rippling payslips
+     ═══════════════════════════════════════════════════ */
+  .mn {
+    font-family: 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 32px 36px;
+    color: #18181b;
+    font-size: 11px;
+    line-height: 1.5;
+    background: #fff;
+  }
+  .mn *, .mn *::before, .mn *::after { box-sizing: border-box; }
+
+  /* ── Header ─────────────────── */
+  .mn-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  .mn-brand { display: flex; align-items: center; gap: 12px; }
+  .mn-logo {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+  .mn-logo-ph {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    background: #18181b;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; font-weight: 700;
+  }
+  .mn-co-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #18181b;
+  }
+  .mn-co-sub {
+    margin: 2px 0 0;
+    font-size: 9px;
+    color: #a1a1aa;
+    font-weight: 400;
+  }
+  .mn-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: #f4f4f5;
+    font-size: 10px;
+    font-weight: 600;
+    color: #52525b;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Title row ──────────────── */
+  .mn-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f4f4f5;
+  }
+  .mn-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #18181b;
+    letter-spacing: -0.5px;
+    margin: 0;
+  }
+  .mn-title-ar {
+    font-size: 22px;
+    font-weight: 700;
+    color: #a1a1aa;
+    direction: rtl;
+  }
+  .mn-period-block { text-align: right; }
+  .mn-period {
+    font-size: 16px;
+    font-weight: 700;
+    color: #18181b;
+  }
+  .mn-ref {
+    font-size: 9px;
+    color: #d4d4d8;
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  /* ── Employee chips ─────────── */
+  .mn-emp {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .mn-chip {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fafafa;
+    border: 1px solid #f4f4f5;
+  }
+  .mn-chip-lbl {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #a1a1aa;
+    margin-bottom: 4px;
+  }
+  .mn-chip-val {
+    font-size: 12px;
+    font-weight: 600;
+    color: #18181b;
+  }
+
+  /* ── Data sections ──────────── */
+  .mn-sections {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .mn-sec {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #f4f4f5;
+  }
+
+  .mn-sec-hdr {
+    padding: 10px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mn-sec-hdr .ar { font-size: 12px; letter-spacing: 0; }
+  .mn-sec.earn .mn-sec-hdr { background: #f0fdf4; color: #166534; }
+  .mn-sec.ded .mn-sec-hdr { background: #fef2f2; color: #991b1b; }
+
+  .mn-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 11px;
+  }
+  .mn-line + .mn-line { border-top: 1px solid #fafafa; }
+  .mn-line-name { color: #52525b; }
+  .mn-line-amt {
+    font-weight: 600;
+    color: #18181b;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .mn-sec-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid #e4e4e7;
+    font-weight: 700;
+    font-size: 11.5px;
+  }
+  .mn-sec.earn .mn-sec-foot { background: #f0fdf4; color: #166534; }
+  .mn-sec.ded .mn-sec-foot { background: #fef2f2; color: #991b1b; }
+
+  /* ── KPI row ────────────────── */
+  .mn-kpi {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .mn-kpi-card {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: #fafafa;
+    border: 1px solid #f4f4f5;
+  }
+  .mn-kpi-lbl {
+    font-size: 7.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #a1a1aa;
+    margin-bottom: 4px;
+  }
+  .mn-kpi-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: #18181b;
+    font-variant-numeric: tabular-nums;
+  }
+  .mn-kpi-card.green .mn-kpi-val { color: #16a34a; }
+  .mn-kpi-card.red .mn-kpi-val { color: #dc2626; }
+
+  /* ── Net pay ────────────────── */
+  .mn-net {
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .mn-net-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    background: #18181b;
+    color: #fff;
+  }
+  .mn-net-left {}
+  .mn-net-lbl {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.6;
+  }
+  .mn-net-lbl-ar {
+    font-size: 14px;
+    font-weight: 700;
+    direction: rtl;
+    margin-top: 2px;
+  }
+  .mn-net-amt {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .mn-net-words {
+    padding: 8px 24px;
+    background: #fafafa;
+    border: 1px solid #f4f4f5;
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    font-size: 10px;
+    color: #71717a;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* ── Footer ─────────────────── */
+  .mn-sigs {
+    display: flex;
+    justify-content: space-between;
+    padding: 36px 20px 0;
+  }
+  .mn-sig {
+    text-align: center;
+    width: 160px;
+  }
+  .mn-sig-line {
+    border-top: 1px solid #d4d4d8;
+    margin-top: 48px;
+    padding-top: 6px;
+    font-size: 9px;
+    font-weight: 600;
+    color: #71717a;
+  }
+  .mn-sig-ar {
+    font-size: 9px;
+    color: #a1a1aa;
+    direction: rtl;
+    margin-top: 1px;
+  }
+  .mn-disc {
+    text-align: center;
+    font-size: 7.5px;
+    color: #d4d4d8;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #fafafa;
+    line-height: 1.6;
+  }
+
+  @media print {
+    .mn { padding: 20px 28px; }
+    .mn-net-bar, .mn-sec.earn .mn-sec-hdr, .mn-sec.ded .mn-sec-hdr,
+    .mn-sec.earn .mn-sec-foot, .mn-sec.ded .mn-sec-foot,
+    .mn-chip, .mn-kpi-card {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+
+<div class="mn">
+  <!-- Top bar -->
+  <div class="mn-top">
+    <div class="mn-brand">
+      {% if company.company_logo %}
+        <img class="mn-logo" src="{{ company.company_logo }}" alt="">
+      {% else %}
+        <div class="mn-logo-ph">{{ doc.company[:2]|upper }}</div>
+      {% endif %}
+      <div>
+        <h2 class="mn-co-name">{{ doc.company }}</h2>
+        <p class="mn-co-sub">{{ company.address or "" }}{{ " | " + (company.phone_no or "") if company.phone_no else "" }}</p>
+      </div>
+    </div>
+    <div class="mn-badge">Confidential / سري</div>
+  </div>
+
+  <!-- Title row -->
+  <div class="mn-title-row">
+    <div style="display:flex;align-items:baseline;gap:12px;">
+      <h1 class="mn-title">Payslip</h1>
+      <span class="mn-title-ar">بيان الراتب</span>
+    </div>
+    <div class="mn-period-block">
+      <div class="mn-period">{{ month_label }}</div>
+      <div class="mn-ref">{{ doc.name }}</div>
+    </div>
+  </div>
+
+  <!-- Employee chips -->
+  <div class="mn-emp">
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Employee</div>
+      <div class="mn-chip-val">{{ doc.employee_name }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">ID</div>
+      <div class="mn-chip-val">{{ doc.employee }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Department</div>
+      <div class="mn-chip-val">{{ doc.department or "-" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Designation</div>
+      <div class="mn-chip-val">{{ doc.designation or "-" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Date of Joining</div>
+      <div class="mn-chip-val">{{ frappe.utils.formatdate(emp.date_of_joining, "dd MMM yyyy") if emp.date_of_joining else "-" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Payment Mode</div>
+      <div class="mn-chip-val">{{ doc.mode_of_payment or "Bank Transfer" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">CNSS Number</div>
+      <div class="mn-chip-val">{{ emp.ctc or "-" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Bank Account</div>
+      <div class="mn-chip-val">{{ doc.bank_account_no or doc.bank_name or "-" }}</div>
+    </div>
+    <div class="mn-chip">
+      <div class="mn-chip-lbl">Working Days</div>
+      <div class="mn-chip-val">{{ doc.payment_days or doc.total_working_days or 0 }} / {{ doc.total_working_days or 0 }}</div>
+    </div>
+  </div>
+
+  <!-- Earnings & Deductions -->
+  <div class="mn-sections">
+    <div class="mn-sec earn">
+      <div class="mn-sec-hdr">
+        <span>Earnings</span>
+        <span class="ar">المداخيل</span>
+      </div>
+      {% for e in doc.earnings %}
+      <div class="mn-line">
+        <span class="mn-line-name">{{ e.salary_component }}</span>
+        <span class="mn-line-amt">{{ frappe.utils.fmt_money(e.amount, currency=currency) }}</span>
+      </div>
+      {% endfor %}
+      <div class="mn-sec-foot">
+        <span>Total</span>
+        <span>{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</span>
+      </div>
+    </div>
+    <div class="mn-sec ded">
+      <div class="mn-sec-hdr">
+        <span>Deductions</span>
+        <span class="ar">الاقتطاعات</span>
+      </div>
+      {% for d in doc.deductions %}
+      <div class="mn-line">
+        <span class="mn-line-name">{{ d.salary_component }}</span>
+        <span class="mn-line-amt">{{ frappe.utils.fmt_money(d.amount, currency=currency) }}</span>
+      </div>
+      {% endfor %}
+      <div class="mn-sec-foot">
+        <span>Total</span>
+        <span>{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="mn-kpi">
+    <div class="mn-kpi-card green">
+      <div class="mn-kpi-lbl">Gross Pay</div>
+      <div class="mn-kpi-val">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</div>
+    </div>
+    <div class="mn-kpi-card red">
+      <div class="mn-kpi-lbl">Deductions</div>
+      <div class="mn-kpi-val">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</div>
+    </div>
+    <div class="mn-kpi-card">
+      <div class="mn-kpi-lbl">Loan</div>
+      <div class="mn-kpi-val">{{ frappe.utils.fmt_money(doc.total_loan_repayment or 0, currency=currency) }}</div>
+    </div>
+    <div class="mn-kpi-card">
+      <div class="mn-kpi-lbl">Year to Date</div>
+      <div class="mn-kpi-val">{{ frappe.utils.fmt_money(doc.year_to_date or 0, currency=currency) }}</div>
+    </div>
+  </div>
+
+  <!-- Net Pay -->
+  <div class="mn-net">
+    <div class="mn-net-bar">
+      <div class="mn-net-left">
+        <div class="mn-net-lbl">Net Pay</div>
+        <div class="mn-net-lbl-ar">صافي الراتب</div>
+      </div>
+      <div class="mn-net-amt">{{ frappe.utils.fmt_money(doc.net_pay, currency=currency) }}</div>
+    </div>
+    {% if doc.total_in_words %}
+    <div class="mn-net-words">{{ doc.total_in_words }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Signatures -->
+  <div class="mn-sigs">
+    <div class="mn-sig">
+      <div class="mn-sig-line">Employer Signature</div>
+      <div class="mn-sig-ar">توقيع صاحب العمل</div>
+    </div>
+    <div class="mn-sig">
+      <div class="mn-sig-line">Employee Signature</div>
+      <div class="mn-sig-ar">توقيع الموظف</div>
+    </div>
+  </div>
+
+  <div class="mn-disc">
+    This is a computer-generated payslip and does not require a physical signature for internal records.<br/>
+    .هذا بيان راتب صادر آلياً ولا يتطلب توقيعاً فعلياً للسجلات الداخلية
+  </div>
+</div>

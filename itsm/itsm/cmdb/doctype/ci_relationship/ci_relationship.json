@@ -1,0 +1,106 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "source_ci",
+    "source_asset",
+    "relationship_type",
+    "column_break_1",
+    "target_ci",
+    "target_asset",
+    "section_details",
+    "description",
+    "is_active"
+  ],
+  "fields": [
+    {
+      "fieldname": "source_ci",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Source CI",
+      "options": "Configuration Item"
+    },
+    {
+      "fieldname": "source_asset",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Source Asset",
+      "options": "IT Asset"
+    },
+    {
+      "fieldname": "relationship_type",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Relationship Type",
+      "options": "CI Relationship Type",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "target_ci",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Target CI",
+      "options": "Configuration Item"
+    },
+    {
+      "fieldname": "target_asset",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Target Asset",
+      "options": "IT Asset"
+    },
+    {
+      "fieldname": "section_details",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Is Active"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "CMDB",
+  "name": "CI Relationship",
+  "naming_rule": "Expression",
+  "autoname": "CIR-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

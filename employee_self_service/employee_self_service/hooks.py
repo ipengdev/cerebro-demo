@@ -149,23 +149,11 @@ website_route_rules = [
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"employee_self_service.tasks.all"
-# 	],
-# 	"daily": [
-# 		"employee_self_service.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"employee_self_service.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"employee_self_service.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"employee_self_service.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"daily": [
+		"employee_self_service.employee_self_service_portal.doctype.delegation.delegation.check_and_manage_delegations"
+	],
+}
 
 # Testing
 # -------

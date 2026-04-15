@@ -1,0 +1,276 @@
+{% from "base_style.html" import base_style %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8">{{ base_style() }}
+<style>
+	@page { size: A4 landscape; margin: 8mm 6mm; }
+	body { font-size: 7.5pt; }
+</style>
+</head>
+<body>
+<!-- ══════════════════════════════════════════════════════════
+     CNSS 351 — جدول الاشتراكات المتوجبة والناتجة عن التصريح الاسمي السنوي
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- Header -->
+<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+	<div style="text-align:right; width:40%;">
+		<div style="margin-bottom:3px;"><span class="field-label">حقل مخصص لأصحاب العمل</span></div>
+		<div style="margin-bottom:3px;"><span class="field-label">إسم المؤسسة :</span> <span class="field-value">{{ company_name }}</span></div>
+		<div><span class="field-label">رقم المؤسسة :</span> <span class="field-value">{{ tax_id }}</span></div>
+	</div>
+	<div style="text-align:center; flex:1;">
+		<div style="font-size:8pt; margin-bottom:2px;">جدول الاشتراكات المتوجبة والناتجة عن التصريح الاسمي السنوي لعام <span class="field-value-short">{{ year }}</span></div>
+		<div style="font-size:7pt; color:#333;">والمتوجب دفعها حتى تاريخ ........................</div>
+	</div>
+	<div style="text-align:left; width:25%;">
+		<div class="cnss-org-name">الصندوق الوطني</div>
+		<div class="cnss-org-name">للضمان الإجتماعي</div>
+		<div class="cnss-org-loc">بيروت - لبنان</div>
+	</div>
+</div>
+
+<div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:7pt; border-top:1px solid #000; padding-top:3px;">
+	<div><span class="field-label">حقل مخصص للصندوق</span></div>
+	<div>
+		<span class="field-label">طريقة دفع الاشتراكات</span>
+		&nbsp; شك <b>3</b> &nbsp; تحويل مصرفي <b>2</b> &nbsp; نقداً <b>1</b> &nbsp; غير مدفوع <b>0</b>
+	</div>
+	<div><span class="field-label">المدة</span> &nbsp; فترة ___/___ &nbsp; سنة ___/___</div>
+	<div>
+		مؤسسة &nbsp;
+		فصلية ___/___ &nbsp;
+		شهرية ___/___
+	</div>
+</div>
+
+<!-- Main CNSS 351 table -->
+<table class="cnss-table" style="font-size:7pt;">
+	<thead>
+		<tr>
+			<th style="width:30px;">فرع</th>
+			<th style="width:55px;">عدد<br>الأجراء</th>
+			<th style="width:120px;">الأجور ولواحقها</th>
+			<th style="width:40px;">المعدل</th>
+			<th colspan="2" style="width:140px;">الاشتراكات المستحقة</th>
+			<th colspan="2" style="width:140px;">الاشتراكات المدفوعة</th>
+			<th style="width:80px;">المتوجب</th>
+			<th colspan="2" style="width:120px;">زيادات التأخير</th>
+			<th style="width:35px;">الفرع</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th>المدفوع</th>
+			<th>الرمز</th>
+			<th>المدفوع</th>
+			<th>الرمز</th>
+			<th></th>
+			<th>المدفوع</th>
+			<th>الرمز</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- ── فرع 3: المرض والأمومة (Sickness & Maternity — 9%) ── -->
+		<tr class="branch-row">
+			<td style="vertical-align:middle;"><b>/3/</b></td>
+			<td style="vertical-align:middle;">{{ employee_count }}</td>
+			<td class="num" style="vertical-align:middle;">{{ totals.medical_capped | fmt_number }}</td>
+			<td style="vertical-align:middle;"><span class="rate-label">%9</span></td>
+			<td class="num">{{ totals.branch3_due | fmt_number }}</td>
+			<td></td>
+			<td class="num"></td>
+			<td></td>
+			<td class="num" style="vertical-align:middle;">{{ totals.branch3_due | fmt_number }}</td>
+			<td></td>
+			<td></td>
+			<td style="vertical-align:middle; font-size:6.5pt; writing-mode:vertical-rl; transform:rotate(180deg);">المرض والأمومة</td>
+		</tr>
+		<tr>
+			<td colspan="8" style="font-size:6.5pt; text-align:right; padding:2px 4px; height:20px;">
+				الاشتراكات = {{ totals.medical_capped | fmt_number }} x %9<br>
+				{{ totals.branch3_due | fmt_number }} =
+			</td>
+			<td colspan="4"></td>
+		</tr>
+
+		<!-- ── فرع 1: تعويض نهاية الخدمة (End of Service — 8.5%) ── -->
+		<tr class="branch-row">
+			<td style="vertical-align:middle;"><b>/1/</b></td>
+			<td style="vertical-align:middle;">{{ employee_count }}</td>
+			<td class="num" style="vertical-align:middle;">{{ totals.gross | fmt_number }}</td>
+			<td style="vertical-align:middle;"><span class="rate-label">%8.5</span></td>
+			<td class="num">{{ totals.employer_eos | fmt_number }}</td>
+			<td></td>
+			<td class="num"></td>
+			<td></td>
+			<td class="num" style="vertical-align:middle;">{{ totals.employer_eos | fmt_number }}</td>
+			<td></td>
+			<td></td>
+			<td style="vertical-align:middle; font-size:6.5pt; writing-mode:vertical-rl; transform:rotate(180deg);">تعويض نهاية الخدمة</td>
+		</tr>
+		<tr>
+			<td colspan="8" style="font-size:6.5pt; text-align:right; padding:2px 4px; height:20px;">
+				الاشتراكات = {{ totals.gross | fmt_number }} x %8.5<br>
+				{{ totals.employer_eos | fmt_number }} =
+			</td>
+			<td colspan="4"></td>
+		</tr>
+
+		<!-- ── فرع 2: التعويضات العائلية (Family Allowances — 6%) ── -->
+		<tr class="branch-row">
+			<td style="vertical-align:middle;"><b>/2/</b></td>
+			<td style="vertical-align:middle;">{{ employee_count }}</td>
+			<td class="num" style="vertical-align:middle;">{{ totals.family_capped | fmt_number }}</td>
+			<td style="vertical-align:middle;"><span class="rate-label">%6</span></td>
+			<td class="num">{{ totals.employer_family | fmt_number }}</td>
+			<td></td>
+			<td class="num"></td>
+			<td></td>
+			<td class="num" style="vertical-align:middle;">{{ totals.employer_family | fmt_number }}</td>
+			<td></td>
+			<td></td>
+			<td style="vertical-align:middle; font-size:6.5pt; writing-mode:vertical-rl; transform:rotate(180deg);">التعويضات العائلية</td>
+		</tr>
+		<tr>
+			<td colspan="8" style="font-size:6.5pt; text-align:right; padding:2px 4px; height:20px;">
+				الاشتراكات = {{ totals.family_capped | fmt_number }} x %6<br>
+				{{ totals.employer_family | fmt_number }} =
+			</td>
+			<td colspan="4"></td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- Totals section -->
+<div class="totals-section" style="border:1px solid #000; padding:5px 10px;">
+	<div class="totals-row">
+		<span class="t-label">مجموع الاشتراكات المستحقة</span>
+		<span class="t-value">{{ (totals.branch3_due + totals.employer_eos + totals.employer_family) | fmt_number }}</span>
+	</div>
+	<div class="totals-row">
+		<span class="t-label">التعويضات العائلية المدفوعة</span>
+		<span class="t-value">____________________</span>
+	</div>
+	<div class="totals-row" style="border-bottom:2px solid #000;">
+		<span class="t-label">الزيادة المتوجبة على الصندوق / الباقي المتوجب للصندوق</span>
+		<span class="t-value">____________________</span>
+	</div>
+</div>
+
+<!-- Signatures -->
+<div style="display:flex; justify-content:space-between; margin-top:12px; font-size:7.5pt;">
+	<div style="text-align:center; width:30%;">
+		<div>المصفي ........</div>
+		<div style="margin-top:8px;">المراقب ........</div>
+		<div style="margin-top:8px;">المحاسب .......</div>
+	</div>
+	<div style="text-align:center; width:30%;">
+		<div style="margin-bottom:3px;">مجموع المبالغ المدفوعة</div>
+		<div>____________________</div>
+	</div>
+	<div style="text-align:center; width:30%;">
+		<div>توقيع وختم رب العمل:</div>
+		<div style="margin-top:25px;">___________________________</div>
+		<div style="margin-top:5px;">................... في ........./........./ 20..........</div>
+	</div>
+</div>
+
+<div style="margin-top:10px; font-size:7pt; font-weight:bold; border-top:1px solid #000; padding-top:4px;">
+	ملاحظة هامة:<br>
+	يتوجب إعادة هذا الجدول مع جدول التصريح الاسمي السنوي المرفق
+</div>
+
+<div class="footer-note">CNSS 351</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     صفحة ثانية — كشف سنوي تفصيلي بالمستخدمين والأجراء
+     ══════════════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+	<div>
+		<div><span class="field-label">إسم المؤسسة :</span> <span class="field-value">{{ company_name }}</span></div>
+		<div><span class="field-label">رقم المؤسسة :</span> <span class="field-value">{{ tax_id }}</span></div>
+	</div>
+	<div style="text-align:center;">
+		<div style="font-size:9pt; font-weight:bold;">التصريح الاسمي السنوي — كشف تفصيلي</div>
+		<div style="font-size:8pt;">عن سنة {{ year }}</div>
+	</div>
+	<div style="text-align:left;">
+		<div class="cnss-org-name" style="font-size:10pt;">الصندوق الوطني للضمان الإجتماعي</div>
+	</div>
+</div>
+
+<table class="cnss-table">
+	<thead>
+		<tr>
+			<th style="width:20px;">#</th>
+			<th>رقم الضمان</th>
+			<th>إسم الأجير</th>
+			<th>أشهر<br>العمل</th>
+			<th>الراتب<br>السنوي</th>
+			<th>سقف المرض<br>والأمومة</th>
+			<th>مستخدم<br>مرض</th>
+			<th>مستخدم<br>أمومة</th>
+			<th>رب عمل<br>مرض</th>
+			<th>رب عمل<br>أمومة</th>
+			<th>رب عمل<br>عائلي</th>
+			<th>رب عمل<br>ن.خ</th>
+			<th>مجموع<br>رب العمل</th>
+			<th>المجموع</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for row in data %}
+		<tr>
+			<td>{{ loop.index }}</td>
+			<td>{{ row.cnss_number }}</td>
+			<td class="text-right">{{ row.employee_name }}</td>
+			<td>{{ row.months_worked }}</td>
+			<td class="num">{{ row.annual_gross | fmt_number }}</td>
+			<td class="num">{{ row.annual_medical_capped | fmt_number }}</td>
+			<td class="num">{{ row.ee_sickness | fmt_number }}</td>
+			<td class="num">{{ row.ee_maternity | fmt_number }}</td>
+			<td class="num">{{ row.er_sickness | fmt_number }}</td>
+			<td class="num">{{ row.er_maternity | fmt_number }}</td>
+			<td class="num">{{ row.employer_family | fmt_number }}</td>
+			<td class="num">{{ row.employer_eos | fmt_number }}</td>
+			<td class="num">{{ row.total_employer | fmt_number }}</td>
+			<td class="num"><b>{{ row.total_cnss | fmt_number }}</b></td>
+		</tr>
+	{% endfor %}
+		<tr class="total-row">
+			<td colspan="4">المجموع</td>
+			<td class="num">{{ totals.gross | fmt_number }}</td>
+			<td class="num">{{ totals.medical_capped | fmt_number }}</td>
+			<td class="num">{{ totals.ee_sickness | fmt_number }}</td>
+			<td class="num">{{ totals.ee_maternity | fmt_number }}</td>
+			<td class="num">{{ totals.er_sickness | fmt_number }}</td>
+			<td class="num">{{ totals.er_maternity | fmt_number }}</td>
+			<td class="num">{{ totals.employer_family | fmt_number }}</td>
+			<td class="num">{{ totals.employer_eos | fmt_number }}</td>
+			<td class="num">{{ totals.total_er | fmt_number }}</td>
+			<td class="num"><b>{{ totals.total_cnss | fmt_number }}</b></td>
+		</tr>
+	</tbody>
+</table>
+
+<div style="display:flex; justify-content:space-between; margin-top:12px; font-size:7.5pt;">
+	<div>
+		<div><b>عدد الأجراء:</b> {{ employee_count }}</div>
+		<div><b>مجموع حصة المستخدم:</b> {{ totals.total_ee | fmt_number }}</div>
+		<div><b>مجموع حصة رب العمل:</b> {{ totals.total_er | fmt_number }}</div>
+		<div><b>المجموع العام:</b> {{ totals.total_cnss | fmt_number }}</div>
+	</div>
+	<div style="text-align:center; margin-top:10px;">
+		<div style="margin-bottom:30px;">ختم المؤسسة وتوقيع رب العمل</div>
+		<div>___________________________</div>
+	</div>
+</div>
+
+</body>
+</html>

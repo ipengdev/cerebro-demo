@@ -1,0 +1,369 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "taxpayer",
+  "taxpayer_name",
+  "tax_identification_number",
+  "column_break_1",
+  "declaration_type",
+  "filing_date",
+  "customs_office",
+  "section_shipment",
+  "transport_mode",
+  "country_of_origin",
+  "country_of_destination",
+  "column_break_s1",
+  "vessel_name",
+  "bill_of_lading",
+  "arrival_date",
+  "section_goods",
+  "total_cif_value",
+  "total_customs_duty",
+  "total_vat_on_imports",
+  "total_other_charges",
+  "column_break_g1",
+  "total_declared_value",
+  "exchange_rate",
+  "currency",
+  "section_items",
+  "items",
+  "section_totals",
+  "total_duties_and_taxes",
+  "amount_paid",
+  "balance_due",
+  "section_status",
+  "status",
+  "submitted_date",
+  "approved_by",
+  "customs_release_date",
+  "remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ETX-CUS-.YYYY.-",
+   "default": "ETX-CUS-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "taxpayer",
+   "fieldtype": "Link",
+   "label": "Importer/Exporter",
+   "options": "Taxpayer",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "taxpayer_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "fetch_from": "taxpayer.taxpayer_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "tax_identification_number",
+   "fieldtype": "Data",
+   "label": "TIN",
+   "fetch_from": "taxpayer.tax_identification_number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "declaration_type",
+   "fieldtype": "Select",
+   "label": "Declaration Type",
+   "options": "\nImport\nExport\nTransit\nRe-export\nTemporary Import",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "filing_date",
+   "fieldtype": "Date",
+   "label": "Filing Date",
+   "default": "Today",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customs_office",
+   "fieldtype": "Data",
+   "label": "Customs Office",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_shipment",
+   "fieldtype": "Section Break",
+   "label": "Shipment Information"
+  },
+  {
+   "fieldname": "transport_mode",
+   "fieldtype": "Select",
+   "label": "Transport Mode",
+   "options": "\nSea\nAir\nRoad\nRail",
+   "reqd": 1
+  },
+  {
+   "fieldname": "country_of_origin",
+   "fieldtype": "Link",
+   "label": "Country of Origin",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "country_of_destination",
+   "fieldtype": "Link",
+   "label": "Country of Destination",
+   "options": "Country"
+  },
+  {
+   "fieldname": "column_break_s1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vessel_name",
+   "fieldtype": "Data",
+   "label": "Vessel / Flight / Vehicle"
+  },
+  {
+   "fieldname": "bill_of_lading",
+   "fieldtype": "Data",
+   "label": "Bill of Lading / AWB No."
+  },
+  {
+   "fieldname": "arrival_date",
+   "fieldtype": "Date",
+   "label": "Arrival / Departure Date"
+  },
+  {
+   "fieldname": "section_goods",
+   "fieldtype": "Section Break",
+   "label": "Goods Value"
+  },
+  {
+   "fieldname": "total_cif_value",
+   "fieldtype": "Currency",
+   "label": "Total CIF Value",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_customs_duty",
+   "fieldtype": "Currency",
+   "label": "Total Customs Duty",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_vat_on_imports",
+   "fieldtype": "Currency",
+   "label": "Total VAT on Imports",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_other_charges",
+   "fieldtype": "Currency",
+   "label": "Other Charges",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_g1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_declared_value",
+   "fieldtype": "Currency",
+   "label": "Total Declared Value",
+   "options": "currency"
+  },
+  {
+   "fieldname": "exchange_rate",
+   "fieldtype": "Float",
+   "label": "Exchange Rate",
+   "default": "1",
+   "precision": "6"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "default": "USD",
+   "hidden": 1
+  },
+  {
+   "fieldname": "section_items",
+   "fieldtype": "Section Break",
+   "label": "Customs Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Customs Declaration Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_totals",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "total_duties_and_taxes",
+   "fieldtype": "Currency",
+   "label": "Total Duties & Taxes",
+   "read_only": 1,
+   "bold": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "amount_paid",
+   "fieldtype": "Currency",
+   "label": "Amount Paid",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "balance_due",
+   "fieldtype": "Currency",
+   "label": "Balance Due",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nUnder Assessment\nAssessed\nCleared\nRejected\nHeld",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "submitted_date",
+   "fieldtype": "Date",
+   "label": "Submitted Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Assessed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "customs_release_date",
+   "fieldtype": "Date",
+   "label": "Customs Release Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Customs Declaration",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Customs",
+ "name": "Customs Declaration",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Officer",
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Filer",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "title": "Draft",
+   "color": "gray"
+  },
+  {
+   "title": "Submitted",
+   "color": "blue"
+  },
+  {
+   "title": "Under Assessment",
+   "color": "orange"
+  },
+  {
+   "title": "Assessed",
+   "color": "yellow"
+  },
+  {
+   "title": "Cleared",
+   "color": "green"
+  },
+  {
+   "title": "Rejected",
+   "color": "red"
+  },
+  {
+   "title": "Held",
+   "color": "purple"
+  }
+ ],
+ "title_field": "taxpayer_name",
+ "search_fields": "taxpayer_name,tax_identification_number,declaration_type"
+}

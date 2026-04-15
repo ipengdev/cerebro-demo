@@ -1,0 +1,235 @@
+{% macro base_style() %}
+<style>
+	@page {
+		size: A4;
+		margin: 10mm 8mm;
+	}
+	* { box-sizing: border-box; margin: 0; padding: 0; }
+	body {
+		font-family: "DejaVu Sans", "Tahoma", "Arial", sans-serif;
+		font-size: 8.5pt;
+		direction: rtl;
+		color: #000;
+		line-height: 1.4;
+	}
+	/* ── Official CNSS form header ── */
+	.cnss-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		border-bottom: 2px solid #000;
+		padding-bottom: 6px;
+		margin-bottom: 8px;
+	}
+	.cnss-header-right { text-align: right; }
+	.cnss-header-center { text-align: center; flex: 1; padding: 0 15px; }
+	.cnss-header-left { text-align: left; }
+	.cnss-org-name {
+		font-size: 13pt;
+		font-weight: bold;
+		margin-bottom: 1px;
+	}
+	.cnss-org-loc { font-size: 9pt; }
+	.cnss-form-number { font-size: 8pt; font-weight: bold; margin-top: 4px; }
+	.cnss-form-title {
+		font-size: 11pt;
+		font-weight: bold;
+		text-align: center;
+		margin: 6px 0 4px 0;
+	}
+	.cnss-form-subtitle {
+		font-size: 8pt;
+		text-align: center;
+		color: #333;
+		margin-bottom: 8px;
+	}
+	/* ── Company info fields ── */
+	.field-row {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 4px;
+		font-size: 8.5pt;
+	}
+	.field-label { font-weight: bold; }
+	.field-value {
+		border-bottom: 1px dotted #000;
+		min-width: 200px;
+		display: inline-block;
+		padding: 0 5px;
+	}
+	.field-value-short {
+		border-bottom: 1px dotted #000;
+		min-width: 80px;
+		display: inline-block;
+		padding: 0 5px;
+		text-align: center;
+	}
+	/* ── Section titles ── */
+	.section-title {
+		font-size: 9pt;
+		font-weight: bold;
+		background: #eee;
+		padding: 3px 8px;
+		margin: 8px 0 5px 0;
+		border: 1px solid #999;
+	}
+	/* ── Info grid ── */
+	.info-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2px 20px;
+		margin-bottom: 6px;
+	}
+	.info-item { flex: 0 0 48%; padding: 2px 0; }
+	.info-item .label {
+		font-weight: bold;
+		display: inline-block;
+		min-width: 110px;
+	}
+	.info-item .value {
+		border-bottom: 1px dotted #000;
+		padding: 0 4px;
+		display: inline-block;
+		min-width: 100px;
+	}
+	.info-item.full { flex: 0 0 100%; }
+	/* ── Official form table ── */
+	table.cnss-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 4px 0;
+		font-size: 7.5pt;
+	}
+	table.cnss-table th, table.cnss-table td {
+		border: 1px solid #000;
+		padding: 3px 4px;
+		text-align: center;
+		vertical-align: middle;
+	}
+	table.cnss-table th {
+		background: #ddd;
+		font-weight: bold;
+		font-size: 7pt;
+	}
+	table.cnss-table td.num {
+		direction: ltr;
+		text-align: right;
+		font-family: "Courier New", monospace;
+		font-size: 8pt;
+	}
+	table.cnss-table td.text-right { text-align: right; }
+	table.cnss-table tr.total-row {
+		background: #e8e8e8;
+		font-weight: bold;
+	}
+	table.cnss-table tr.branch-row td {
+		height: 55px;
+		vertical-align: top;
+		padding: 5px 4px;
+	}
+	/* ── Digit boxes (like official form fields) ── */
+	.digit-boxes {
+		display: inline-flex;
+		direction: ltr;
+		gap: 1px;
+	}
+	.digit-boxes .box {
+		width: 14px;
+		height: 16px;
+		border: 1px solid #000;
+		text-align: center;
+		font-size: 8pt;
+		font-family: monospace;
+		line-height: 16px;
+		display: inline-block;
+	}
+	.digit-boxes .sep {
+		width: 6px;
+		text-align: center;
+		font-size: 10pt;
+		line-height: 16px;
+	}
+	/* ── Summary / totals section ── */
+	.totals-section {
+		margin: 8px 0;
+		font-size: 8.5pt;
+	}
+	.totals-row {
+		display: flex;
+		justify-content: space-between;
+		border-bottom: 1px solid #999;
+		padding: 3px 5px;
+	}
+	.totals-row .t-label { font-weight: bold; }
+	.totals-row .t-value {
+		direction: ltr;
+		font-family: monospace;
+		font-weight: bold;
+	}
+	/* ── Signature ── */
+	.signature-section {
+		margin-top: 20px;
+		display: flex;
+		justify-content: space-between;
+	}
+	.signature-block { text-align: center; width: 180px; }
+	.signature-block .sig-line {
+		border-top: 1px solid #000;
+		margin-top: 35px;
+		padding-top: 3px;
+		font-size: 7.5pt;
+	}
+	.footer-note {
+		margin-top: 10px;
+		font-size: 7pt;
+		color: #555;
+		text-align: center;
+		border-top: 1px solid #999;
+		padding-top: 4px;
+	}
+	.page-break { page-break-before: always; }
+	/* ── CNSS 190A specific ── */
+	.branch-label {
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+		font-weight: bold;
+		font-size: 7pt;
+		white-space: nowrap;
+	}
+	.rate-label {
+		font-size: 9pt;
+		font-weight: bold;
+		color: #000;
+	}
+	/* ── CNSS 2M specific ── */
+	.month-grid {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 6px 0;
+		font-size: 8pt;
+	}
+	.month-grid th, .month-grid td {
+		border: 1px solid #000;
+		padding: 4px 6px;
+		text-align: center;
+	}
+	.month-grid th { background: #ddd; font-weight: bold; }
+	.checkbox-field {
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		border: 1px solid #000;
+		text-align: center;
+		font-size: 9pt;
+		line-height: 12px;
+		vertical-align: middle;
+		margin: 0 2px;
+	}
+	.underline-field {
+		border-bottom: 1px solid #000;
+		min-width: 120px;
+		display: inline-block;
+		padding: 0 4px;
+	}
+</style>
+{% endmacro %}

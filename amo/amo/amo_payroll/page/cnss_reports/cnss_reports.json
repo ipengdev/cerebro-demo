@@ -1,0 +1,24 @@
+{
+ "content": "",
+ "creation": "2026-04-10 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Page",
+ "icon": "file",
+ "idx": 0,
+ "modified": "2026-04-10 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "AMO Payroll",
+ "name": "cnss-reports",
+ "owner": "Administrator",
+ "page_name": "cnss-reports",
+ "roles": [
+  {"role": "HR Manager"},
+  {"role": "HR User"},
+  {"role": "System Manager"},
+  {"role": "AMO HR Manager"},
+  {"role": "AMO Finance Manager"}
+ ],
+ "standard": "Yes",
+ "system_page": 0,
+ "title": "CNSS Reports"
+}

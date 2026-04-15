@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-04-10 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "demo_data_section",
+  "demo_data_html",
+  "demo_settings_section",
+  "default_company",
+  "column_break_demo_1",
+  "number_of_employees",
+  "column_break_demo_2",
+  "fill_all_fields",
+  "fill_translatable_fields"
+ ],
+ "fields": [
+  {
+   "fieldname": "demo_data_section",
+   "fieldtype": "Section Break",
+   "label": "Demo Data Management"
+  },
+  {
+   "fieldname": "demo_data_html",
+   "fieldtype": "HTML",
+   "label": "Demo Data Actions",
+   "options": "<div id=\"demo-data-actions\"></div>"
+  },
+  {
+   "fieldname": "demo_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Demo Data Settings"
+  },
+  {
+   "fieldname": "default_company",
+   "fieldtype": "Link",
+   "label": "Default Company",
+   "options": "Company",
+   "description": "Company to assign demo employees to (leave blank to distribute across all AMO companies)"
+  },
+  {
+   "fieldname": "column_break_demo_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "number_of_employees",
+   "fieldtype": "Int",
+   "label": "Number of Employees",
+   "default": 20,
+   "description": "Number of demo employees to create"
+  },
+  {
+   "fieldname": "column_break_demo_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fill_all_fields",
+   "fieldtype": "Check",
+   "label": "Fill All Fields",
+   "default": 1,
+   "description": "Fill optional fields (emergency contact, bank details, personal details, education, etc.)"
+  },
+  {
+   "fieldname": "fill_translatable_fields",
+   "fieldtype": "Check",
+   "label": "Fill Translatable Fields (Arabic)",
+   "default": 1,
+   "description": "Fill translatable fields with Arabic values"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-04-10 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "AMO Setup",
+ "name": "AMO Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "AMO Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

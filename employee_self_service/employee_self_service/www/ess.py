@@ -25,6 +25,7 @@ def get_context_for_dev():
 
 
 def get_boot():
+	desk_theme = frappe.db.get_value("User", frappe.session.user, "desk_theme") or "Light"
 	return frappe._dict(
 		{
 			"frappe_version": frappe.__version__,
@@ -32,6 +33,7 @@ def get_boot():
 			"default_route": "/ess/dashboard",
 			"csrf_token": frappe.sessions.get_csrf_token(),
 			"default_currency": frappe.db.get_default("currency") or "USD",
+			"desk_theme": desk_theme.lower(),
 			"timezone": {
 				"system": get_system_timezone(),
 				"user": frappe.db.get_value("User", frappe.session.user, "time_zone")

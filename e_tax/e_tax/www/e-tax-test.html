@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <title>e-Tax API Diagnostic</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+    .result { background: white; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
+    .ok { border-color: green; }
+    .fail { border-color: red; }
+    pre { white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow: auto; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>e-Tax API Diagnostic</h1>
+  <div class="result">
+    <strong>CSRF Token:</strong> <span id="csrf"></span><br>
+    <strong>Host:</strong> <span id="host"></span><br>
+    <strong>User Agent:</strong> <span id="ua"></span>
+  </div>
+
+  <button onclick="testDashboard()">Test Dashboard API</button>
+  <button onclick="testDemoStatus()">Test Demo Status API</button>
+  <button onclick="testCreateDemo()">Test Create Demo Data</button>
+
+  <div id="results"></div>
+
+  <script>
+    {% for key in boot %}
+    window["{{ key }}"] = {{ boot[key] | tojson }};
+    {% endfor %}
+  </script>
+  <script>
+    document.getElementById('csrf').textContent = window.csrf_token || 'NOT SET';
+    document.getElementById('host').textContent = window.location.hostname;
+    document.getElementById('ua').textContent = navigator.userAgent;
+
+    async function apiCall(method, label) {
+      const div = document.createElement('div');
+      div.className = 'result';
+      div.innerHTML = '<strong>' + label + '</strong>: Calling...';
+      document.getElementById('results').prepend(div);
+
+      try {
+        const headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'X-Frappe-Site-Name': window.location.hostname
+        };
+        if (window.csrf_token && window.csrf_token !== '{{ csrf_token }}') {
+          headers['X-Frappe-CSRF-Token'] = window.csrf_token;
+        }
+
+        const startTime = Date.now();
+        const res = await fetch('/api/method/' + method, {
+          method: 'POST',
+          headers: headers
+        });
+        const elapsed = Date.now() - startTime;
+
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); } catch(e) { data = text; }
+
+        if (res.ok) {
+          div.className = 'result ok';
+          div.innerHTML = '<strong>' + label + '</strong> ✅ ' + res.status + ' (' + elapsed + 'ms)<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        } else {
+          div.className = 'result fail';
+          div.innerHTML = '<strong>' + label + '</strong> ❌ ' + res.status + ' ' + res.statusText + ' (' + elapsed + 'ms)<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+      } catch(e) {
+        div.className = 'result fail';
+        div.innerHTML = '<strong>' + label + '</strong> ❌ Network Error: ' + e.message;
+      }
+    }
+
+    function testDashboard() { apiCall('e_tax.api.get_dashboard_stats', 'Dashboard Stats'); }
+    function testDemoStatus() { apiCall('e_tax.api.get_demo_data_status', 'Demo Status'); }
+    function testCreateDemo() { apiCall('e_tax.api.create_demo_data', 'Create Demo Data'); }
+  </script>
+</body>
+</html>

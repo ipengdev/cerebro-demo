@@ -1,0 +1,367 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "taxpayer",
+  "taxpayer_name",
+  "tax_identification_number",
+  "column_break_1",
+  "fiscal_year",
+  "declaration_period",
+  "filing_date",
+  "due_date",
+  "section_income_tax",
+  "gross_revenue",
+  "allowable_deductions",
+  "taxable_income",
+  "income_tax_rate",
+  "income_tax_amount",
+  "section_social_tax",
+  "total_payroll",
+  "social_tax_rate",
+  "social_tax_amount",
+  "section_unemployment",
+  "unemployment_insurance_rate",
+  "unemployment_insurance_amount",
+  "section_pension",
+  "pension_fund_rate",
+  "pension_fund_amount",
+  "section_totals",
+  "total_tax_liability",
+  "total_paid",
+  "balance_due",
+  "section_status",
+  "status",
+  "submitted_date",
+  "approved_by",
+  "remarks",
+  "section_items",
+  "items",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ETX-ED-.YYYY.-",
+   "default": "ETX-ED-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "taxpayer",
+   "fieldtype": "Link",
+   "label": "Taxpayer",
+   "options": "Taxpayer",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "taxpayer_name",
+   "fieldtype": "Data",
+   "label": "Taxpayer Name",
+   "fetch_from": "taxpayer.taxpayer_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "tax_identification_number",
+   "fieldtype": "Data",
+   "label": "TIN",
+   "fetch_from": "taxpayer.tax_identification_number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "default": "USD",
+   "hidden": 1,
+   "no_copy": 0
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Tax Fiscal Year",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "declaration_period",
+   "fieldtype": "Select",
+   "label": "Declaration Period",
+   "options": "\nMonthly\nQuarterly\nAnnually",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "filing_date",
+   "fieldtype": "Date",
+   "label": "Filing Date",
+   "default": "Today",
+   "reqd": 1
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_income_tax",
+   "fieldtype": "Section Break",
+   "label": "Income Tax"
+  },
+  {
+   "fieldname": "gross_revenue",
+   "fieldtype": "Currency",
+   "label": "Gross Revenue",
+   "reqd": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "allowable_deductions",
+   "fieldtype": "Currency",
+   "label": "Allowable Deductions",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "taxable_income",
+   "fieldtype": "Currency",
+   "label": "Taxable Income",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "income_tax_rate",
+   "fieldtype": "Percent",
+   "label": "Income Tax Rate (%)",
+   "default": "30"
+  },
+  {
+   "fieldname": "income_tax_amount",
+   "fieldtype": "Currency",
+   "label": "Income Tax Amount",
+   "read_only": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_social_tax",
+   "fieldtype": "Section Break",
+   "label": "Social Tax"
+  },
+  {
+   "fieldname": "total_payroll",
+   "fieldtype": "Currency",
+   "label": "Total Payroll",
+   "reqd": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "social_tax_rate",
+   "fieldtype": "Percent",
+   "label": "Social Tax Rate (%)",
+   "default": "33"
+  },
+  {
+   "fieldname": "social_tax_amount",
+   "fieldtype": "Currency",
+   "label": "Social Tax Amount",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_unemployment",
+   "fieldtype": "Section Break",
+   "label": "Unemployment Insurance"
+  },
+  {
+   "fieldname": "unemployment_insurance_rate",
+   "fieldtype": "Percent",
+   "label": "Unemployment Insurance Rate (%)",
+   "default": "1.6"
+  },
+  {
+   "fieldname": "unemployment_insurance_amount",
+   "fieldtype": "Currency",
+   "label": "Unemployment Insurance Amount",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_pension",
+   "fieldtype": "Section Break",
+   "label": "Mandatory Pension Fund"
+  },
+  {
+   "fieldname": "pension_fund_rate",
+   "fieldtype": "Percent",
+   "label": "Pension Fund Rate (%)",
+   "default": "2"
+  },
+  {
+   "fieldname": "pension_fund_amount",
+   "fieldtype": "Currency",
+   "label": "Pension Fund Amount",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_totals",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "total_tax_liability",
+   "fieldtype": "Currency",
+   "label": "Total Tax Liability",
+   "read_only": 1,
+   "bold": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "total_paid",
+   "fieldtype": "Currency",
+   "label": "Total Paid",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "balance_due",
+   "fieldtype": "Currency",
+   "label": "Balance Due",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status & Approval"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nUnder Review\nApproved\nRejected\nAmended",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "submitted_date",
+   "fieldtype": "Date",
+   "label": "Submitted Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_items",
+   "fieldtype": "Section Break",
+   "label": "Detailed Breakdown"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Declaration Items",
+   "options": "Enterprise Declaration Item"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Enterprise Declaration",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax Administration",
+ "name": "Enterprise Declaration",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Officer",
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Filer",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "title": "Draft",
+   "color": "gray"
+  },
+  {
+   "title": "Submitted",
+   "color": "blue"
+  },
+  {
+   "title": "Under Review",
+   "color": "orange"
+  },
+  {
+   "title": "Approved",
+   "color": "green"
+  },
+  {
+   "title": "Rejected",
+   "color": "red"
+  }
+ ],
+ "title_field": "taxpayer_name",
+ "search_fields": "taxpayer_name,tax_identification_number,fiscal_year"
+}

@@ -1,0 +1,306 @@
+"""R4 — بيان معلومات من المستخدم/الأجير الى رب العمل — Employee Info Statement.
+
+2-page form. Page 1: personal info. Page 2: dependents table.
+"""
+
+from reportlab.lib.units import mm
+
+from .pdf_utils import (
+    FormPDF, PAGE_W, PAGE_H, MARGIN, GREEN, LIGHT_GREEN, GRAY, ar,
+)
+
+
+def build_r4_pdf(employee, company, dep_count=0, dependents=None):
+    """Build R4 PDF and return bytes."""
+    pdf = FormPDF()
+    c = pdf.c
+    emp = employee
+    comp = company
+    dependents = dependents or []
+
+    R = PAGE_W - MARGIN
+    L = MARGIN
+    W = R - L
+    row_h = 15
+    col1_r = R - 5
+    col2_r = PAGE_W / 2 - 10
+
+    # ══════════════════════════════════════════════════════════════
+    #  PAGE 1
+    # ══════════════════════════════════════════════════════════════
+    y = PAGE_H - MARGIN
+
+    # Form number & page
+    pdf.text_ar(L + 20, y, "ر ٤", size=16, bold=True)
+    pdf.text_ar(L + 60, y - 15, "صفحة ١/٢", size=7, color=GRAY)
+
+    # Ministry header
+    pdf.text_ar(R, y, "الجمهورية اللبنانيـــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "وزارة الماليــــــة", size=9, bold=True)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية المالية العامة", size=8)
+    y -= 12
+    pdf.text_ar(R, y, "مديرية الواردات – ضريبة الرواتب والأجور", size=8)
+
+    title_y = PAGE_H - MARGIN - 18
+    pdf.text_center(PAGE_W / 2, title_y,
+                    "بيان معلومات من المستخدم/الأجير الى رب العمل", size=12, bold=True)
+
+    # ── Company info ─────────────────────────────────────────────
+    y = PAGE_H - MARGIN - 60
+    pdf.text_ar(col1_r, y, "إسم الشركة/المؤسسة", size=8)
+    pdf.dotted_line(L + 5, y - 2, R - L - 120)
+    pdf.text_value(L + 10, y, comp.get("company_name", ""), size=9, bold=True)
+
+    y -= row_h
+    pdf.text_ar(col1_r, y, "الشهرة التجارية", size=8)
+    pdf.dotted_line(L + 5, y - 2, R - L - 100)
+    pdf.text_value(L + 10, y, comp.get("abbr", ""), size=9)
+
+    y -= row_h
+    pdf.text_ar(col1_r, y, "رقم التسجيل", size=8)
+    tax_id = str(comp.get("tax_id") or "")
+    pdf.field_boxes_ltr(R - 250, y - 4, 12, box_size=13, values=tax_id)
+    pdf.text_ar(R - 260, y, "(لدى وزارة المالية)", size=7)
+
+    # Financial number question
+    y -= row_h + 4
+    has_fin = bool(emp.get("financial_number"))
+    pdf.text_ar(col1_r, y, "هل لديك رقم مالي شخصي؟*", size=8)
+    pdf.checkbox(col1_r - 150, y - 3, checked=has_fin, size=8)
+    pdf.text_ar(col1_r - 152, y, "نعم", size=7)
+    pdf.checkbox(col1_r - 185, y - 3, checked=not has_fin, size=8)
+    pdf.text_ar(col1_r - 187, y, "كلا", size=7)
+    if has_fin:
+        pdf.text_ar(col1_r - 220, y, "الرقم:", size=7)
+        pdf.dotted_line(L + 5, y - 2, 100)
+        pdf.text_value(L + 10, y, emp.get("financial_number", ""), size=9)
+
+    # ── Employee personal info ───────────────────────────────────
+    y -= 18
+    sec_top = y + 12
+    pdf.section_header(L, y, W, "تعريف المستخدم / الأجير", size=9)
+    y -= 6
+
+    fields = [
+        [(".١", "الإسم", emp.get("first_name", "")),
+         (".٢", "الشهرة", emp.get("last_name", ""))],
+        [(".٣", "إسم الأب", emp.get("father_name", "")),
+         (".٤", "إسم الأم", emp.get("mother_name", ""))],
+    ]
+
+    for row in fields:
+        for i, (num, label, val) in enumerate(row):
+            x = col1_r if i == 0 else col2_r
+            base = col2_r + 10 if i == 0 else L + 5
+            field_w = x - base - 50
+            pdf.text_ar(x, y, num, size=7, color=GREEN)
+            pdf.text_ar(x - 12, y, label, size=8)
+            pdf.dotted_line(base, y - 2, field_w)
+            pdf.text_value(base + 5, y, val, size=9)
+        y -= row_h
+
+    # Nationality / Gender
+    pdf.text_ar(col1_r, y, ".٥", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 12, y, "الجنسية", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 60)
+    pdf.text_value(col2_r + 15, y, emp.get("nationality", ""), size=9)
+
+    pdf.text_ar(col2_r, y, ".٦", size=7, color=GREEN)
+    pdf.text_ar(col2_r - 12, y, "الجنس", size=8)
+    gender = (emp.get("gender") or "").lower()
+    cx = col2_r - 55
+    pdf.checkbox(cx, y - 3, checked=(gender in ("female", "أنثى")), size=7)
+    pdf.text_ar(cx - 2, y, "أنثى", size=7)
+    pdf.checkbox(cx - 35, y - 3, checked=(gender in ("male", "ذكر")), size=7)
+    pdf.text_ar(cx - 37, y, "ذكر", size=7)
+
+    y -= row_h
+    # Place of birth / DOB
+    pdf.text_ar(col1_r, y, ".٧", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 12, y, "محل الولادة", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 70)
+    pdf.text_value(col2_r + 15, y, emp.get("place_of_birth", ""), size=9)
+
+    dob = emp.get("date_of_birth")
+    pdf.text_ar(col2_r, y, ".٨", size=7, color=GREEN)
+    pdf.text_ar(col2_r - 12, y, "تاريخ الولادة", size=8)
+    pdf.dotted_line(L + 5, y - 2, col2_r - L - 70)
+    pdf.text_value(L + 10, y, str(dob) if dob else "", size=9)
+
+    y -= row_h
+    # Marital status
+    marital = (emp.get("marital_status") or "").lower()
+    pdf.text_ar(col1_r, y, ".٩", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 12, y, "الوضع العائلي*", size=8)
+    cx = col1_r - 90
+    for status, label in [("single", "أعزب"), ("married", "متزوج"),
+                          ("divorced", "أرمل"), ("مطلق", "مطلق")]:
+        pdf.checkbox(cx, y - 3, checked=(marital == status), size=7)
+        pdf.text_ar(cx - 2, y, label, size=7)
+        cx -= 35
+
+    y -= row_h
+    # Salary type / dependents count
+    salary_mode = emp.get("salary_mode") or "Monthly"
+    pdf.text_ar(col1_r, y, ".١٠", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 15, y, "نوع الأجرة*", size=8)
+    cx = col1_r - 80
+    pdf.checkbox(cx, y - 3, checked=(salary_mode == "Monthly"), size=7)
+    pdf.text_ar(cx - 2, y, "شهري", size=7)
+    pdf.checkbox(cx - 35, y - 3, checked=(salary_mode == "Daily"), size=7)
+    pdf.text_ar(cx - 37, y, "يومي", size=7)
+
+    pdf.text_ar(col2_r, y, ".١١", size=7, color=GREEN)
+    pdf.text_ar(col2_r - 15, y, "عدد الأشخاص الذين يستفيدون من التنزيل العائلي", size=7)
+    pdf.dotted_line(L + 5, y - 2, 40)
+    pdf.text_value(L + 10, y, str(dep_count) if dep_count else "", size=9)
+
+    y -= row_h
+    # Register number, place
+    pdf.text_ar(col1_r, y, ".١٢", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 15, y, "رقم السجل", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 70)
+    pdf.text_value(col2_r + 15, y, emp.get("register_number", ""), size=9)
+
+    pdf.text_ar(col2_r, y, "مكان السجل", size=8)
+    pdf.dotted_line(L + 5, y - 2, col2_r - L - 60)
+    pdf.text_value(L + 10, y, emp.get("register_place", ""), size=9)
+
+    y -= row_h
+    # ID card / social security
+    pdf.text_ar(col1_r, y, ".١٣", size=7, color=GREEN)
+    pdf.text_ar(col1_r - 15, y, "رقم بطاقة الهوية", size=8)
+    pdf.dotted_line(col2_r + 10, y - 2, col1_r - col2_r - 80)
+    pdf.text_value(col2_r + 15, y, emp.get("national_id_number", ""), size=9)
+
+    pdf.text_ar(col2_r, y, ".١٤", size=7, color=GREEN)
+    pdf.text_ar(col2_r - 15, y, "رقم الضمان الاجتماعي", size=8)
+    pdf.dotted_line(L + 5, y - 2, col2_r - L - 100)
+    pdf.text_value(L + 10, y, emp.get("social_security_number", ""), size=9)
+
+    sec_bottom = y - 8
+    pdf.rect(L, sec_bottom, W, sec_top - sec_bottom, line_width=0.8)
+
+    # ── Spouse section ───────────────────────────────────────────
+    y -= 18
+    sec_sp_top = y + 12
+    pdf.section_header(L, y, W, "معلومات عن الزوج/الزوجة وعن صاحب العمل الذي يعمل لديه", size=8)
+    y -= 6
+
+    spouse_rows = [
+        ("إسم الزوج/الزوجة", emp.get("spouse_name", "")),
+        ("إسم صاحب العمل للزوج/الزوجة", ""),
+        ("رقم تسجيل صاحب عمل الزوج/ة لدى وزارة المالية", ""),
+    ]
+    for label, val in spouse_rows:
+        pdf.text_ar(col1_r, y, label, size=8)
+        pdf.dotted_line(L + 5, y - 2, R - L - 200)
+        if val:
+            pdf.text_value(L + 10, y, val, size=9)
+        y -= row_h
+
+    sec_sp_bottom = y - 4
+    pdf.rect(L, sec_sp_bottom, W, sec_sp_top - sec_sp_bottom, line_width=0.8)
+
+    # ── Address section ──────────────────────────────────────────
+    y -= 14
+    sec_ad_top = y + 12
+    pdf.section_header(L, y, W, "عنوان المسكن", size=9)
+    y -= 6
+
+    for label, val in [("محافظة", emp.get("mohafaza", "")),
+                       ("قضاء", emp.get("caza", "")),
+                       ("منطقة - بلدة", emp.get("register_place", "")),
+                       ("الشارع", ""), ("الحي", "")]:
+        pdf.text_ar(R - 5, y, label, size=8)
+        pdf.dotted_line(L + 5, y - 2, R - L - 70)
+        if val:
+            pdf.text_value(L + 10, y, val, size=9)
+        y -= row_h - 3
+
+    pdf.text_ar(R - 5, y, "هاتف", size=8)
+    pdf.dotted_line(L + 5, y - 2, R - L - 50)
+    pdf.text_value(L + 10, y, emp.get("cell_phone", ""), size=9)
+    y -= row_h - 3
+
+    pdf.text_ar(R - 5, y, "البريد الإلكتروني (e-mail)", size=8)
+    pdf.dotted_line(L + 5, y - 2, R - L - 130)
+    pdf.text_value(L + 10, y, emp.get("personal_email", ""), size=9)
+
+    sec_ad_bottom = y - 8
+    pdf.rect(L, sec_ad_bottom, W, sec_ad_top - sec_ad_bottom, line_width=0.8)
+
+    # ── Declaration ──────────────────────────────────────────────
+    y -= 16
+    pdf.text_ar(R, y, "إفادة", size=9, bold=True, color=GREEN)
+    y -= 12
+    pdf.text_ar(R, y,
+                "أنا الموقع أدناه أقر بأن هذه المعلومات هي مطابقة لذلك المدون", size=7)
+    y -= 10
+    pdf.text_ar(R, y, "التاريخ .................... التوقيع ....................", size=8)
+
+    # ══════════════════════════════════════════════════════════════
+    #  PAGE 2 — Dependents table
+    # ══════════════════════════════════════════════════════════════
+    pdf.new_page()
+    y = PAGE_H - MARGIN
+
+    pdf.text_ar(L + 20, y, "ر ٤", size=16, bold=True)
+    pdf.text_ar(L + 60, y - 15, "صفحة ٢/٢", size=7, color=GRAY)
+    pdf.text_center(PAGE_W / 2, y, "جدول الأشخاص الذين يعيلهم المستخدم/الأجير", size=11, bold=True)
+
+    y -= 30
+
+    # Table headers
+    headers = [
+        "الرقم", "الإسم الكامل", "تاريخ الولادة", "تاريخ الوفاة",
+        "الجنس", "طالب", "إعاقة", "الوضع العائلي", "صلة القربى", "مكان الدراسة"
+    ]
+    col_widths = [25, 100, 55, 55, 30, 30, 30, 55, 55, W - 435]
+
+    th = 16
+    cx = R
+    for i, (hdr, w) in enumerate(zip(headers, col_widths)):
+        cx -= w
+        pdf.rect(cx, y - th, w, th, fill=True, fill_color=LIGHT_GREEN, line_width=0.5)
+        pdf.text_center(cx + w / 2, y - th + 4, hdr, size=6, bold=True, color=GREEN)
+
+    # Data rows (6 rows)
+    for r in range(6):
+        y -= th
+        cx = R
+        dep = dependents[r] if r < len(dependents) else {}
+        row_vals = [
+            str(r + 1),
+            dep.get("name", ""),
+            str(dep.get("dob", "")),
+            str(dep.get("death_date", "")),
+            dep.get("gender", ""),
+            dep.get("student", ""),
+            dep.get("disability", ""),
+            dep.get("marital_status", ""),
+            dep.get("relation", ""),
+            dep.get("school", ""),
+        ]
+        for val, w in zip(row_vals, col_widths):
+            cx -= w
+            pdf.rect(cx, y - th, w, th, line_width=0.3)
+            if val:
+                pdf.text_center(cx + w / 2, y - th + 4, val, size=6)
+
+    # Notes
+    y -= th + 15
+    pdf.text_ar(R, y, "ملاحظات:", size=8, bold=True)
+    y -= 12
+    pdf.text_ar(R, y,
+                "- يجب أن يُرفق بهذا البيان صورة عن إخراج القيد العائلي أو الإفرادي.", size=7)
+    y -= 10
+    pdf.text_ar(R, y,
+                "- يجب تعبئة نموذج تعديل معلومات عند أي تغيير في الوضع.", size=7)
+
+    y -= 25
+    pdf.text_ar(R, y, "التاريخ .................... التوقيع ....................", size=8)
+
+    return pdf.save()
