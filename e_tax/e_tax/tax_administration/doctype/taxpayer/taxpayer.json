@@ -1,0 +1,186 @@
+{
+ "actions": [],
+ "autoname": "ETX-TP-.#####",
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "taxpayer_name",
+  "taxpayer_type",
+  "tax_identification_number",
+  "column_break_1",
+  "registration_date",
+  "status",
+  "section_contact",
+  "email",
+  "phone",
+  "column_break_2",
+  "address",
+  "city",
+  "region",
+  "section_enterprise",
+  "enterprise_name",
+  "industry",
+  "column_break_3",
+  "annual_turnover",
+  "employee_count"
+ ],
+ "fields": [
+  {
+   "fieldname": "taxpayer_name",
+   "fieldtype": "Data",
+   "label": "Taxpayer Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "taxpayer_type",
+   "fieldtype": "Select",
+   "label": "Taxpayer Type",
+   "options": "\nIndividual\nEnterprise\nGovernment Entity\nNon-Profit",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "tax_identification_number",
+   "fieldtype": "Data",
+   "label": "Tax Identification Number (TIN)",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "registration_date",
+   "fieldtype": "Date",
+   "label": "Registration Date",
+   "reqd": 1,
+   "default": "Today"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nActive\nSuspended\nDeregistered",
+   "default": "Active",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "default": "USD",
+   "hidden": 1,
+   "no_copy": 0
+  },
+  {
+   "fieldname": "section_contact",
+   "fieldtype": "Section Break",
+   "label": "Contact Information"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Data",
+   "label": "Region / Province"
+  },
+  {
+   "fieldname": "section_enterprise",
+   "fieldtype": "Section Break",
+   "label": "Enterprise Details",
+   "depends_on": "eval:doc.taxpayer_type=='Enterprise'"
+  },
+  {
+   "fieldname": "enterprise_name",
+   "fieldtype": "Data",
+   "label": "Enterprise Name"
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Data",
+   "label": "Industry / Sector"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "annual_turnover",
+   "fieldtype": "Currency",
+   "label": "Annual Turnover",
+   "options": "currency"
+  },
+  {
+   "fieldname": "employee_count",
+   "fieldtype": "Int",
+   "label": "Number of Employees"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax Administration",
+ "name": "Taxpayer",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Officer",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Tax Filer"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "taxpayer_name",
+ "search_fields": "taxpayer_name,tax_identification_number,taxpayer_type",
+ "image_field": ""
+}

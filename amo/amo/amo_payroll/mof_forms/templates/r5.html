@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8">
+{% include "base_style.html" %}
+<style>
+  .r5-calc { width: 100%; border-collapse: collapse; margin: 3px 0; }
+  .r5-calc td { padding: 2px 4px; font-size: 9.5px; vertical-align: middle; }
+  .r5-calc .num { width: 35px; text-align: center; font-weight: bold; background: #e0f2e9; border: 1px solid #333; font-size: 10px; }
+  .r5-calc .val1, .r5-calc .val2 { width: 90px; border: 1px solid #333; text-align: center; font-size: 10px; }
+  .r5-calc .lbl { text-align: right; padding-right: 6px; }
+  .period-table { width: 100%; border-collapse: collapse; }
+  .period-table td, .period-table th { border: 1px solid #333; padding: 2px 4px; font-size: 9px; text-align: center; }
+  .period-table th { background: #e0f2e9; }
+</style>
+</head>
+<body>
+<div class="mof-page">
+  <div class="form-number">ر ٥</div>
+
+  <!-- Header -->
+  <div class="mof-header-row">
+    <div class="mof-header-right">
+      الجمهورية اللبنانيـــــة<br>
+      وزارة الماليــــــة<br>
+      مديرية المالية العامة<br>
+      مديرية الواردات – ضريبة الرواتب والأجور
+    </div>
+    <div class="mof-header-center">
+      <div class="mof-title">تصريح سنوي عن ضريبة الدخل<br>على الرواتب والأجور</div>
+    </div>
+    <div class="mof-header-left"></div>
+  </div>
+
+  <!-- Company & Period -->
+  <div class="two-col" style="margin-top:4px;">
+    <div>
+      <div class="field-row"><span class="field-label">إسم الشركة/المؤسسة</span><span class="field-value">{{ company.company_name or '' }}</span></div>
+      <div class="field-row"><span class="field-label">رقم التسجيل</span>
+        <span class="reg-boxes">{% set tid = (company.tax_id or '')|string %}{% for i in range(12) %}<span class="reg-box">{{ tid[i] if i < tid|length else '' }}</span>{% endfor %}</span>
+        <span style="font-size:8px;">(لدى وزارة المالية)</span>
+      </div>
+      <div class="field-row"><span class="field-label">الشهرة التجارية</span><span class="field-value">{{ company.abbr or '' }}</span></div>
+    </div>
+    <div>
+      <div class="field-row">
+        <span class="field-label">السنة المالية من</span>
+        <span class="field-value" style="max-width:80px;">01/01/{{ year }}</span>
+        <span class="field-label">إلى</span>
+        <span class="field-value" style="max-width:80px;">31/12/{{ year }}</span>
+      </div>
+      <div class="field-row">
+        <span class="field-label">عن الفترة من</span>
+        <span class="field-value" style="max-width:80px;">01/01/{{ year }}</span>
+        <span class="field-label">إلى</span>
+        <span class="field-value" style="max-width:80px;">31/12/{{ year }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Addresses -->
+  <div class="two-col" style="margin-top:4px;">
+    <div class="section-border">
+      <div class="section-title" style="font-size:10px;">عنوان المركز الرئيسي</div>
+      <div class="addr-grid" style="font-size:9px;">
+        <div class="field-row"><span class="field-label">محافظة</span><span class="field-value">{{ company.address.state or '' }}</span></div>
+        <div class="field-row"><span class="field-label">قضاء</span><span class="field-value">{{ company.address.city or '' }}</span></div>
+        <div class="field-row"><span class="field-label">الشارع</span><span class="field-value">{{ company.address.address_line1 or '' }}</span></div>
+        <div class="field-row"><span class="field-label">الحي</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">هاتف</span><span class="field-value">{{ company.phone_no or company.address.phone or '' }}</span></div>
+        <div class="field-row"><span class="field-label">فاكس</span><span class="field-value">{{ company.fax or company.address.fax or '' }}</span></div>
+      </div>
+      <div class="field-row"><span class="field-label">البريد الالكتروني (e-mail):</span><span class="field-value">{{ company.email or company.address.email_id or '' }}</span></div>
+    </div>
+    <div class="section-border">
+      <div class="section-title" style="font-size:10px;">محل الإقامة المختار للتبليغ*</div>
+      <div class="addr-grid" style="font-size:9px;">
+        <div class="field-row"><span class="field-label">محافظة</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">قضاء</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">الشارع</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">الحي</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">هاتف</span><span class="field-value"></span></div>
+        <div class="field-row"><span class="field-label">فاكس</span><span class="field-value"></span></div>
+      </div>
+      <div class="field-row"><span class="field-label">البريد الالكتروني (e-mail):</span><span class="field-value"></span></div>
+    </div>
+  </div>
+
+  <!-- Contact persons -->
+  <div class="two-col" style="margin-top:3px;">
+    <div class="section-border">
+      <div class="section-title" style="font-size:9px;">الشخص المكلف بتبلّغ البريد</div>
+      <div class="field-row"><span class="field-label">الإسم الكامل</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">رقم التسجيل (لدى وزارة المالية)</span>
+        <span class="reg-boxes">{% for i in range(12) %}<span class="reg-box"></span>{% endfor %}</span>
+      </div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value"></span><span class="field-label" style="margin-right:10px;">فاكس</span><span class="field-value"></span></div>
+    </div>
+    <div class="section-border">
+      <div class="section-title" style="font-size:9px;">الشخص الذي ساهم بتحضير التصريح</div>
+      <div class="field-row"><span class="field-label">الإسم الكامل</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">رقم التسجيل (لدى وزارة المالية)</span>
+        <span class="reg-boxes">{% for i in range(12) %}<span class="reg-box"></span>{% endfor %}</span>
+      </div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value"></span><span class="field-label" style="margin-right:10px;">فاكس</span><span class="field-value"></span></div>
+    </div>
+  </div>
+
+  <!-- Counts -->
+  <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px;">
+    <div class="field-row">
+      <span class="field-label">عدد رئيس وأعضاء مجلس الإدارة</span>
+      <span style="border:1px solid #333; padding:1px 6px; background:#e0f2e9; font-weight:bold;">٧٠</span>
+      <span class="field-value" style="max-width:50px;">{{ board.count }}</span>
+    </div>
+    <div class="field-row">
+      <span class="field-label">عدد المستخدمين والأجراء للفترة المصرح عنها</span>
+      <span style="border:1px solid #333; padding:1px 6px; background:#e0f2e9; font-weight:bold;">٨٠</span>
+      <span class="field-value" style="max-width:50px;">{{ employees.count }}</span>
+    </div>
+    <div class="field-row">
+      <span class="field-label">عدد العمال الذين يتقاضون أجوراً مقطوعة</span>
+      <span style="border:1px solid #333; padding:1px 6px; background:#e0f2e9; font-weight:bold;">٩٠</span>
+      <span class="field-value" style="max-width:50px;">0</span>
+    </div>
+  </div>
+
+  <!-- Tax Calculation Table -->
+  <div style="margin-top:4px; text-align:center; font-weight:bold; font-size:11px;">ضريبة الباب الثاني</div>
+  <table class="r5-calc">
+    <tr>
+      <td class="lbl" style="width:45%;"></td>
+      <td colspan="2" style="text-align:center; font-weight:bold; font-size:9px;">رئيس وأعضاء مجلس الإدارة (١)</td>
+      <td colspan="2" style="text-align:center; font-weight:bold; font-size:9px;">المستخدمون والأجراء (٢)</td>
+    </tr>
+    {% set lines = [
+      ('الرواتب وملحقاتها', '100'),
+      ('المنافع النقدية والعينية', '110'),
+      ('مجموع المبالغ المدفوعة', '120'),
+      ('يُنزل تعويضات نقل وانتقال', '130'),
+      ('تعويضات تمثيل', '140'),
+      ('تنزيلات أخرى', '150'),
+      ('المبالغ الصافية', '160'),
+      ('التنزيل العائلي', '170'),
+      ('الرواتب والأجور الخاضعة للضريبة', '180'),
+      ('الضريبة المتوجبة', '190'),
+    ] %}
+    {% for label, code in lines %}
+    <tr>
+      <td class="lbl">{{ label }}</td>
+      <td class="num">{{ code }}</td>
+      <td class="val1">{{ board['line_' ~ code]|fmt_number }}</td>
+      <td class="num">{{ code }}</td>
+      <td class="val2">{{ employees['line_' ~ code]|fmt_number }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <!-- Lump sum -->
+  <div style="text-align:center; font-weight:bold; font-size:10px; margin-top:4px;">أجور مقطوعة</div>
+  <table class="r5-calc">
+    <tr><td class="lbl">المبالغ المدفوعة كأجور مقطوعة</td><td class="num">٢٤٠</td><td class="val1">{{ lump_sum.line_240|fmt_number }}</td></tr>
+    <tr><td class="lbl">الضريبة على الأجور المقطوعة</td><td class="num">٢٥٠</td><td class="val1">{{ lump_sum.line_250|fmt_number }}</td></tr>
+  </table>
+
+  <!-- Periodic payments & Totals side by side -->
+  <div class="two-col" style="margin-top:4px;">
+    <div>
+      <table class="r5-calc">
+        <tr><td class="lbl">إجمالي الرواتب والأجور الخاضع للضريبة</td><td class="num">٢٥١</td><td class="val1">{{ totals.line_251|fmt_number }}</td></tr>
+        <tr><td class="lbl">إجمالي الضريبة المتوجبة</td><td class="num">٢٦٠</td><td class="val1">{{ totals.line_260|fmt_number }}</td></tr>
+        <tr><td class="lbl">المجموع المدفوع</td><td class="num">٢٦١</td><td class="val1">{{ totals.line_261|fmt_number }}</td></tr>
+        <tr><td class="lbl">الرصيد</td><td class="num">٢٦٢</td><td class="val1">{{ totals.line_262|fmt_number }}</td></tr>
+        <tr><td class="lbl">غرامات التحقق</td><td class="num">٢٧٠</td><td class="val1">{{ totals.line_270|fmt_number }}</td></tr>
+        <tr><td class="lbl">غرامة التحصيل</td><td class="num">٢٨٠</td><td class="val1">{{ totals.line_280|fmt_number }}</td></tr>
+        <tr><td class="lbl">الرصيد المتوجب دفعه</td><td class="num">٢٩٠</td><td class="val1">{{ totals.line_290|fmt_number }}</td></tr>
+        <tr><td class="lbl">الرصيد المتوجب إسترداده</td><td class="num">٣٠٠</td><td class="val1">{{ totals.line_300|fmt_number }}</td></tr>
+      </table>
+    </div>
+    <div>
+      <div style="font-size:9px; font-weight:bold; text-align:center; margin-bottom:2px;">الدفعات الدورية خلال السنة</div>
+      <table class="period-table">
+        <tr><th></th><th>التاريخ</th><th>القيمة</th></tr>
+        {% for p in payments %}
+        <tr>
+          <td>{{ ['١','٢','٣','٤'][loop.index0] }}</td>
+          <td>{{ p.date|fmt_date }}</td>
+          <td>{{ p.amount|fmt_number }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="font-weight:bold;">
+          <td colspan="2">المجموع المدفوع</td>
+          <td style="background:#e0f2e9;">
+            <span style="font-weight:bold;">٤٠٠</span>
+            {{ total_paid|fmt_number }}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Declaration -->
+  <div class="section-border" style="margin-top:6px;">
+    <div class="section-title" style="font-size:10px;">إفادة</div>
+    <p style="font-size:9px;">انا الموقع أدناه أشهد بصدق وصحة المعلومات التي ينطوي عليها هذا التصريح</p>
+    <div class="sig-row" style="margin-top:4px;">
+      <div class="field-row" style="flex:1;"><span class="field-label">الإسم</span><span class="field-value"></span></div>
+      <div class="field-row" style="flex:1;"><span class="field-label">الصفة</span><span class="field-value"></span></div>
+    </div>
+    <div class="sig-row">
+      <div class="field-row" style="flex:1;"><span class="field-label">التوقيع</span><span class="field-value"></span></div>
+      <div class="field-row" style="flex:1;">
+        <span class="field-label">التاريخ</span>
+        <span class="field-value" style="max-width:30px;">اليوم</span>/
+        <span class="field-value" style="max-width:30px;">الشهر</span>/
+        <span class="field-value" style="max-width:50px;">السنة</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

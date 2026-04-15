@@ -1,0 +1,445 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_basic",
+    "subject",
+    "ticket_type",
+    "ticket_category",
+    "status",
+    "priority",
+    "column_break_basic",
+    "raised_by",
+    "raised_by_email",
+    "raised_by_phone",
+    "department",
+    "company",
+    "section_description",
+    "description",
+    "section_assignment",
+    "assigned_group",
+    "assigned_to",
+    "column_break_assign",
+    "escalation_level",
+    "escalated_to",
+    "section_asset",
+    "asset",
+    "configuration_item",
+    "column_break_asset",
+    "location",
+    "affected_service",
+    "section_sla",
+    "sla_policy",
+    "response_by",
+    "resolution_by",
+    "column_break_sla",
+    "first_responded_on",
+    "resolved_on",
+    "response_sla_status",
+    "resolution_sla_status",
+    "section_resolution",
+    "resolution_details",
+    "column_break_resolution",
+    "root_cause",
+    "workaround",
+    "section_comments",
+    "comments",
+    "section_meta",
+    "closed_on",
+    "closed_by",
+    "satisfaction_rating",
+    "column_break_meta",
+    "reopened_count",
+    "total_time_spent_minutes",
+    "section_amended",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_basic",
+      "fieldtype": "Section Break",
+      "label": "Ticket Information"
+    },
+    {
+      "fieldname": "subject",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Subject",
+      "reqd": 1
+    },
+    {
+      "fieldname": "ticket_type",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Ticket Type",
+      "options": "Ticket Type",
+      "reqd": 1
+    },
+    {
+      "fieldname": "ticket_category",
+      "fieldtype": "Select",
+      "in_standard_filter": 1,
+      "label": "Category",
+      "options": "Incident\nService Request\nChange Request\nProblem\nMaintenance\nAccess Request\nHardware Request\nSoftware Request"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Open\nIn Progress\nPending\nOn Hold\nResolved\nClosed\nCancelled",
+      "default": "Open",
+      "reqd": 1
+    },
+    {
+      "fieldname": "priority",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Priority",
+      "options": "Low\nMedium\nHigh\nUrgent",
+      "default": "Medium",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_basic",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "raised_by",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Raised By",
+      "options": "User"
+    },
+    {
+      "fieldname": "raised_by_email",
+      "fieldtype": "Data",
+      "label": "Requester Email",
+      "options": "Email"
+    },
+    {
+      "fieldname": "raised_by_phone",
+      "fieldtype": "Data",
+      "label": "Requester Phone",
+      "options": "Phone"
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Link",
+      "label": "Department",
+      "options": "Department"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company"
+    },
+    {
+      "fieldname": "section_description",
+      "fieldtype": "Section Break",
+      "label": "Description"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Description",
+      "reqd": 1
+    },
+    {
+      "fieldname": "section_assignment",
+      "fieldtype": "Section Break",
+      "label": "Assignment & Escalation"
+    },
+    {
+      "fieldname": "assigned_group",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Assigned Group"
+    },
+    {
+      "fieldname": "assigned_to",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Assigned To",
+      "options": "User"
+    },
+    {
+      "fieldname": "column_break_assign",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "escalation_level",
+      "fieldtype": "Int",
+      "label": "Escalation Level",
+      "default": "0"
+    },
+    {
+      "fieldname": "escalated_to",
+      "fieldtype": "Link",
+      "label": "Escalated To",
+      "options": "User"
+    },
+    {
+      "fieldname": "section_asset",
+      "fieldtype": "Section Break",
+      "label": "Related Asset / CI"
+    },
+    {
+      "fieldname": "asset",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Related Asset",
+      "options": "IT Asset"
+    },
+    {
+      "fieldname": "configuration_item",
+      "fieldtype": "Link",
+      "label": "Configuration Item",
+      "options": "Configuration Item"
+    },
+    {
+      "fieldname": "column_break_asset",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "location",
+      "fieldtype": "Link",
+      "label": "Location",
+      "options": "IT Asset Location"
+    },
+    {
+      "fieldname": "affected_service",
+      "fieldtype": "Data",
+      "label": "Affected Service"
+    },
+    {
+      "fieldname": "section_sla",
+      "fieldtype": "Section Break",
+      "label": "SLA Tracking"
+    },
+    {
+      "fieldname": "sla_policy",
+      "fieldtype": "Link",
+      "label": "SLA Policy",
+      "options": "SLA Policy"
+    },
+    {
+      "fieldname": "response_by",
+      "fieldtype": "Datetime",
+      "label": "Response By"
+    },
+    {
+      "fieldname": "resolution_by",
+      "fieldtype": "Datetime",
+      "label": "Resolution By"
+    },
+    {
+      "fieldname": "column_break_sla",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "first_responded_on",
+      "fieldtype": "Datetime",
+      "label": "First Responded On"
+    },
+    {
+      "fieldname": "resolved_on",
+      "fieldtype": "Datetime",
+      "label": "Resolved On"
+    },
+    {
+      "fieldname": "response_sla_status",
+      "fieldtype": "Select",
+      "label": "Response SLA",
+      "options": "\nWithin SLA\nBreached",
+      "read_only": 1
+    },
+    {
+      "fieldname": "resolution_sla_status",
+      "fieldtype": "Select",
+      "label": "Resolution SLA",
+      "options": "\nWithin SLA\nBreached",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_resolution",
+      "fieldtype": "Section Break",
+      "label": "Resolution",
+      "collapsible": 1,
+      "depends_on": "eval:doc.status=='Resolved' || doc.status=='Closed' || doc.resolution_details"
+    },
+    {
+      "fieldname": "resolution_details",
+      "fieldtype": "Text Editor",
+      "label": "Resolution Details"
+    },
+    {
+      "fieldname": "column_break_resolution",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "root_cause",
+      "fieldtype": "Small Text",
+      "label": "Root Cause"
+    },
+    {
+      "fieldname": "workaround",
+      "fieldtype": "Small Text",
+      "label": "Workaround"
+    },
+    {
+      "fieldname": "section_comments",
+      "fieldtype": "Section Break",
+      "label": "Comments"
+    },
+    {
+      "fieldname": "comments",
+      "fieldtype": "Table",
+      "label": "Comments",
+      "options": "Ticket Comment"
+    },
+    {
+      "fieldname": "section_meta",
+      "fieldtype": "Section Break",
+      "label": "Closure Details",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "closed_on",
+      "fieldtype": "Datetime",
+      "label": "Closed On"
+    },
+    {
+      "fieldname": "closed_by",
+      "fieldtype": "Link",
+      "label": "Closed By",
+      "options": "User"
+    },
+    {
+      "fieldname": "satisfaction_rating",
+      "fieldtype": "Rating",
+      "label": "Satisfaction Rating"
+    },
+    {
+      "fieldname": "column_break_meta",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "reopened_count",
+      "fieldtype": "Int",
+      "label": "Reopened Count",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_time_spent_minutes",
+      "fieldtype": "Float",
+      "label": "Total Time Spent (Minutes)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_amended",
+      "fieldtype": "Section Break",
+      "hidden": 1
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Service Ticket",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [
+    {
+      "group": "Related",
+      "link_doctype": "Knowledge Base Article",
+      "link_fieldname": "related_ticket"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "Service Ticket",
+  "naming_rule": "Expression",
+  "autoname": "TKT-.YYYY.-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "IT Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT User",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "Employee"
+    }
+  ],
+  "search_fields": "subject,raised_by,assigned_to,status",
+  "show_name_in_global_search": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [
+    {
+      "title": "Open",
+      "color": "red"
+    },
+    {
+      "title": "In Progress",
+      "color": "blue"
+    },
+    {
+      "title": "Pending",
+      "color": "orange"
+    },
+    {
+      "title": "On Hold",
+      "color": "yellow"
+    },
+    {
+      "title": "Resolved",
+      "color": "green"
+    },
+    {
+      "title": "Closed",
+      "color": "gray"
+    }
+  ],
+  "title_field": "subject",
+  "track_changes": 1
+}

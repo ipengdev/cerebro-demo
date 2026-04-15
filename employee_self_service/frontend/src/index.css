@@ -106,3 +106,25 @@
     color: #fcd34d;
   }
 }
+
+/* ── Dark mode overrides (high specificity, outside @layer) ── */
+html[data-theme="dark"] body {
+  background-color: #171717 !important;
+  color: #f3f4f6 !important;
+}
+
+html[data-theme="dark"] .ess-card,
+html[data-theme="dark"] .ess-stat-card {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+}
+
+html[data-theme="dark"] .ess-card-interactive {
+  background-color: #262626 !important;
+  border-color: #404040 !important;
+}
+
+html[data-theme="dark"] .ess-card-interactive:hover {
+  background-color: #333 !important;
+  border-color: #555 !important;
+}

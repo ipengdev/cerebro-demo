@@ -1,0 +1,143 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "title",
+    "category",
+    "status",
+    "column_break_1",
+    "author",
+    "published_on",
+    "related_ticket",
+    "section_content",
+    "content",
+    "section_meta",
+    "tags",
+    "views",
+    "helpful_count"
+  ],
+  "fields": [
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title",
+      "reqd": 1
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Category",
+      "options": "How-To\nTroubleshooting\nFAQ\nPolicy\nProcess\nKnown Issue\nBest Practice"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Draft\nPublished\nArchived",
+      "default": "Draft"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "author",
+      "fieldtype": "Link",
+      "label": "Author",
+      "options": "User",
+      "default": "__user"
+    },
+    {
+      "fieldname": "published_on",
+      "fieldtype": "Date",
+      "label": "Published On"
+    },
+    {
+      "fieldname": "related_ticket",
+      "fieldtype": "Link",
+      "label": "Related Ticket",
+      "options": "Service Ticket"
+    },
+    {
+      "fieldname": "section_content",
+      "fieldtype": "Section Break",
+      "label": "Content"
+    },
+    {
+      "fieldname": "content",
+      "fieldtype": "Text Editor",
+      "label": "Content",
+      "reqd": 1
+    },
+    {
+      "fieldname": "section_meta",
+      "fieldtype": "Section Break",
+      "label": "Metadata",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "tags",
+      "fieldtype": "Small Text",
+      "label": "Tags (comma-separated)"
+    },
+    {
+      "fieldname": "views",
+      "fieldtype": "Int",
+      "label": "Views",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "helpful_count",
+      "fieldtype": "Int",
+      "label": "Helpful Count",
+      "default": "0",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "Knowledge Base Article",
+  "naming_rule": "Expression",
+  "autoname": "KB-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT User",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "Employee"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "title",
+  "track_changes": 1
+}

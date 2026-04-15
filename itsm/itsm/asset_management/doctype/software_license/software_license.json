@@ -1,0 +1,215 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "license_name",
+    "software_name",
+    "software_version",
+    "license_type",
+    "status",
+    "column_break_1",
+    "license_key",
+    "total_licenses",
+    "used_licenses",
+    "available_licenses",
+    "section_vendor",
+    "vendor",
+    "publisher",
+    "column_break_v",
+    "purchase_date",
+    "purchase_cost",
+    "currency",
+    "section_dates",
+    "start_date",
+    "expiry_date",
+    "column_break_d",
+    "auto_renew",
+    "renewal_cost",
+    "section_notes",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "license_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "License Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "software_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Software Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "software_version",
+      "fieldtype": "Data",
+      "label": "Software Version"
+    },
+    {
+      "fieldname": "license_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "License Type",
+      "options": "Per Seat\nPer Device\nSite License\nEnterprise\nSubscription\nOpen Source\nFreeware\nVolume License\nOEM",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Active\nExpired\nPending Renewal\nCancelled",
+      "default": "Active"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "license_key",
+      "fieldtype": "Password",
+      "label": "License Key"
+    },
+    {
+      "fieldname": "total_licenses",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Total Licenses",
+      "default": "1"
+    },
+    {
+      "fieldname": "used_licenses",
+      "fieldtype": "Int",
+      "label": "Used Licenses",
+      "read_only": 1
+    },
+    {
+      "fieldname": "available_licenses",
+      "fieldtype": "Int",
+      "label": "Available Licenses",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_vendor",
+      "fieldtype": "Section Break",
+      "label": "Vendor & Cost"
+    },
+    {
+      "fieldname": "vendor",
+      "fieldtype": "Link",
+      "label": "Vendor",
+      "options": "Vendor"
+    },
+    {
+      "fieldname": "publisher",
+      "fieldtype": "Data",
+      "label": "Publisher"
+    },
+    {
+      "fieldname": "column_break_v",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "purchase_date",
+      "fieldtype": "Date",
+      "label": "Purchase Date"
+    },
+    {
+      "fieldname": "purchase_cost",
+      "fieldtype": "Currency",
+      "label": "Purchase Cost"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "default": "USD"
+    },
+    {
+      "fieldname": "section_dates",
+      "fieldtype": "Section Break",
+      "label": "License Period"
+    },
+    {
+      "fieldname": "start_date",
+      "fieldtype": "Date",
+      "label": "Start Date"
+    },
+    {
+      "fieldname": "expiry_date",
+      "fieldtype": "Date",
+      "label": "Expiry Date"
+    },
+    {
+      "fieldname": "column_break_d",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "auto_renew",
+      "fieldtype": "Check",
+      "label": "Auto Renew"
+    },
+    {
+      "fieldname": "renewal_cost",
+      "fieldtype": "Currency",
+      "label": "Renewal Cost"
+    },
+    {
+      "fieldname": "section_notes",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Management",
+  "name": "Software License",
+  "naming_rule": "Expression",
+  "autoname": "SWL-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "license_name",
+  "track_changes": 1
+}

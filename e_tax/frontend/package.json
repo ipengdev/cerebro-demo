@@ -1,0 +1,27 @@
+{
+  "name": "e-tax-ui",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base=/assets/e_tax/frontend/ && yarn copy-html-entry",
+    "copy-html-entry": "cp ../e_tax/public/frontend/index.html ../e_tax/www/e-tax.html",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "frappe-ui": "0.1.261",
+    "lodash": "^4.17.21",
+    "pinia": "^2.0.33",
+    "socket.io-client": "^4.7.2",
+    "vite": "^4.4.9",
+    "vue": "^3.5.13",
+    "vue-router": "^4.2.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
+  }
+}

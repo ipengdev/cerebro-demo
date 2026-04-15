@@ -1,0 +1,427 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:title",
+ "creation": "2026-04-08 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "company",
+  "column_break_1",
+  "effective_from",
+  "effective_to",
+  "is_active",
+  "section_starting_date",
+  "from_date",
+  "section_cnss",
+  "nssf_spouse_allowance",
+  "column_break_allow_1",
+  "nssf_child_allowance",
+  "section_employer_allowances",
+  "employer_spouse_allowance",
+  "column_break_allow_2",
+  "employer_child_allowance",
+  "section_ceilings",
+  "family_allowance_contributions_ceiling",
+  "column_break_ceil",
+  "medical_maternity_contributions_ceiling",
+  "section_employer_rates",
+  "employer_nssf_sickness_percentage",
+  "column_break_emp_rate_s",
+  "employer_nssf_maternity_percentage",
+  "section_employer_rates_1b",
+  "employer_nssf_medical_percentage",
+  "column_break_emp_rate",
+  "employer_nssf_retirement_percentage",
+  "section_employer_rates_2",
+  "employer_nssf_eos_percentage",
+  "column_break_emp_rate_2",
+  "employer_nssf_eos_fees_percentage",
+  "section_employer_rates_3",
+  "employer_nssf_family_percentage",
+  "section_employee_rates",
+  "employee_nssf_sickness_percentage",
+  "column_break_ee_rate_s",
+  "employee_nssf_maternity_percentage",
+  "section_employee_rates_1b",
+  "employee_nssf_medical_percentage",
+  "column_break_ee_rate",
+  "employee_nssf_retirement_percentage",
+  "section_additional",
+  "additional_tax_exemption",
+  "column_break_additional",
+  "monthly_medical_solidarity_contribution",
+  "section_transport",
+  "transport_allowance",
+  "column_break_transport",
+  "meal_allowance",
+  "section_constants",
+  "constants",
+  "section_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "label": "Effective To"
+  },
+  {
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active",
+   "default": "1"
+  },
+  {
+   "fieldname": "section_starting_date",
+   "fieldtype": "Section Break",
+   "label": "Starting Date Constants Apply"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_cnss",
+   "fieldtype": "Section Break",
+   "label": "CNSS / NSSF Allowances"
+  },
+  {
+   "fieldname": "nssf_spouse_allowance",
+   "fieldtype": "Currency",
+   "label": "NSSF Spouse Allowance",
+   "reqd": 1,
+   "description": "Spouse allowance paid by NSSF"
+  },
+  {
+   "fieldname": "column_break_allow_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nssf_child_allowance",
+   "fieldtype": "Currency",
+   "label": "NSSF Child Allowance",
+   "reqd": 1,
+   "description": "Per-child allowance paid by NSSF"
+  },
+  {
+   "fieldname": "section_employer_allowances",
+   "fieldtype": "Section Break",
+   "label": "Employer Allowances"
+  },
+  {
+   "fieldname": "employer_spouse_allowance",
+   "fieldtype": "Currency",
+   "label": "Employer Spouse Allowance",
+   "reqd": 1,
+   "description": "Employer portion of spouse allowance"
+  },
+  {
+   "fieldname": "column_break_allow_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employer_child_allowance",
+   "fieldtype": "Currency",
+   "label": "Employer Child Allowance",
+   "reqd": 1,
+   "description": "Employer portion of per-child allowance"
+  },
+  {
+   "fieldname": "section_ceilings",
+   "fieldtype": "Section Break",
+   "label": "Contribution Ceilings"
+  },
+  {
+   "fieldname": "family_allowance_contributions_ceiling",
+   "fieldtype": "Currency",
+   "label": "Family Allowance Contributions Ceiling",
+   "reqd": 1,
+   "description": "Maximum salary subject to family allowance contributions"
+  },
+  {
+   "fieldname": "column_break_ceil",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "medical_maternity_contributions_ceiling",
+   "fieldtype": "Currency",
+   "label": "Medical & Maternity Contributions Ceiling",
+   "reqd": 1,
+   "description": "Maximum salary subject to medical and maternity contributions"
+  },
+  {
+   "fieldname": "section_employer_rates",
+   "fieldtype": "Section Break",
+   "label": "Employer Sickness & Maternity Rates"
+  },
+  {
+   "fieldname": "employer_nssf_sickness_percentage",
+   "fieldtype": "Float",
+   "label": "Employer Sickness %",
+   "reqd": 1,
+   "default": "7",
+   "description": "Employer sickness branch (7%)"
+  },
+  {
+   "fieldname": "column_break_emp_rate_s",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employer_nssf_maternity_percentage",
+   "fieldtype": "Float",
+   "label": "Employer Maternity %",
+   "reqd": 1,
+   "default": "1",
+   "description": "Employer maternity branch (1%)"
+  },
+  {
+   "fieldname": "section_employer_rates_1b",
+   "fieldtype": "Section Break",
+   "label": "Employer Other Rates"
+  },
+  {
+   "fieldname": "employer_nssf_medical_percentage",
+   "fieldtype": "Float",
+   "label": "Employer Total Medical % (Sickness + Maternity)",
+   "reqd": 1,
+   "description": "Combined sickness and maternity branch (computed: Sickness + Maternity)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_emp_rate",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employer_nssf_retirement_percentage",
+   "fieldtype": "Float",
+   "label": "Employer NSSF Retirement Percentage",
+   "reqd": 1,
+   "description": "Retirement branch"
+  },
+  {
+   "fieldname": "section_employer_rates_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employer_nssf_eos_percentage",
+   "fieldtype": "Float",
+   "label": "Employer NSSF EOS Percentage",
+   "reqd": 1,
+   "description": "End of service indemnity branch"
+  },
+  {
+   "fieldname": "column_break_emp_rate_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employer_nssf_eos_fees_percentage",
+   "fieldtype": "Float",
+   "label": "Employer NSSF EOS Fees Percentage",
+   "reqd": 1,
+   "description": "EOS administrative fees"
+  },
+  {
+   "fieldname": "section_employer_rates_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employer_nssf_family_percentage",
+   "fieldtype": "Float",
+   "label": "Employer NSSF Family Percentage",
+   "reqd": 1,
+   "description": "Family allowance branch"
+  },
+  {
+   "fieldname": "section_employee_rates",
+   "fieldtype": "Section Break",
+   "label": "Employee Sickness & Maternity Rates"
+  },
+  {
+   "fieldname": "employee_nssf_sickness_percentage",
+   "fieldtype": "Float",
+   "label": "Employee Sickness %",
+   "reqd": 1,
+   "default": "2",
+   "description": "Employee sickness branch (2%)"
+  },
+  {
+   "fieldname": "column_break_ee_rate_s",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_nssf_maternity_percentage",
+   "fieldtype": "Float",
+   "label": "Employee Maternity %",
+   "reqd": 1,
+   "default": "1",
+   "description": "Employee maternity branch (1%)"
+  },
+  {
+   "fieldname": "section_employee_rates_1b",
+   "fieldtype": "Section Break",
+   "label": "Employee Other Rates"
+  },
+  {
+   "fieldname": "employee_nssf_medical_percentage",
+   "fieldtype": "Float",
+   "label": "Employee Total Medical % (Sickness + Maternity)",
+   "reqd": 1,
+   "description": "Combined sickness and maternity branch (computed: Sickness + Maternity)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ee_rate",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_nssf_retirement_percentage",
+   "fieldtype": "Float",
+   "label": "Employee NSSF Retirement Percentage",
+   "reqd": 1,
+   "description": "Retirement branch"
+  },
+  {
+   "fieldname": "section_additional",
+   "fieldtype": "Section Break",
+   "label": "Other Deductions"
+  },
+  {
+   "fieldname": "additional_tax_exemption",
+   "fieldtype": "Float",
+   "label": "Additional Tax Exemption",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_additional",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "monthly_medical_solidarity_contribution",
+   "fieldtype": "Float",
+   "label": "Monthly Medical Solidarity Contribution",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_transport",
+   "fieldtype": "Section Break",
+   "label": "Standard Allowances (Monthly)",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "transport_allowance",
+   "fieldtype": "Currency",
+   "label": "Standard Transport Allowance",
+   "default": "64000",
+   "description": "Standard monthly transport allowance"
+  },
+  {
+   "fieldname": "column_break_transport",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meal_allowance",
+   "fieldtype": "Currency",
+   "label": "Standard Meal Allowance",
+   "default": "0",
+   "description": "Standard monthly meal allowance"
+  },
+  {
+   "fieldname": "section_constants",
+   "fieldtype": "Section Break",
+   "label": "Additional Constants",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "constants",
+   "fieldtype": "Table",
+   "label": "Constants",
+   "options": "Payroll Constant Detail"
+  },
+  {
+   "fieldname": "section_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Notes"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-09 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "AMO Payroll",
+ "name": "Payroll Constants",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

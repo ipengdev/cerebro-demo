@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "DELEG-.#####",
+ "creation": "2026-04-09 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "delegation_details_section",
+  "user",
+  "user_full_name",
+  "column_break_details",
+  "delegate",
+  "delegate_full_name",
+  "section_break_schedule",
+  "start_date",
+  "column_break_schedule",
+  "end_date",
+  "section_break_status",
+  "status",
+  "column_break_status",
+  "delegation_type",
+  "section_break_roles",
+  "roles_to_delegate",
+  "section_break_reason",
+  "reason",
+  "section_break_internal",
+  "assigned_roles",
+  "activated_on",
+  "deactivated_on",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "delegation_details_section",
+   "fieldtype": "Section Break",
+   "label": "Delegation Details"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "User",
+   "options": "User",
+   "reqd": 1,
+   "search_index": 1,
+   "description": "The user delegating their roles"
+  },
+  {
+   "depends_on": "user",
+   "fetch_from": "user.full_name",
+   "fieldname": "user_full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delegate",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Delegate",
+   "options": "User",
+   "reqd": 1,
+   "search_index": 1,
+   "description": "The user receiving the delegated roles"
+  },
+  {
+   "depends_on": "delegate",
+   "fetch_from": "delegate.full_name",
+   "fieldname": "delegate_full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_schedule",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1,
+   "description": "When delegation begins"
+  },
+  {
+   "fieldname": "column_break_schedule",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "End Date",
+   "reqd": 1,
+   "description": "When delegation ends"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status & Type"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nActive\nCompleted\nCancelled",
+   "read_only": 1,
+   "search_index": 1,
+   "description": "Automatically managed by the system"
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "All Roles",
+   "fieldname": "delegation_type",
+   "fieldtype": "Select",
+   "label": "Delegation Type",
+   "options": "All Roles\nSpecific Roles",
+   "reqd": 1,
+   "description": "Choose whether to delegate all roles or select specific ones"
+  },
+  {
+   "fieldname": "section_break_roles",
+   "fieldtype": "Section Break",
+   "label": "Roles Selection",
+   "depends_on": "eval:doc.delegation_type=='Specific Roles'"
+  },
+  {
+   "fieldname": "roles_to_delegate",
+   "fieldtype": "Table MultiSelect",
+   "label": "Roles to Delegate",
+   "options": "Has Role",
+   "depends_on": "eval:doc.delegation_type=='Specific Roles'",
+   "mandatory_depends_on": "eval:doc.delegation_type=='Specific Roles'",
+   "description": "Select specific roles to delegate (only shown when Delegation Type is 'Specific Roles')"
+  },
+  {
+   "fieldname": "section_break_reason",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "description": "Reason for delegation (e.g., vacation, medical leave, business travel)"
+  },
+  {
+   "fieldname": "section_break_internal",
+   "fieldtype": "Section Break",
+   "label": "System Information",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "assigned_roles",
+   "fieldtype": "Long Text",
+   "hidden": 1,
+   "label": "Assigned Roles",
+   "read_only": 1,
+   "description": "JSON list of roles that were actually delegated (stored for restoration)"
+  },
+  {
+   "fieldname": "activated_on",
+   "fieldtype": "Datetime",
+   "label": "Activated On",
+   "read_only": 1,
+   "description": "When the delegation was actually activated"
+  },
+  {
+   "fieldname": "deactivated_on",
+   "fieldtype": "Datetime",
+   "label": "Deactivated On",
+   "read_only": 1,
+   "description": "When the delegation was deactivated"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Delegation",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-09 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Employee Self Service Portal",
+ "name": "Delegation",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 0,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "orange",
+   "title": "Pending"
+  },
+  {
+   "color": "blue",
+   "title": "Active"
+  },
+  {
+   "color": "green",
+   "title": "Completed"
+  },
+  {
+   "color": "red",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "user",
+ "track_changes": 1
+}

@@ -1,0 +1,68 @@
+{# Shared CSS for all MoF forms #}
+<style>
+  @page { size: A4; margin: 5mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body, html { font-family: 'Arial', 'Tahoma', sans-serif; font-size: 11px; direction: rtl; }
+  .mof-page { width: 190mm; margin: 0 auto; padding: 5mm; position: relative; }
+  .mof-header { text-align: center; margin-bottom: 6px; }
+  .mof-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .mof-header-left, .mof-header-right { width: 35%; text-align: center; font-size: 10px; line-height: 1.5; }
+  .mof-header-center { width: 30%; text-align: center; }
+  .mof-title { font-size: 16px; font-weight: bold; margin: 6px 0; }
+  .mof-subtitle { font-size: 10px; line-height: 1.4; }
+  .form-number { position: absolute; top: 5mm; left: 5mm; font-size: 18px; font-weight: bold; color: #2e7d32; }
+  .page-number { position: absolute; top: 22mm; left: 5mm; font-size: 9px; }
+
+  /* Tables */
+  .mof-table { width: 100%; border-collapse: collapse; margin: 4px 0; }
+  .mof-table th, .mof-table td { border: 1px solid #333; padding: 3px 5px; text-align: right; font-size: 10px; vertical-align: middle; }
+  .mof-table th { background: #e0f2e9; font-weight: bold; text-align: center; }
+
+  /* Form fields */
+  .field-row { display: flex; align-items: baseline; margin: 3px 0; flex-wrap: wrap; }
+  .field-label { font-weight: bold; margin-left: 4px; white-space: nowrap; font-size: 10px; }
+  .field-value { border-bottom: 1px solid #666; min-width: 80px; padding: 0 4px; flex: 1; font-size: 10px; min-height: 14px; }
+  .field-label-num { font-weight: bold; margin-left: 4px; font-size: 10px; }
+
+  /* Sections */
+  .section { margin: 6px 0; padding: 4px; }
+  .section-title { font-weight: bold; font-size: 12px; margin-bottom: 4px; text-decoration: underline; }
+  .section-border { border: 1px solid #333; padding: 6px; margin: 4px 0; }
+
+  /* Checkbox */
+  .checkbox { display: inline-block; width: 12px; height: 12px; border: 1px solid #333; margin: 0 3px; vertical-align: middle; text-align: center; font-size: 10px; line-height: 12px; }
+  .checkbox.checked { background: #333; color: #fff; }
+  .checkbox.checked::after { content: "×"; }
+
+  /* Registration number boxes */
+  .reg-boxes { display: inline-flex; direction: ltr; }
+  .reg-box { width: 16px; height: 18px; border: 1px solid #333; text-align: center; font-size: 11px; line-height: 18px; margin: 0 0.5px; }
+
+  /* Two column layout */
+  .two-col { display: flex; gap: 10px; }
+  .two-col > div { flex: 1; }
+
+  /* Calculation table */
+  .calc-table { width: 100%; border-collapse: collapse; }
+  .calc-table td { padding: 2px 5px; font-size: 10px; vertical-align: middle; }
+  .calc-table .line-num { width: 40px; text-align: center; font-weight: bold; background: #e0f2e9; border: 1px solid #333; }
+  .calc-table .line-val { width: 120px; border: 1px solid #333; text-align: center; }
+  .calc-table .line-label { text-align: right; padding-right: 8px; }
+
+  /* Signature */
+  .signature-section { margin-top: 10px; border-top: 1px solid #333; padding-top: 6px; }
+  .sig-row { display: flex; justify-content: space-between; margin: 4px 0; }
+
+  /* Green accent */
+  .accent { color: #2e7d32; }
+  .bg-accent { background-color: #e0f2e9; }
+
+  /* Address grid */
+  .addr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
+
+  /* Print */
+  @media print {
+    .mof-page { page-break-after: always; }
+    .no-print { display: none; }
+  }
+</style>

@@ -1,0 +1,67 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "item_name",
+    "description",
+    "category",
+    "estimated_cost",
+    "fulfillment_time_hours",
+    "requires_approval"
+  ],
+  "fields": [
+    {
+      "fieldname": "item_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Item Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "in_list_view": 1,
+      "label": "Description"
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Category",
+      "options": "Hardware\nSoftware\nAccess\nNetwork\nEmail\nOther"
+    },
+    {
+      "fieldname": "estimated_cost",
+      "fieldtype": "Currency",
+      "label": "Estimated Cost"
+    },
+    {
+      "fieldname": "fulfillment_time_hours",
+      "fieldtype": "Float",
+      "in_list_view": 1,
+      "label": "Fulfillment Time (Hours)"
+    },
+    {
+      "default": "0",
+      "fieldname": "requires_approval",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "Requires Approval"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "Service Catalog Item",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

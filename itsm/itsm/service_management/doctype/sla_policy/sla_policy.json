@@ -1,0 +1,81 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "policy_name",
+    "is_default",
+    "is_active",
+    "description",
+    "section_priorities",
+    "priorities"
+  ],
+  "fields": [
+    {
+      "fieldname": "policy_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Policy Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_default",
+      "fieldtype": "Check",
+      "label": "Is Default"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Is Active"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "section_priorities",
+      "fieldtype": "Section Break",
+      "label": "Priority Definitions"
+    },
+    {
+      "fieldname": "priorities",
+      "fieldtype": "Table",
+      "label": "Priorities",
+      "options": "SLA Policy Priority",
+      "reqd": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Service Management",
+  "name": "SLA Policy",
+  "naming_rule": "By fieldname",
+  "autoname": "field:policy_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "policy_name",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}

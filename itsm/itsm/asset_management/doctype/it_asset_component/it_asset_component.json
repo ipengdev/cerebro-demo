@@ -1,0 +1,74 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "component_type",
+    "component_name",
+    "serial_number",
+    "manufacturer",
+    "model",
+    "specifications",
+    "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "component_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Component Type",
+      "options": "CPU\nRAM\nHard Drive\nSSD\nNIC\nGPU\nPower Supply\nMotherboard\nExpansion Card\nBattery\nOther",
+      "reqd": 1
+    },
+    {
+      "fieldname": "component_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Component Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Serial Number"
+    },
+    {
+      "fieldname": "manufacturer",
+      "fieldtype": "Data",
+      "label": "Manufacturer"
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "label": "Model"
+    },
+    {
+      "fieldname": "specifications",
+      "fieldtype": "Small Text",
+      "label": "Specifications"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Working\nFaulty\nReplaced",
+      "default": "Working"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Management",
+  "name": "IT Asset Component",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

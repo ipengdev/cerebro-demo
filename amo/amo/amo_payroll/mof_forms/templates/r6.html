@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8">
+{% include "base_style.html" %}
+<style>
+  .r6-table { width: 100%; border-collapse: collapse; margin: 3px 0; font-size: 9px; }
+  .r6-table td, .r6-table th { border: 1px solid #333; padding: 2px 4px; text-align: center; vertical-align: middle; }
+  .r6-table th { background: #e0f2e9; font-size: 9px; }
+  .r6-table .code { width: 30px; font-weight: bold; background: #e0f2e9; }
+  .r6-table .lbl { text-align: right; padding-right: 6px; width: 35%; }
+  .r6-table .amt { width: 15%; font-size: 10px; }
+  .r6-table .grey { background: #ddd; }
+  .r6-ded { width: 60%; margin-right: auto; border-collapse: collapse; }
+  .r6-ded td { border: 1px solid #333; padding: 2px 4px; font-size: 9px; }
+  .r6-ded .code { width: 30px; font-weight: bold; background: #e0f2e9; text-align: center; }
+  .r6-ded .lbl { text-align: right; padding-right: 6px; }
+  .r6-ded .amt { width: 20%; text-align: center; font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="mof-page">
+  <div class="form-number">ر ٦</div>
+
+  <!-- Header -->
+  <div class="mof-header-row">
+    <div class="mof-header-right">
+      الجمهورية اللبنانيـــــة<br>
+      وزارة الماليــــــة<br>
+      مديرية المالية العامة<br>
+      مديرية الواردات – ضريبة الرواتب والأجور
+    </div>
+    <div class="mof-header-center">
+      <div class="mof-title" style="font-size:14px;">كشف سنوي إفرادي بإجمالي إيرادات<br>المستخدم/الأجير</div>
+    </div>
+    <div class="mof-header-left"></div>
+  </div>
+
+  <!-- Company Info -->
+  <div class="two-col" style="margin-top:4px; font-size:10px;">
+    <div>
+      <div class="field-row"><span class="field-label">إسم الشركة/المؤسسة</span><span class="field-value">{{ company.company_name or '' }}</span></div>
+      <div class="field-row"><span class="field-label">الشهرة التجارية</span><span class="field-value">{{ company.abbr or '' }}</span></div>
+      <div class="field-row">
+        <span class="field-label">رقم التسجيل</span>
+        <span class="reg-boxes">{% set tid = (company.tax_id or '')|string %}{% for i in range(12) %}<span class="reg-box">{{ tid[i] if i < tid|length else '' }}</span>{% endfor %}</span>
+        <span style="font-size:8px;">(لدى وزارة المالية)</span>
+      </div>
+    </div>
+    <div>
+      <div class="field-row"><span class="field-label">عن أعمال سنة</span><span class="field-value" style="max-width:60px;">{{ year }}</span></div>
+      <div class="field-row"><span class="field-label">عدد الأجراء/المستخدمين</span><span class="field-value" style="max-width:60px;">{{ emp_count }}</span></div>
+    </div>
+  </div>
+
+  <!-- Separator: how many entered -->
+  <div class="field-row" style="margin-top:4px; font-size:10px;">
+    <span class="field-label">عدد الأجراء/المستخدمين المدخلين</span>
+    <span class="field-value" style="max-width:40px;">1</span>
+    <span class="field-label" style="margin-right:10px;">من</span>
+    <span class="field-value" style="max-width:40px;">{{ emp_count }}</span>
+  </div>
+
+  <!-- Employee Info Row -->
+  <div style="display:flex; gap:8px; margin-top:4px; font-size:10px;">
+    <div class="field-row" style="flex:1;"><span class="field-label">إسم الأجير/المستخدم</span><span class="field-value">{{ employee.first_name or '' }}</span></div>
+    <div class="field-row" style="flex:1;"><span class="field-label">إسم الأب</span><span class="field-value">{{ employee.father_first_name or '' }}</span></div>
+    <div class="field-row" style="flex:1;"><span class="field-label">الشهرة</span><span class="field-value">{{ employee.last_name or '' }}</span></div>
+  </div>
+  <div style="display:flex; gap:8px; font-size:10px;">
+    <div class="field-row">
+      <span class="field-label">رقم التسجيل الشخصي</span>
+      <span class="reg-boxes">{% set fin = (employee.financial_number or '')|string %}{% for i in range(12) %}<span class="reg-box">{{ fin[i] if i < fin|length else '' }}</span>{% endfor %}</span>
+      <span style="font-size:8px;">(لدى وزارة المالية)</span>
+    </div>
+    <div class="field-row" style="margin-right:10px;">
+      <span class="field-label">نوع العمل</span>
+      <span class="field-value" style="max-width:80px;"></span>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; font-size:10px;">
+    <div class="field-row">
+      <span class="field-label">نوع الأجر*</span>
+      <span class="checkbox {{ 'checked' if salary_type == 'Monthly' or salary_type == 'Bank' else '' }}">{% if salary_type == 'Monthly' or salary_type == 'Bank' %}×{% endif %}</span> شهري
+      <span class="checkbox">{% if salary_type == 'Daily' %}×{% endif %}</span> يومي
+      <span class="checkbox">{% if salary_type == 'Hourly' %}×{% endif %}</span> بالساعة
+    </div>
+    <div class="field-row" style="margin-right:10px;">
+      <span class="field-label">عدد الأشخاص الذين يستفيدون من التنزيل العائلي**</span>
+      <span class="field-value" style="max-width:30px;">{{ dep_count }}</span>
+    </div>
+    <div class="field-row" style="margin-right:10px;">
+      <span class="field-label">عدد الأولاد</span>
+      <span class="field-value" style="max-width:30px;">{{ dep_count }}</span>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; font-size:10px;">
+    <div class="field-row">
+      <span class="field-label">الوضع العائلي*</span>
+      <span class="checkbox {{ 'checked' if marital_status == 'Single' else '' }}">{% if marital_status == 'Single' %}×{% endif %}</span> أعزب
+      <span class="checkbox {{ 'checked' if marital_status == 'Married' else '' }}">{% if marital_status == 'Married' %}×{% endif %}</span> متزوج
+      <span class="checkbox {{ 'checked' if marital_status == 'Widowed' else '' }}">{% if marital_status == 'Widowed' %}×{% endif %}</span> أرمل
+      <span class="checkbox {{ 'checked' if marital_status == 'Divorced' else '' }}">{% if marital_status == 'Divorced' %}×{% endif %}</span> مطلّق
+    </div>
+    <div class="field-row" style="margin-right:10px;">
+      <span class="field-label">مدة العمل من</span>
+      <span class="field-value" style="max-width:70px;">{{ work_from|fmt_date }}</span>
+      <span class="field-label">إلى</span>
+      <span class="field-value" style="max-width:70px;">{{ work_to|fmt_date }}</span>
+    </div>
+  </div>
+
+  <!-- Address -->
+  <div class="section-border" style="margin-top:3px;">
+    <div class="section-title" style="font-size:10px;">عنوان المستخدم/الأجير</div>
+    <div class="addr-grid" style="font-size:9px;">
+      <div class="field-row"><span class="field-label">محافظة</span><span class="field-value">{{ employee.mohafaza or '' }}</span></div>
+      <div class="field-row"><span class="field-label">قضاء</span><span class="field-value">{{ employee.caza or '' }}</span></div>
+      <div class="field-row"><span class="field-label">منطقة - بلدة</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الشارع</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الحي</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">المبنى</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">الطابق</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value">{{ employee.cell_number or '' }}</span></div>
+      <div class="field-row"><span class="field-label">هاتف</span><span class="field-value"></span></div>
+      <div class="field-row"><span class="field-label">فاكس</span><span class="field-value"></span></div>
+    </div>
+    <div class="field-row"><span class="field-label">صندوق البريد : رقم</span><span class="field-value" style="max-width:60px;"></span><span class="field-label" style="margin-right:6px;">المنطقة</span><span class="field-value" style="max-width:60px;"></span></div>
+    <div class="field-row"><span class="field-label">البريد الإلكتروني (e-mail):</span><span class="field-value">{{ employee.personal_email or employee.company_email or '' }}</span></div>
+  </div>
+
+  <!-- Income Table -->
+  <table class="r6-table" style="margin-top:4px;">
+    <thead>
+      <tr>
+        <th class="code"></th>
+        <th class="lbl">الشرح</th>
+        <th class="amt">إجمالي الإيرادات<br>(١)</th>
+        <th class="amt">الإيرادات غير الخاضعة للضريبة<br>(٢)</th>
+        <th class="amt">الإيرادات الخاضعة للضريبة<br>(٣)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set income_lines = [
+        ('١٠٠', '100', 'الراتب الأساسي/الأجور اليومية'),
+        ('١١٠', '110', 'بدل تمثيل'),
+        ('١٢٠', '120', 'مكافآت وعمولات وساعات إضافية'),
+        ('١٣٠', '130', 'تعويض عائلي عن الزوجة'),
+        ('١٤٠', '140', 'تعويض عائلي عن الأولاد'),
+        ('١٥٠', '150', 'تعويضات نقل وانتقال'),
+        ('١٦٠', '160', 'بدل سيارة'),
+        ('١٧٠', '170', 'بدل سكن'),
+        ('١٨٠', '180', 'بدل طعام'),
+        ('١٩٠', '190', 'بدل ملبس'),
+        ('٢٠٠', '200', 'تعويض صندوق'),
+        ('٢١٠', '210', 'تأمينات صحية على أنواعها'),
+        ('٢٢٠', '220', 'منح تعليم'),
+        ('٢٣٠', '230', 'منح زواج'),
+        ('٢٤٠', '240', 'منح ولادة'),
+        ('٢٥٠', '250', 'مساعدات مرضية'),
+        ('٢٦٠', '260', 'مساعدات وفاة'),
+        ('٣٠٠', '300', 'منح وتقديمات أخرى'),
+      ] %}
+      {% set non_taxable_codes = ['150', '210', '220', '230', '240', '250', '260'] %}
+      {% for ar_code, code, label in income_lines %}
+      <tr>
+        <td class="code">{{ ar_code }}</td>
+        <td class="lbl">{{ label }}</td>
+        <td class="amt">{{ lines[code].total|fmt_number }}</td>
+        <td class="amt {% if code not in non_taxable_codes %}grey{% endif %}">{{ lines[code].non_taxable|fmt_number }}</td>
+        <td class="amt">{{ lines[code].taxable|fmt_number }}</td>
+      </tr>
+      {% endfor %}
+      <tr style="font-weight:bold;">
+        <td class="code">٣١٠</td>
+        <td class="lbl" style="font-weight:bold;">المجموع</td>
+        <td class="amt">{{ line_310.total|fmt_number }}</td>
+        <td class="amt">{{ line_310.non_taxable|fmt_number }}</td>
+        <td class="amt">{{ line_310.taxable|fmt_number }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Deductions -->
+  <div style="font-weight:bold; font-size:10px; margin-top:3px;">يُنزل :</div>
+  <table class="r6-ded">
+    <tr><td class="code">٣٣٠</td><td class="lbl">تنزيل عائلي</td><td class="amt">{{ line_330|fmt_number }}</td></tr>
+    <tr><td class="code">٣٤٠</td><td class="lbl">تنزيلات أخرى</td><td class="amt">{{ line_340|fmt_number }}</td></tr>
+  </table>
+
+  <!-- Net Taxable & Tax -->
+  <table class="r6-ded" style="margin-top:3px;">
+    <tr style="font-weight:bold;"><td class="code">٣٥٠</td><td class="lbl">صافي الإيرادات</td><td class="amt">{{ line_350|fmt_number }}</td></tr>
+    <tr style="font-weight:bold;"><td class="code">٣٦٠</td><td class="lbl">الضريبة السنوية المتوجبة</td><td class="amt">{{ line_360|fmt_number }}</td></tr>
+  </table>
+
+  <div style="font-size:8px; margin-top:6px; line-height:1.5;">
+    * توضع علامة × في المربع المناسب<br>
+    ** العدد يشمل الزوجة في حال كانت لا تعمل والأولاد الذين هم على عاتق المستخدم/الأجير
+  </div>
+</div>
+</body>
+</html>

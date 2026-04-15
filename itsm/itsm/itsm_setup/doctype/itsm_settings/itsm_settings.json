@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-04-08 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "demo_data_section",
+  "demo_data_html",
+  "auto_discovery_section",
+  "auto_discovery_html",
+  "discovery_settings_section",
+  "default_subnet",
+  "discovery_timeout",
+  "auto_create_assets"
+ ],
+ "fields": [
+  {
+   "fieldname": "demo_data_section",
+   "fieldtype": "Section Break",
+   "label": "Demo Data Management"
+  },
+  {
+   "fieldname": "demo_data_html",
+   "fieldtype": "HTML",
+   "label": "Demo Data Actions",
+   "options": "<div id=\"demo-data-actions\"></div>"
+  },
+  {
+   "fieldname": "auto_discovery_section",
+   "fieldtype": "Section Break",
+   "label": "Auto Discovery"
+  },
+  {
+   "fieldname": "auto_discovery_html",
+   "fieldtype": "HTML",
+   "label": "Auto Discovery Actions",
+   "options": "<div id=\"auto-discovery-actions\"></div>"
+  },
+  {
+   "fieldname": "discovery_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Discovery Settings"
+  },
+  {
+   "fieldname": "default_subnet",
+   "fieldtype": "Data",
+   "label": "Default Subnet",
+   "default": "auto",
+   "description": "Set to 'auto' to detect all local subnets automatically, or specify a CIDR like 192.168.1.0/24"
+  },
+  {
+   "fieldname": "discovery_timeout",
+   "fieldtype": "Int",
+   "label": "Discovery Timeout (seconds)",
+   "default": 2,
+   "description": "Timeout for each host ping/scan in seconds"
+  },
+  {
+   "fieldname": "auto_create_assets",
+   "fieldtype": "Check",
+   "label": "Auto-create IT Assets from Discovery",
+   "default": 1,
+   "description": "Automatically create IT Asset records when new devices are discovered"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-04-08 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "ITSM Setup",
+ "name": "ITSM Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "IT Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "IT User"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "track_changes": 0
+}

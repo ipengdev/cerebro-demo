@@ -1,0 +1,216 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "probe",
+    "discovered_at",
+    "status",
+    "column_break_1",
+    "ip_address",
+    "hostname",
+    "mac_address",
+    "section_details",
+    "os_detected",
+    "device_type",
+    "manufacturer",
+    "model",
+    "column_break_d",
+    "serial_number",
+    "firmware_version",
+    "uptime",
+    "section_network",
+    "open_ports",
+    "section_snmp",
+    "snmp_sysdescr",
+    "snmp_sysname",
+    "snmp_syslocation",
+    "snmp_syscontact",
+    "section_link",
+    "linked_asset",
+    "auto_created",
+    "raw_data"
+  ],
+  "fields": [
+    {
+      "fieldname": "probe",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Probe",
+      "options": "Discovery Probe",
+      "reqd": 1
+    },
+    {
+      "fieldname": "discovered_at",
+      "fieldtype": "Datetime",
+      "in_list_view": 1,
+      "label": "Discovered At",
+      "reqd": 1,
+      "default": "Now"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "New\nMatched\nCreated Asset\nIgnored",
+      "default": "New"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "ip_address",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "IP Address",
+      "reqd": 1
+    },
+    {
+      "fieldname": "hostname",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Hostname"
+    },
+    {
+      "fieldname": "mac_address",
+      "fieldtype": "Data",
+      "label": "MAC Address"
+    },
+    {
+      "fieldname": "section_details",
+      "fieldtype": "Section Break",
+      "label": "Detected Details"
+    },
+    {
+      "fieldname": "os_detected",
+      "fieldtype": "Data",
+      "label": "OS Detected"
+    },
+    {
+      "fieldname": "device_type",
+      "fieldtype": "Select",
+      "label": "Device Type",
+      "options": "\nServer\nWorkstation\nRouter\nSwitch\nFirewall\nPrinter\nAccess Point\nStorage\nVirtual Machine\nUnknown"
+    },
+    {
+      "fieldname": "manufacturer",
+      "fieldtype": "Data",
+      "label": "Manufacturer"
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "label": "Model"
+    },
+    {
+      "fieldname": "column_break_d",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "label": "Serial Number"
+    },
+    {
+      "fieldname": "firmware_version",
+      "fieldtype": "Data",
+      "label": "Firmware Version"
+    },
+    {
+      "fieldname": "uptime",
+      "fieldtype": "Data",
+      "label": "Uptime"
+    },
+    {
+      "fieldname": "section_network",
+      "fieldtype": "Section Break",
+      "label": "Open Ports"
+    },
+    {
+      "fieldname": "open_ports",
+      "fieldtype": "Table",
+      "label": "Open Ports",
+      "options": "Discovered Port"
+    },
+    {
+      "fieldname": "section_snmp",
+      "fieldtype": "Section Break",
+      "label": "SNMP Data",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "snmp_sysdescr",
+      "fieldtype": "Small Text",
+      "label": "sysDescr"
+    },
+    {
+      "fieldname": "snmp_sysname",
+      "fieldtype": "Data",
+      "label": "sysName"
+    },
+    {
+      "fieldname": "snmp_syslocation",
+      "fieldtype": "Data",
+      "label": "sysLocation"
+    },
+    {
+      "fieldname": "snmp_syscontact",
+      "fieldtype": "Data",
+      "label": "sysContact"
+    },
+    {
+      "fieldname": "section_link",
+      "fieldtype": "Section Break",
+      "label": "Asset Link"
+    },
+    {
+      "fieldname": "linked_asset",
+      "fieldtype": "Link",
+      "label": "Linked IT Asset",
+      "options": "IT Asset"
+    },
+    {
+      "default": "0",
+      "fieldname": "auto_created",
+      "fieldtype": "Check",
+      "label": "Auto Created Asset"
+    },
+    {
+      "fieldname": "raw_data",
+      "fieldtype": "Code",
+      "label": "Raw Discovery Data",
+      "options": "JSON"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Discovery",
+  "name": "Discovery Result",
+  "naming_rule": "Expression",
+  "autoname": "DSC-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "discovered_at",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

@@ -1,0 +1,165 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "vendor_name",
+    "vendor_type",
+    "status",
+    "column_break_1",
+    "website",
+    "primary_contact",
+    "email",
+    "phone",
+    "section_address",
+    "address",
+    "city",
+    "country",
+    "section_notes",
+    "notes",
+    "support_portal_url",
+    "support_phone",
+    "support_email"
+  ],
+  "fields": [
+    {
+      "fieldname": "vendor_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Vendor Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "vendor_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Vendor Type",
+      "options": "Hardware\nSoftware\nCloud Services\nMSP\nIntegrator\nTelecommunications\nConsulting\nOther"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Status",
+      "options": "Active\nInactive\nBlacklisted",
+      "default": "Active"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "website",
+      "fieldtype": "Data",
+      "label": "Website",
+      "options": "URL"
+    },
+    {
+      "fieldname": "primary_contact",
+      "fieldtype": "Data",
+      "label": "Primary Contact"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email",
+      "options": "Email"
+    },
+    {
+      "fieldname": "phone",
+      "fieldtype": "Data",
+      "label": "Phone",
+      "options": "Phone"
+    },
+    {
+      "fieldname": "section_address",
+      "fieldtype": "Section Break",
+      "label": "Address"
+    },
+    {
+      "fieldname": "address",
+      "fieldtype": "Small Text",
+      "label": "Address"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Data",
+      "label": "City"
+    },
+    {
+      "fieldname": "country",
+      "fieldtype": "Link",
+      "label": "Country",
+      "options": "Country"
+    },
+    {
+      "fieldname": "section_notes",
+      "fieldtype": "Section Break",
+      "label": "Support & Notes"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "support_portal_url",
+      "fieldtype": "Data",
+      "label": "Support Portal URL",
+      "options": "URL"
+    },
+    {
+      "fieldname": "support_phone",
+      "fieldtype": "Data",
+      "label": "Support Phone",
+      "options": "Phone"
+    },
+    {
+      "fieldname": "support_email",
+      "fieldtype": "Data",
+      "label": "Support Email",
+      "options": "Email"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [
+    {
+      "group": "Contracts",
+      "link_doctype": "IT Contract",
+      "link_fieldname": "vendor"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Contracts",
+  "name": "Vendor",
+  "naming_rule": "By fieldname",
+  "autoname": "field:vendor_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "vendor_name",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}

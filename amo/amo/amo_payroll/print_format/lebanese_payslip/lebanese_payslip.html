@@ -1,0 +1,552 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set currency = doc.currency or "LBP" -%}
+{%- set emp = frappe.get_doc("Employee", doc.employee) -%}
+{%- set month_label = frappe.utils.formatdate(doc.start_date, "MMMM yyyy") -%}
+<style>
+  /* ── Reset & Base ─────────────────────────────────── */
+  .ps {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0;
+    color: #1e293b;
+    font-size: 11px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .ps *, .ps *::before, .ps *::after { box-sizing: border-box; }
+
+  /* ── Watermark ────────────────────────────────────── */
+  .ps::before {
+    content: "{{ doc.company }}";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    font-size: 60px;
+    font-weight: 800;
+    color: rgba(0,0,0,0.018);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+    letter-spacing: 6px;
+  }
+
+  /* ── Top Accent Bar ───────────────────────────────── */
+  .ps-accent {
+    height: 5px;
+    background: linear-gradient(90deg, #0f4c81 0%, #1a6fb5 40%, #48a9c5 100%);
+    border-radius: 3px 3px 0 0;
+  }
+
+  /* ── Header ───────────────────────────────────────── */
+  .ps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .ps-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ps-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    object-fit: contain;
+    border: 1px solid #e2e8f0;
+  }
+  .ps-logo-placeholder {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0f4c81, #1a6fb5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+  .ps-company-name {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.3px;
+  }
+  .ps-company-detail {
+    margin: 1px 0 0;
+    font-size: 9.5px;
+    color: #64748b;
+  }
+  .ps-header-right {
+    text-align: right;
+  }
+  .ps-doc-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f4c81;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+  }
+  .ps-doc-title-ar {
+    margin: 2px 0 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f4c81;
+    direction: rtl;
+  }
+  .ps-period {
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+  }
+  .ps-ref {
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 3px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ── Employee Card ────────────────────────────────── */
+  .ps-emp-card {
+    margin: 0 24px;
+    padding: 14px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .ps-emp-field {
+    padding: 5px 10px;
+    border-left: 2px solid transparent;
+  }
+  .ps-emp-field:hover { border-left-color: #0f4c81; }
+  .ps-emp-label {
+    font-size: 8.5px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 1px;
+  }
+  .ps-emp-value {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  /* ── Body: Earnings & Deductions ──────────────────── */
+  .ps-body {
+    display: flex;
+    gap: 16px;
+    padding: 16px 24px;
+  }
+  .ps-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Section pills */
+  .ps-section-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin-bottom: 1px;
+  }
+  .ps-section-pill .ps-pill-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .ps-section-pill .ps-pill-label-ar {
+    font-size: 12px;
+    font-weight: 700;
+    direction: rtl;
+  }
+  .ps-earnings .ps-section-pill {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+  }
+  .ps-deductions .ps-section-pill {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #fff;
+  }
+
+  /* Component rows */
+  .ps-rows {
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    overflow: hidden;
+  }
+  .ps-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+  }
+  .ps-row:last-child { border-bottom: none; }
+  .ps-row:nth-child(even) { background: #f8fafc; }
+  .ps-row-name {
+    font-size: 10.5px;
+    color: #475569;
+  }
+  .ps-row-amount {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .ps-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    background: #f1f5f9;
+    border-top: 2px solid #cbd5e1;
+  }
+  .ps-total-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+  }
+  .ps-total-amount {
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .ps-earnings .ps-total-amount { color: #059669; }
+  .ps-deductions .ps-total-amount { color: #dc2626; }
+
+  /* ── Summary Strip ────────────────────────────────── */
+  .ps-summary {
+    display: flex;
+    gap: 0;
+    margin: 0 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .ps-summary-item {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    border-right: 1px solid #e2e8f0;
+    position: relative;
+  }
+  .ps-summary-item:last-child { border-right: none; }
+  .ps-summary-label {
+    font-size: 8px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 3px;
+  }
+  .ps-summary-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+  }
+  .ps-summary-item.ps-gross .ps-summary-value { color: #059669; }
+  .ps-summary-item.ps-ded .ps-summary-value { color: #dc2626; }
+
+  /* ── Net Pay Banner ───────────────────────────────── */
+  .ps-net {
+    margin: 14px 24px 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .ps-net-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f4c81 100%);
+    color: #fff;
+  }
+  .ps-net-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .ps-net-label-ar {
+    font-size: 14px;
+    font-weight: 700;
+    direction: rtl;
+    opacity: 0.85;
+    margin-top: 1px;
+  }
+  .ps-net-amount {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .ps-net-words {
+    padding: 8px 22px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    font-size: 10px;
+    color: #0369a1;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* ── Footer ───────────────────────────────────────── */
+  .ps-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 0 24px;
+    padding-top: 30px;
+  }
+  .ps-sig {
+    text-align: center;
+    width: 180px;
+  }
+  .ps-sig-line {
+    border-top: 1.5px solid #475569;
+    margin-top: 50px;
+    padding-top: 6px;
+  }
+  .ps-sig-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: #334155;
+  }
+  .ps-sig-title-ar {
+    font-size: 10px;
+    color: #64748b;
+    direction: rtl;
+    margin-top: 1px;
+  }
+  .ps-disclaimer {
+    text-align: center;
+    font-size: 8px;
+    color: #cbd5e1;
+    margin: 18px 24px 0;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+    line-height: 1.6;
+  }
+
+  /* ── Confidential Tag ─────────────────────────────── */
+  .ps-conf-tag {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: #f8fafc;
+    padding: 2px 12px;
+    border-radius: 3px;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* ── Print ────────────────────────────────────────── */
+  @media print {
+    .ps { padding: 0; }
+    .ps-accent, .ps-net-bar, .ps-section-pill,
+    .ps-summary-item, .ps-total-row, .ps-rows .ps-row:nth-child(even) {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .ps::before { display: none; }
+    .ps-conf-tag { display: none; }
+    .ps-emp-field:hover { border-left-color: transparent; }
+  }
+</style>
+
+<div class="ps">
+  <!-- Accent Bar -->
+  <div class="ps-accent"></div>
+
+  <!-- Confidential Tag -->
+  <div class="ps-conf-tag">Confidential &mdash; سري</div>
+
+  <!-- Header -->
+  <div class="ps-header">
+    <div class="ps-header-left">
+      {% if company.company_logo %}
+        <img class="ps-logo" src="{{ company.company_logo }}" alt="{{ doc.company }}">
+      {% else %}
+        <div class="ps-logo-placeholder">{{ doc.company[:2]|upper }}</div>
+      {% endif %}
+      <div>
+        <h2 class="ps-company-name">{{ doc.company }}</h2>
+        {% if company.address %}<p class="ps-company-detail">{{ company.address }}</p>{% endif %}
+        {% if company.phone_no or company.email %}
+          <p class="ps-company-detail">{{ company.phone_no or "" }}{{ " &bull; " + company.email if company.email else "" }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="ps-header-right">
+      <div class="ps-doc-title">Payslip</div>
+      <div class="ps-doc-title-ar">بيان الراتب</div>
+      <div class="ps-period">{{ month_label }}</div>
+      <div class="ps-ref">{{ doc.name }}</div>
+    </div>
+  </div>
+
+  <!-- Employee Details -->
+  <div class="ps-emp-card">
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Employee ID / رقم الموظف</div>
+      <div class="ps-emp-value">{{ doc.employee }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Employee Name / اسم الموظف</div>
+      <div class="ps-emp-value">{{ doc.employee_name }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Department / القسم</div>
+      <div class="ps-emp-value">{{ doc.department or "-" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Designation / المسمى الوظيفي</div>
+      <div class="ps-emp-value">{{ doc.designation or "-" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Date of Joining / تاريخ الالتحاق</div>
+      <div class="ps-emp-value">{{ frappe.utils.formatdate(emp.date_of_joining, "dd MMM yyyy") if emp.date_of_joining else "-" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Payment Mode / طريقة الدفع</div>
+      <div class="ps-emp-value">{{ doc.mode_of_payment or "Bank Transfer" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">CNSS Number / رقم الضمان</div>
+      <div class="ps-emp-value">{{ emp.ctc or "-" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Bank Account / الحساب المصرفي</div>
+      <div class="ps-emp-value">{{ doc.bank_account_no or doc.bank_name or "-" }}</div>
+    </div>
+    <div class="ps-emp-field">
+      <div class="ps-emp-label">Working Days / أيام العمل</div>
+      <div class="ps-emp-value">{{ doc.total_working_days or 0 }} <span style="color:#94a3b8;font-weight:400">(Absent: {{ doc.absent_days or 0 }})</span></div>
+    </div>
+  </div>
+
+  <!-- Earnings & Deductions -->
+  <div class="ps-body">
+    <!-- Earnings -->
+    <div class="ps-col ps-earnings">
+      <div class="ps-section-pill">
+        <span class="ps-pill-label">Earnings</span>
+        <span class="ps-pill-label-ar">المداخيل</span>
+      </div>
+      <div class="ps-rows">
+        {% for e in doc.earnings %}
+        <div class="ps-row">
+          <span class="ps-row-name">{{ e.salary_component }}</span>
+          <span class="ps-row-amount">{{ frappe.utils.fmt_money(e.amount, currency=currency) }}</span>
+        </div>
+        {% endfor %}
+        <div class="ps-total-row">
+          <span class="ps-total-label">Total Earnings / إجمالي المداخيل</span>
+          <span class="ps-total-amount">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deductions -->
+    <div class="ps-col ps-deductions">
+      <div class="ps-section-pill">
+        <span class="ps-pill-label">Deductions</span>
+        <span class="ps-pill-label-ar">الاقتطاعات</span>
+      </div>
+      <div class="ps-rows">
+        {% for d in doc.deductions %}
+        <div class="ps-row">
+          <span class="ps-row-name">{{ d.salary_component }}</span>
+          <span class="ps-row-amount">{{ frappe.utils.fmt_money(d.amount, currency=currency) }}</span>
+        </div>
+        {% endfor %}
+        <div class="ps-total-row">
+          <span class="ps-total-label">Total Deductions / إجمالي الاقتطاعات</span>
+          <span class="ps-total-amount">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="ps-summary">
+    <div class="ps-summary-item ps-gross">
+      <div class="ps-summary-label">Gross Pay / الراتب الإجمالي</div>
+      <div class="ps-summary-value">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</div>
+    </div>
+    <div class="ps-summary-item ps-ded">
+      <div class="ps-summary-label">Deductions / الاقتطاعات</div>
+      <div class="ps-summary-value">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</div>
+    </div>
+    <div class="ps-summary-item">
+      <div class="ps-summary-label">Loan / قرض</div>
+      <div class="ps-summary-value">{{ frappe.utils.fmt_money(doc.total_loan_repayment or 0, currency=currency) }}</div>
+    </div>
+    <div class="ps-summary-item">
+      <div class="ps-summary-label">Year to Date / منذ بداية السنة</div>
+      <div class="ps-summary-value">{{ frappe.utils.fmt_money(doc.year_to_date or 0, currency=currency) }}</div>
+    </div>
+  </div>
+
+  <!-- Net Pay -->
+  <div class="ps-net">
+    <div class="ps-net-bar">
+      <div>
+        <div class="ps-net-label">NET PAY</div>
+        <div class="ps-net-label-ar">صافي الراتب</div>
+      </div>
+      <div class="ps-net-amount">{{ frappe.utils.fmt_money(doc.net_pay, currency=currency) }}</div>
+    </div>
+    {% if doc.total_in_words %}
+    <div class="ps-net-words">{{ doc.total_in_words }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Signatures -->
+  <div class="ps-footer">
+    <div class="ps-sig">
+      <div class="ps-sig-line">
+        <div class="ps-sig-title">Employer Signature</div>
+        <div class="ps-sig-title-ar">توقيع صاحب العمل</div>
+      </div>
+    </div>
+    <div class="ps-sig">
+      <div class="ps-sig-line">
+        <div class="ps-sig-title">Employee Signature</div>
+        <div class="ps-sig-title-ar">توقيع الموظف</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="ps-disclaimer">
+    This is a computer-generated payslip and does not require a physical signature for internal records.<br/>
+    .هذا بيان راتب صادر آلياً ولا يتطلب توقيعاً فعلياً للسجلات الداخلية
+  </div>
+</div>

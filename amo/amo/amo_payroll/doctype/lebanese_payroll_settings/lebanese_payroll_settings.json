@@ -1,0 +1,419 @@
+{
+ "actions": [],
+ "creation": "2026-04-08 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "issingle": 1,
+ "editable_grid": 1,
+ "track_changes": 1,
+ "field_order": [
+  "cnss_tab",
+  "employee_contributions_section",
+  "cnss_employee_sickness_rate",
+  "cnss_employee_maternity_rate",
+  "column_break_e1",
+  "cnss_medical_ceiling",
+  "employer_contributions_section",
+  "cnss_employer_sickness_rate",
+  "cnss_employer_maternity_rate",
+  "cnss_employer_family_rate",
+  "cnss_employer_eos_rate",
+  "column_break_e2",
+  "cnss_sickness_ceiling",
+  "cnss_family_ceiling",
+  "cnss_eos_description",
+  "tax_tab",
+  "tax_slabs_section",
+  "tax_slabs",
+  "personal_deductions_section",
+  "personal_allowance",
+  "spouse_allowance",
+  "column_break_t1",
+  "child_allowance",
+  "max_children_deduction",
+  "allowances_tab",
+  "transport_section",
+  "transport_allowance_daily",
+  "working_days_per_month",
+  "column_break_a1",
+  "transport_allowance_monthly",
+  "schooling_section",
+  "schooling_allowance_annual",
+  "column_break_a2",
+  "max_schooling_children",
+  "nssf_family_section",
+  "nssf_spouse_allowance",
+  "column_break_a3",
+  "nssf_child_allowance",
+  "nssf_max_children",
+  "eos_tab",
+  "eos_section",
+  "eos_months_1_to_5",
+  "eos_months_6_to_10",
+  "eos_months_above_10",
+  "column_break_eos1",
+  "eos_tax_rate",
+  "actions_tab",
+  "actions_section",
+  "company",
+  "column_break_act1",
+  "data_created",
+  "actions_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "cnss_tab",
+   "fieldtype": "Tab Break",
+   "label": "CNSS Rates"
+  },
+  {
+   "fieldname": "employee_contributions_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Contributions",
+   "description": "Contributions deducted from employee salary"
+  },
+  {
+   "fieldname": "cnss_employee_sickness_rate",
+   "fieldtype": "Percent",
+   "label": "Employee Sickness Rate (%)",
+   "default": "2",
+   "description": "Employee contribution for sickness scheme (2% of capped salary)"
+  },
+  {
+   "fieldname": "cnss_employee_maternity_rate",
+   "fieldtype": "Percent",
+   "label": "Employee Maternity Rate (%)",
+   "default": "1",
+   "description": "Employee contribution for maternity scheme (1% of capped salary)"
+  },
+  {
+   "fieldname": "column_break_e1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cnss_medical_ceiling",
+   "fieldtype": "Currency",
+   "label": "Medical/Sickness Ceiling (Monthly)",
+   "default": "120000000",
+   "description": "Maximum monthly salary subject to medical/sickness contributions (LL 120M as of Aug 2025)"
+  },
+  {
+   "fieldname": "employer_contributions_section",
+   "fieldtype": "Section Break",
+   "label": "Employer Contributions",
+   "description": "Contributions paid by employer (not deducted from employee)"
+  },
+  {
+   "fieldname": "cnss_employer_sickness_rate",
+   "fieldtype": "Percent",
+   "label": "Employer Sickness Rate (%)",
+   "default": "7",
+   "description": "Employer contribution for sickness branch (7% of capped salary)"
+  },
+  {
+   "fieldname": "cnss_employer_maternity_rate",
+   "fieldtype": "Percent",
+   "label": "Employer Maternity Rate (%)",
+   "default": "1",
+   "description": "Employer contribution for maternity branch (1% of capped salary)"
+  },
+  {
+   "fieldname": "cnss_employer_family_rate",
+   "fieldtype": "Percent",
+   "label": "Family Allowance Rate (%)",
+   "default": "6",
+   "description": "Employer contribution for family allowance branch"
+  },
+  {
+   "fieldname": "cnss_employer_eos_rate",
+   "fieldtype": "Percent",
+   "label": "End of Service Rate (%)",
+   "default": "5",
+   "description": "Employer contribution for end-of-service indemnity (no ceiling)"
+  },
+  {
+   "fieldname": "column_break_e2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cnss_sickness_ceiling",
+   "fieldtype": "Currency",
+   "label": "Sickness Ceiling (Monthly)",
+   "default": "120000000",
+   "description": "Maximum monthly salary for sickness & maternity (same as medical ceiling)"
+  },
+  {
+   "fieldname": "cnss_family_ceiling",
+   "fieldtype": "Currency",
+   "label": "Family Allowance Ceiling (Monthly)",
+   "default": "18000000",
+   "description": "Maximum monthly salary for family allowance contributions (LL 18M as of Jul 2025)"
+  },
+  {
+   "fieldname": "cnss_eos_description",
+   "fieldtype": "HTML",
+   "label": "",
+   "options": "<p class='text-muted small'><strong>Note:</strong> End of Service contributions are calculated on total annual earnings with no ceiling.</p>"
+  },
+  {
+   "fieldname": "tax_tab",
+   "fieldtype": "Tab Break",
+   "label": "Income Tax"
+  },
+  {
+   "fieldname": "tax_slabs_section",
+   "fieldtype": "Section Break",
+   "label": "Progressive Income Tax Slabs (Annual)",
+   "description": "Lebanese payroll tax brackets per 2022 Budget Law (Article 57 Income Tax Law)"
+  },
+  {
+   "fieldname": "tax_slabs",
+   "fieldtype": "Table",
+   "label": "Tax Slabs",
+   "options": "Lebanese Tax Slab Row"
+  },
+  {
+   "fieldname": "personal_deductions_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Deductions (Annual)",
+   "description": "Family deductions from taxable income per 2024 Budget Law (Article 49)"
+  },
+  {
+   "fieldname": "personal_allowance",
+   "fieldtype": "Currency",
+   "label": "Personal Allowance (Annual)",
+   "default": "450000000",
+   "description": "Annual personal tax-free allowance for single taxpayer"
+  },
+  {
+   "fieldname": "spouse_allowance",
+   "fieldtype": "Currency",
+   "label": "Spouse Allowance (Annual)",
+   "default": "225000000",
+   "description": "Additional annual allowance for non-working spouse"
+  },
+  {
+   "fieldname": "column_break_t1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "child_allowance",
+   "fieldtype": "Currency",
+   "label": "Per Child Allowance (Annual)",
+   "default": "45000000",
+   "description": "Annual tax deduction per dependent child"
+  },
+  {
+   "fieldname": "max_children_deduction",
+   "fieldtype": "Int",
+   "label": "Max Children for Deduction",
+   "default": "5"
+  },
+  {
+   "fieldname": "allowances_tab",
+   "fieldtype": "Tab Break",
+   "label": "Allowances"
+  },
+  {
+   "fieldname": "transport_section",
+   "fieldtype": "Section Break",
+   "label": "Transport Allowance",
+   "description": "Per Decree 12966 dated 15 February 2024"
+  },
+  {
+   "fieldname": "transport_allowance_daily",
+   "fieldtype": "Currency",
+   "label": "Daily Transport Allowance",
+   "default": "450000",
+   "description": "LL 450,000/day for private sector (effective Feb 2024)"
+  },
+  {
+   "fieldname": "working_days_per_month",
+   "fieldtype": "Int",
+   "label": "Working Days per Month",
+   "default": "22"
+  },
+  {
+   "fieldname": "column_break_a1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transport_allowance_monthly",
+   "fieldtype": "Currency",
+   "label": "Monthly Transport Allowance",
+   "read_only": 1,
+   "description": "Auto-calculated: Daily × Working Days"
+  },
+  {
+   "fieldname": "schooling_section",
+   "fieldtype": "Section Break",
+   "label": "Schooling Allowance"
+  },
+  {
+   "fieldname": "schooling_allowance_annual",
+   "fieldtype": "Currency",
+   "label": "Annual Schooling Allowance (Total)",
+   "default": "6000000",
+   "description": "Maximum total annual schooling allowance"
+  },
+  {
+   "fieldname": "column_break_a2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "max_schooling_children",
+   "fieldtype": "Int",
+   "label": "Max Children for Schooling",
+   "default": "3"
+  },
+  {
+   "fieldname": "nssf_family_section",
+   "fieldtype": "Section Break",
+   "label": "NSSF Family Allowances (Monthly)",
+   "description": "Amounts paid by NSSF to insured employees (Memorandum 793, effective Jul 2025)"
+  },
+  {
+   "fieldname": "nssf_spouse_allowance",
+   "fieldtype": "Currency",
+   "label": "Spouse Allowance",
+   "default": "1200000",
+   "description": "Monthly family allowance for spouse"
+  },
+  {
+   "fieldname": "column_break_a3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nssf_child_allowance",
+   "fieldtype": "Currency",
+   "label": "Per Child Allowance",
+   "default": "660000",
+   "description": "Monthly family allowance per child"
+  },
+  {
+   "fieldname": "nssf_max_children",
+   "fieldtype": "Int",
+   "label": "Max Children",
+   "default": "5"
+  },
+  {
+   "fieldname": "eos_tab",
+   "fieldtype": "Tab Break",
+   "label": "End of Service"
+  },
+  {
+   "fieldname": "eos_section",
+   "fieldtype": "Section Break",
+   "label": "End of Service Indemnity",
+   "description": "Per Lebanese Labour Law - Article 50"
+  },
+  {
+   "fieldname": "eos_months_1_to_5",
+   "fieldtype": "Float",
+   "label": "Months per Year (Years 1-5)",
+   "default": "1",
+   "precision": "1",
+   "description": "1 month salary per year of service for the first 5 years"
+  },
+  {
+   "fieldname": "eos_months_6_to_10",
+   "fieldtype": "Float",
+   "label": "Months per Year (Years 6-10)",
+   "default": "1.5",
+   "precision": "1",
+   "description": "1.5 months salary per year of service for years 6-10"
+  },
+  {
+   "fieldname": "eos_months_above_10",
+   "fieldtype": "Float",
+   "label": "Months per Year (Above 10 Years)",
+   "default": "2",
+   "precision": "1",
+   "description": "2 months salary per year of service beyond 10 years"
+  },
+  {
+   "fieldname": "column_break_eos1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "eos_tax_rate",
+   "fieldtype": "Percent",
+   "label": "EoS Tax Rate (%)",
+   "default": "2",
+   "description": "Tax rate applied to end-of-service indemnity"
+  },
+  {
+   "fieldname": "actions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Setup Actions"
+  },
+  {
+   "fieldname": "actions_section",
+   "fieldtype": "Section Break",
+   "label": "Generate Payroll Master Data",
+   "description": "Create or clear Lebanese payroll setup records (Salary Components, Income Tax Slab, Payroll Constants, Salary Structure) for the selected company."
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_act1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "data_created",
+   "fieldtype": "Check",
+   "label": "Data Created",
+   "read_only": 1,
+   "default": "0",
+   "description": "Checked when payroll data has been generated"
+  },
+  {
+   "fieldname": "actions_html",
+   "fieldtype": "HTML",
+   "label": "",
+   "options": ""
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-04-08 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "AMO Payroll",
+ "name": "Lebanese Payroll Settings",
+ "naming_rule": "Expression (old style)",
+ "autoname": "Lebanese Payroll Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

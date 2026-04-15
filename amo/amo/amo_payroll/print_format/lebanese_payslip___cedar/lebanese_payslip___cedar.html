@@ -1,0 +1,434 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set currency = doc.currency or "LBP" -%}
+{%- set emp = frappe.get_doc("Employee", doc.employee) -%}
+{%- set month_label = frappe.utils.formatdate(doc.start_date, "MMMM yyyy") -%}
+<style>
+  /* ═══════════════════════════════════════════════════
+     CEDAR — Lebanese-themed warm design
+     Warm terracotta, cedar green, Lebanese identity
+     ═══════════════════════════════════════════════════ */
+  .cd {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    color: #3c2415;
+    font-size: 10.5px;
+    line-height: 1.5;
+    background: #fefcf9;
+    border: 1px solid #e8ddd0;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cd *, .cd *::before, .cd *::after { box-sizing: border-box; }
+
+  /* Top flag band: Red - White - Cedar Green - White - Red */
+  .cd-flag {
+    display: flex;
+    height: 6px;
+  }
+  .cd-flag-r { flex: 1; background: #ed1c24; }
+  .cd-flag-w { flex: 1; background: #fff; }
+  .cd-flag-g { flex: 1; background: #00a651; }
+
+  /* Header */
+  .cd-hdr {
+    padding: 20px 28px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #2d6a4f;
+  }
+  .cd-hdr-left { display: flex; align-items: center; gap: 14px; }
+  .cd-logo {
+    width: 50px; height: 50px; border-radius: 50%;
+    object-fit: contain; border: 2px solid #2d6a4f;
+    background: #fff;
+  }
+  .cd-logo-ph {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: #2d6a4f;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 15px; font-weight: 800;
+    letter-spacing: 1px; border: 2px solid #1b4332;
+  }
+  .cd-co {
+    margin: 0; font-size: 17px; font-weight: 700;
+    color: #1b4332; letter-spacing: 0.3px;
+  }
+  .cd-co-sub { margin: 2px 0 0; font-size: 9px; color: #8b7355; }
+
+  .cd-hdr-right { text-align: right; }
+  .cd-doc-lbl {
+    font-size: 10px; font-weight: 700; color: #2d6a4f;
+    text-transform: uppercase; letter-spacing: 2px;
+  }
+  .cd-doc-lbl-ar {
+    font-size: 16px; font-weight: 700; color: #2d6a4f;
+    direction: rtl;
+  }
+  .cd-period {
+    margin-top: 6px; font-size: 13px; font-weight: 600; color: #3c2415;
+  }
+  .cd-ref { font-size: 8.5px; color: #b49d80; margin-top: 2px; font-family: monospace; }
+
+  /* Employee section */
+  .cd-emp-title {
+    margin: 14px 28px 0; padding: 0 0 4px;
+    border-bottom: 1px solid #d4c4a8;
+    font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: #8b7355;
+    display: flex; justify-content: space-between;
+  }
+  .cd-emp-title .ar { direction: rtl; font-size: 10px; letter-spacing: 0; }
+
+  .cd-emp {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    margin: 0 28px 16px;
+  }
+  .cd-ef {
+    padding: 7px 10px;
+    border-bottom: 1px solid #f0e6d6;
+  }
+  .cd-ef-lbl {
+    font-size: 7.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #b49d80;
+  }
+  .cd-ef-val {
+    font-size: 11px; font-weight: 600; color: #3c2415;
+  }
+
+  /* Earnings & Deductions */
+  .cd-body {
+    display: flex;
+    gap: 20px;
+    padding: 0 28px;
+    margin-bottom: 16px;
+  }
+  .cd-col { flex: 1; }
+
+  .cd-col-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 6px 6px 0 0;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .cd-col-hdr .ar { font-size: 12px; letter-spacing: 0; direction: rtl; }
+  .cd-col.earn .cd-col-hdr { background: #2d6a4f; color: #fff; }
+  .cd-col.ded .cd-col-hdr { background: #ed1c24; color: #fff; }
+
+  .cd-rows {
+    border: 1px solid #e8ddd0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+  }
+  .cd-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 14px;
+    border-bottom: 1px solid #f5efe6;
+  }
+  .cd-row:last-of-type { border-bottom: none; }
+  .cd-row-name { color: #6b5744; font-size: 10.5px; }
+  .cd-row-amt {
+    font-weight: 600; color: #3c2415;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap; font-size: 10.5px;
+  }
+  .cd-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-top: 2px solid #d4c4a8;
+    font-weight: 700;
+    font-size: 11px;
+    background: #faf5ed;
+  }
+  .cd-col.earn .cd-total { color: #1b4332; }
+  .cd-col.ded .cd-total { color: #b91c1c; }
+
+  /* Summary */
+  .cd-summary {
+    display: flex;
+    gap: 10px;
+    margin: 0 28px 14px;
+  }
+  .cd-sum-card {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    border-radius: 8px;
+    border: 1px solid #e8ddd0;
+    background: #faf5ed;
+  }
+  .cd-sum-lbl {
+    font-size: 7px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #b49d80; margin-bottom: 3px;
+  }
+  .cd-sum-val {
+    font-size: 12px; font-weight: 700;
+    color: #3c2415;
+    font-variant-numeric: tabular-nums;
+  }
+  .cd-sum-card.green .cd-sum-val { color: #2d6a4f; }
+  .cd-sum-card.red .cd-sum-val { color: #ed1c24; }
+
+  /* Net pay */
+  .cd-net {
+    margin: 0 28px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #2d6a4f;
+  }
+  .cd-net-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 22px;
+    background: linear-gradient(135deg, #1b4332, #2d6a4f, #40916c);
+    color: #fff;
+  }
+  .cd-net-lbl {
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+  }
+  .cd-net-lbl-ar {
+    font-size: 14px; font-weight: 700;
+    direction: rtl; opacity: 0.8; margin-top: 2px;
+  }
+  .cd-net-amt {
+    font-size: 24px; font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .cd-net-words {
+    padding: 7px 22px;
+    background: #f0fdf4;
+    border-top: 1px solid #bbf7d0;
+    font-size: 9.5px; color: #2d6a4f;
+    font-style: italic; text-align: center;
+  }
+
+  /* Footer */
+  .cd-sigs {
+    display: flex;
+    justify-content: space-between;
+    padding: 28px 40px 0;
+  }
+  .cd-sig { text-align: center; width: 170px; }
+  .cd-sig-line {
+    border-top: 1.5px solid #6b5744;
+    margin-top: 48px;
+    padding-top: 5px;
+    font-size: 9.5px; font-weight: 600; color: #6b5744;
+  }
+  .cd-sig-ar { font-size: 9.5px; color: #b49d80; direction: rtl; margin-top: 1px; }
+
+  .cd-disc {
+    text-align: center;
+    font-size: 7.5px; color: #d4c4a8;
+    margin-top: 16px;
+    padding: 10px 28px 14px;
+    border-top: 1px solid #f0e6d6;
+    line-height: 1.6;
+  }
+
+  /* Flag bar at bottom too */
+  .cd-flag-bottom { margin-top: 0; }
+
+  @media print {
+    .cd, .cd-flag-r, .cd-flag-w, .cd-flag-g,
+    .cd-col.earn .cd-col-hdr, .cd-col.ded .cd-col-hdr,
+    .cd-net-bar, .cd-net-words, .cd-sum-card,
+    .cd-total, .cd-kpi-item, .cd-emp {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+
+<div class="cd">
+  <!-- Flag band -->
+  <div class="cd-flag">
+    <div class="cd-flag-r"></div>
+    <div class="cd-flag-w"></div>
+    <div class="cd-flag-g"></div>
+    <div class="cd-flag-w"></div>
+    <div class="cd-flag-r"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="cd-hdr">
+    <div class="cd-hdr-left">
+      {% if company.company_logo %}
+        <img class="cd-logo" src="{{ company.company_logo }}" alt="">
+      {% else %}
+        <div class="cd-logo-ph">{{ doc.company[:2]|upper }}</div>
+      {% endif %}
+      <div>
+        <h2 class="cd-co">{{ doc.company }}</h2>
+        <p class="cd-co-sub">{{ company.address or "" }}{{ " | " + (company.phone_no or "") if company.phone_no else "" }}</p>
+      </div>
+    </div>
+    <div class="cd-hdr-right">
+      <div class="cd-doc-lbl">Payslip</div>
+      <div class="cd-doc-lbl-ar">بيان الراتب</div>
+      <div class="cd-period">{{ month_label }}</div>
+      <div class="cd-ref">{{ doc.name }}</div>
+    </div>
+  </div>
+
+  <!-- Employee Details -->
+  <div class="cd-emp-title">
+    <span>Employee Details</span>
+    <span class="ar">بيانات الموظف</span>
+  </div>
+  <div class="cd-emp">
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Employee ID</div>
+      <div class="cd-ef-val">{{ doc.employee }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Full Name / الاسم</div>
+      <div class="cd-ef-val">{{ doc.employee_name }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Department / القسم</div>
+      <div class="cd-ef-val">{{ doc.department or "-" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Designation / المسمى</div>
+      <div class="cd-ef-val">{{ doc.designation or "-" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Joined / الالتحاق</div>
+      <div class="cd-ef-val">{{ frappe.utils.formatdate(emp.date_of_joining, "dd MMM yyyy") if emp.date_of_joining else "-" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Payment / الدفع</div>
+      <div class="cd-ef-val">{{ doc.mode_of_payment or "Bank Transfer" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">CNSS / الضمان</div>
+      <div class="cd-ef-val">{{ emp.ctc or "-" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Bank / المصرف</div>
+      <div class="cd-ef-val">{{ doc.bank_account_no or doc.bank_name or "-" }}</div>
+    </div>
+    <div class="cd-ef">
+      <div class="cd-ef-lbl">Working Days / أيام العمل</div>
+      <div class="cd-ef-val">{{ doc.payment_days or doc.total_working_days or 0 }} / {{ doc.total_working_days or 0 }}</div>
+    </div>
+  </div>
+
+  <!-- Earnings & Deductions -->
+  <div class="cd-body">
+    <div class="cd-col earn">
+      <div class="cd-col-hdr">
+        <span>Earnings</span>
+        <span class="ar">المداخيل</span>
+      </div>
+      <div class="cd-rows">
+        {% for e in doc.earnings %}
+        <div class="cd-row">
+          <span class="cd-row-name">{{ e.salary_component }}</span>
+          <span class="cd-row-amt">{{ frappe.utils.fmt_money(e.amount, currency=currency) }}</span>
+        </div>
+        {% endfor %}
+        <div class="cd-total">
+          <span>Total Earnings / إجمالي</span>
+          <span>{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="cd-col ded">
+      <div class="cd-col-hdr">
+        <span>Deductions</span>
+        <span class="ar">الاقتطاعات</span>
+      </div>
+      <div class="cd-rows">
+        {% for d in doc.deductions %}
+        <div class="cd-row">
+          <span class="cd-row-name">{{ d.salary_component }}</span>
+          <span class="cd-row-amt">{{ frappe.utils.fmt_money(d.amount, currency=currency) }}</span>
+        </div>
+        {% endfor %}
+        <div class="cd-total">
+          <span>Total Deductions / إجمالي</span>
+          <span>{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="cd-summary">
+    <div class="cd-sum-card green">
+      <div class="cd-sum-lbl">Gross Pay / الإجمالي</div>
+      <div class="cd-sum-val">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</div>
+    </div>
+    <div class="cd-sum-card red">
+      <div class="cd-sum-lbl">Deductions / الاقتطاعات</div>
+      <div class="cd-sum-val">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</div>
+    </div>
+    <div class="cd-sum-card">
+      <div class="cd-sum-lbl">Loan / قرض</div>
+      <div class="cd-sum-val">{{ frappe.utils.fmt_money(doc.total_loan_repayment or 0, currency=currency) }}</div>
+    </div>
+    <div class="cd-sum-card">
+      <div class="cd-sum-lbl">Year to Date / السنة</div>
+      <div class="cd-sum-val">{{ frappe.utils.fmt_money(doc.year_to_date or 0, currency=currency) }}</div>
+    </div>
+  </div>
+
+  <!-- Net Pay -->
+  <div class="cd-net">
+    <div class="cd-net-bar">
+      <div>
+        <div class="cd-net-lbl">Net Pay</div>
+        <div class="cd-net-lbl-ar">صافي الراتب</div>
+      </div>
+      <div class="cd-net-amt">{{ frappe.utils.fmt_money(doc.net_pay, currency=currency) }}</div>
+    </div>
+    {% if doc.total_in_words %}
+    <div class="cd-net-words">{{ doc.total_in_words }}</div>
+    {% endif %}
+  </div>
+
+  <!-- Signatures -->
+  <div class="cd-sigs">
+    <div class="cd-sig">
+      <div class="cd-sig-line">Employer Signature</div>
+      <div class="cd-sig-ar">توقيع صاحب العمل</div>
+    </div>
+    <div class="cd-sig">
+      <div class="cd-sig-line">Employee Signature</div>
+      <div class="cd-sig-ar">توقيع الموظف</div>
+    </div>
+  </div>
+
+  <div class="cd-disc">
+    This is a computer-generated payslip and does not require a physical signature for internal records.<br/>
+    .هذا بيان راتب صادر آلياً ولا يتطلب توقيعاً فعلياً للسجلات الداخلية
+  </div>
+
+  <!-- Bottom flag band -->
+  <div class="cd-flag cd-flag-bottom">
+    <div class="cd-flag-r"></div>
+    <div class="cd-flag-w"></div>
+    <div class="cd-flag-g"></div>
+    <div class="cd-flag-w"></div>
+    <div class="cd-flag-r"></div>
+  </div>
+</div>

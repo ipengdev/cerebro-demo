@@ -1,0 +1,65 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "type_name",
+    "description",
+    "icon",
+    "color"
+  ],
+  "fields": [
+    {
+      "fieldname": "type_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Type Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "icon",
+      "fieldtype": "Data",
+      "label": "Icon"
+    },
+    {
+      "fieldname": "color",
+      "fieldtype": "Color",
+      "label": "Color"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "CMDB",
+  "name": "CI Type",
+  "naming_rule": "By fieldname",
+  "autoname": "field:type_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "type_name",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}

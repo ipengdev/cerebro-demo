@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --base=/assets/employee_self_service/frontend/ && yarn copy-html-entry",
-    "copy-html-entry": "cp ../employee_self_service/public/frontend/index.html ../employee_self_service/www/ess.html",
+    "copy-html-entry": "node scripts/copy-html.js",
     "serve": "vite preview"
   },
   "dependencies": {

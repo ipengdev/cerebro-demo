@@ -1,0 +1,19 @@
+{
+	"content": null,
+	"creation": "2026-04-08 10:00:00",
+	"doctype": "Page",
+	"icon": "fa fa-dashboard",
+	"idx": 0,
+	"module": "AMO Setup",
+	"name": "amo-dashboard",
+	"page_name": "amo-dashboard",
+	"roles": [
+		{"role": "Administrator"},
+		{"role": "AMO Admin"},
+		{"role": "AMO Finance Manager"},
+		{"role": "AMO University Admin"}
+	],
+	"standard": "Yes",
+	"system_page": 0,
+	"title": "AMO Dashboard"
+}

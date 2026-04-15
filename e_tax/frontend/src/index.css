@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply text-gray-800;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer components {
+  .etax-card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200;
+  }
+  .etax-stat-card {
+    @apply etax-card p-6 relative overflow-hidden;
+  }
+  .etax-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .etax-badge-draft {
+    @apply etax-badge bg-gray-100 text-gray-700;
+  }
+  .etax-badge-submitted {
+    @apply etax-badge bg-blue-100 text-blue-700;
+  }
+  .etax-badge-review {
+    @apply etax-badge bg-amber-100 text-amber-700;
+  }
+  .etax-badge-approved {
+    @apply etax-badge bg-green-100 text-green-700;
+  }
+  .etax-badge-rejected {
+    @apply etax-badge bg-red-100 text-red-700;
+  }
+  .etax-nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150;
+  }
+  .etax-nav-item:hover {
+    @apply bg-gray-100 text-gray-900;
+  }
+  .etax-nav-item.active {
+    @apply bg-blue-50 text-blue-700;
+  }
+  .etax-section-title {
+    @apply text-lg font-semibold text-gray-900;
+  }
+  .etax-page-header {
+    @apply pb-6 border-b border-gray-200 mb-6;
+  }
+}

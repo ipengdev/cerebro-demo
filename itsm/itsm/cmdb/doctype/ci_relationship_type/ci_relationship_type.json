@@ -1,0 +1,59 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "relationship_type",
+    "description",
+    "reverse_label"
+  ],
+  "fields": [
+    {
+      "fieldname": "relationship_type",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Relationship Type",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "reverse_label",
+      "fieldtype": "Data",
+      "label": "Reverse Label"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "CMDB",
+  "name": "CI Relationship Type",
+  "naming_rule": "By fieldname",
+  "autoname": "field:relationship_type",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "relationship_type",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}

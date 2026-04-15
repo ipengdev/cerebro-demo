@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{area_name_en} - {city}",
+ "creation": "2026-06-10 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "area_name_en",
+  "area_name_ar",
+  "column_break_1",
+  "mohafaza",
+  "caza",
+  "city",
+  "section_details",
+  "postal_code",
+  "column_break_2",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "area_name_en",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Area / Neighborhood Name (EN)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "area_name_ar",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Area / Neighborhood Name (AR)"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mohafaza",
+   "fieldtype": "Link",
+   "label": "Mohafaza",
+   "options": "LB Mohafaza",
+   "read_only": 1,
+   "fetch_from": "city.mohafaza"
+  },
+  {
+   "fieldname": "caza",
+   "fieldtype": "Link",
+   "label": "Caza",
+   "options": "LB Caza",
+   "read_only": 1,
+   "fetch_from": "city.caza"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "City / Town",
+   "options": "LB City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_details",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Data",
+   "label": "Postal Code"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "default": "1"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-06-10 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MoF Address",
+ "name": "LB Area",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "role": "All"
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "area_name_ar, city, caza",
+ "sort_field": "area_name_en",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "area_name_en",
+ "track_changes": 1
+}

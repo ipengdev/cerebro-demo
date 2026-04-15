@@ -1,0 +1,61 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "port_number",
+    "protocol",
+    "service_name",
+    "state",
+    "banner"
+  ],
+  "fields": [
+    {
+      "fieldname": "port_number",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Port",
+      "reqd": 1
+    },
+    {
+      "fieldname": "protocol",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Protocol",
+      "options": "TCP\nUDP",
+      "default": "TCP"
+    },
+    {
+      "fieldname": "service_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Service"
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "State",
+      "options": "Open\nClosed\nFiltered"
+    },
+    {
+      "fieldname": "banner",
+      "fieldtype": "Data",
+      "label": "Banner"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Discovery",
+  "name": "Discovered Port",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

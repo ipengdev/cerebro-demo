@@ -1,0 +1,60 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "istable": 1,
+  "field_order": [
+    "item_description",
+    "quantity",
+    "unit_cost",
+    "total_cost",
+    "asset"
+  ],
+  "fields": [
+    {
+      "fieldname": "item_description",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Item Description",
+      "reqd": 1
+    },
+    {
+      "fieldname": "quantity",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Quantity",
+      "default": "1"
+    },
+    {
+      "fieldname": "unit_cost",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Unit Cost"
+    },
+    {
+      "fieldname": "total_cost",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Total Cost"
+    },
+    {
+      "fieldname": "asset",
+      "fieldtype": "Link",
+      "label": "Related Asset",
+      "options": "IT Asset"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Contracts",
+  "name": "IT Contract Item",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

@@ -1,0 +1,375 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-04-08 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "taxpayer",
+  "taxpayer_name",
+  "tax_identification_number",
+  "column_break_1",
+  "fiscal_year",
+  "return_period",
+  "period_start",
+  "period_end",
+  "filing_date",
+  "section_sales",
+  "total_sales",
+  "exempt_sales",
+  "zero_rated_sales",
+  "taxable_sales",
+  "column_break_s1",
+  "output_vat_rate",
+  "output_vat",
+  "section_purchases",
+  "total_purchases",
+  "exempt_purchases",
+  "taxable_purchases",
+  "column_break_p1",
+  "input_vat_rate",
+  "input_vat",
+  "section_calculation",
+  "net_vat",
+  "vat_credit_brought_forward",
+  "vat_payable",
+  "vat_refund_due",
+  "section_lines",
+  "lines",
+  "section_status",
+  "status",
+  "submitted_date",
+  "approved_by",
+  "remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ETX-VAT-.YYYY.-",
+   "default": "ETX-VAT-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "taxpayer",
+   "fieldtype": "Link",
+   "label": "Taxpayer",
+   "options": "Taxpayer",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "taxpayer_name",
+   "fieldtype": "Data",
+   "label": "Taxpayer Name",
+   "fetch_from": "taxpayer.taxpayer_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "tax_identification_number",
+   "fieldtype": "Data",
+   "label": "TIN",
+   "fetch_from": "taxpayer.tax_identification_number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "default": "USD",
+   "hidden": 1,
+   "no_copy": 0
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Tax Fiscal Year",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "return_period",
+   "fieldtype": "Select",
+   "label": "Return Period",
+   "options": "\nMonthly\nQuarterly",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "period_start",
+   "fieldtype": "Date",
+   "label": "Period Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "period_end",
+   "fieldtype": "Date",
+   "label": "Period End",
+   "reqd": 1
+  },
+  {
+   "fieldname": "filing_date",
+   "fieldtype": "Date",
+   "label": "Filing Date",
+   "default": "Today",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_sales",
+   "fieldtype": "Section Break",
+   "label": "Output VAT (Sales)"
+  },
+  {
+   "fieldname": "total_sales",
+   "fieldtype": "Currency",
+   "label": "Total Sales",
+   "reqd": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "exempt_sales",
+   "fieldtype": "Currency",
+   "label": "Exempt Sales",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "zero_rated_sales",
+   "fieldtype": "Currency",
+   "label": "Zero-Rated Sales",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "taxable_sales",
+   "fieldtype": "Currency",
+   "label": "Taxable Sales",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_s1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "output_vat_rate",
+   "fieldtype": "Percent",
+   "label": "Output VAT Rate (%)",
+   "default": "18"
+  },
+  {
+   "fieldname": "output_vat",
+   "fieldtype": "Currency",
+   "label": "Output VAT",
+   "read_only": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_purchases",
+   "fieldtype": "Section Break",
+   "label": "Input VAT (Purchases)"
+  },
+  {
+   "fieldname": "total_purchases",
+   "fieldtype": "Currency",
+   "label": "Total Purchases",
+   "reqd": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "exempt_purchases",
+   "fieldtype": "Currency",
+   "label": "Exempt Purchases",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "taxable_purchases",
+   "fieldtype": "Currency",
+   "label": "Taxable Purchases",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_p1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "input_vat_rate",
+   "fieldtype": "Percent",
+   "label": "Input VAT Rate (%)",
+   "default": "18"
+  },
+  {
+   "fieldname": "input_vat",
+   "fieldtype": "Currency",
+   "label": "Input VAT",
+   "read_only": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_calculation",
+   "fieldtype": "Section Break",
+   "label": "VAT Calculation"
+  },
+  {
+   "fieldname": "net_vat",
+   "fieldtype": "Currency",
+   "label": "Net VAT (Output - Input)",
+   "read_only": 1,
+   "bold": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "vat_credit_brought_forward",
+   "fieldtype": "Currency",
+   "label": "VAT Credit Brought Forward",
+   "default": "0",
+   "options": "currency"
+  },
+  {
+   "fieldname": "vat_payable",
+   "fieldtype": "Currency",
+   "label": "VAT Payable",
+   "read_only": 1,
+   "bold": 1,
+   "in_list_view": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "vat_refund_due",
+   "fieldtype": "Currency",
+   "label": "VAT Refund Due",
+   "read_only": 1,
+   "options": "currency"
+  },
+  {
+   "fieldname": "section_lines",
+   "fieldtype": "Section Break",
+   "label": "Detailed Lines"
+  },
+  {
+   "fieldname": "lines",
+   "fieldtype": "Table",
+   "label": "VAT Return Lines",
+   "options": "VAT Return Line"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nUnder Review\nApproved\nRejected",
+   "default": "Draft",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "submitted_date",
+   "fieldtype": "Date",
+   "label": "Submitted Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "VAT Return",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax Administration",
+ "name": "VAT Return",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Officer",
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Tax Filer",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "title": "Draft",
+   "color": "gray"
+  },
+  {
+   "title": "Submitted",
+   "color": "blue"
+  },
+  {
+   "title": "Under Review",
+   "color": "orange"
+  },
+  {
+   "title": "Approved",
+   "color": "green"
+  },
+  {
+   "title": "Rejected",
+   "color": "red"
+  }
+ ],
+ "title_field": "taxpayer_name",
+ "search_fields": "taxpayer_name,tax_identification_number,fiscal_year"
+}

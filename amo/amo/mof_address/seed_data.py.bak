@@ -1,0 +1,307 @@
+import frappe
+
+
+def seed_lebanon_addresses():
+	"""Seed Lebanese administrative divisions: Mohafaza -> Caza -> City/Municipality"""
+	seed_mohafazat()
+	seed_cazas()
+	seed_cities()
+	frappe.db.commit()
+
+
+def seed_mohafazat():
+	"""Seed 9 Governorates (Mohafazat) of Lebanon with ISO 3166-2 codes"""
+	mohafazat = [
+		{"mohafaza_name_en": "Akkar", "mohafaza_name_ar": "عكار", "iso_code": "LB-AK", "hasc_code": "LB.AA", "fips_code": "LE10", "capital": "Halba", "area_km2": 776, "population": 432000},
+		{"mohafaza_name_en": "Baalbek-Hermel", "mohafaza_name_ar": "بعلبك - الهرمل", "iso_code": "LB-BH", "hasc_code": "LB.BH", "fips_code": "LE11", "capital": "Baalbek", "area_km2": 3009, "population": 472000},
+		{"mohafaza_name_en": "Beirut", "mohafaza_name_ar": "بيروت", "iso_code": "LB-BA", "hasc_code": "LB.BA", "fips_code": "LE04", "capital": "Beirut", "area_km2": 18, "population": 419000},
+		{"mohafaza_name_en": "Beqaa", "mohafaza_name_ar": "البقاع", "iso_code": "LB-BI", "hasc_code": "LB.BQ", "fips_code": "LE08", "capital": "Zahleh", "area_km2": 1271, "population": 540000},
+		{"mohafaza_name_en": "Keserwan-Jbeil", "mohafaza_name_ar": "كسروان - جبيل", "iso_code": "", "hasc_code": "LB.KJ", "fips_code": "", "capital": "Jounieh", "area_km2": 722, "population": 300000},
+		{"mohafaza_name_en": "Mount Lebanon", "mohafaza_name_ar": "جبل لبنان", "iso_code": "LB-JL", "hasc_code": "LB.JL", "fips_code": "LE05", "capital": "Baabda", "area_km2": 1238, "population": 1531000},
+		{"mohafaza_name_en": "Nabatieh", "mohafaza_name_ar": "النبطية", "iso_code": "LB-NA", "hasc_code": "LB.NA", "fips_code": "LE07", "capital": "Nabatiye", "area_km2": 1058, "population": 391000},
+		{"mohafaza_name_en": "North Lebanon", "mohafaza_name_ar": "الشمال", "iso_code": "LB-AS", "hasc_code": "LB.NL", "fips_code": "LE09", "capital": "Tripoli", "area_km2": 1205, "population": 803000},
+		{"mohafaza_name_en": "South Lebanon", "mohafaza_name_ar": "الجنوب", "iso_code": "LB-JA", "hasc_code": "LB.JA", "fips_code": "LE06", "capital": "Sidon", "area_km2": 943, "population": 602000},
+	]
+
+	for m in mohafazat:
+		if not frappe.db.exists("LB Mohafaza", m["mohafaza_name_en"]):
+			doc = frappe.new_doc("LB Mohafaza")
+			doc.update(m)
+			doc.enabled = 1
+			doc.insert(ignore_permissions=True)
+			frappe.logger().info(f"Created LB Mohafaza: {m['mohafaza_name_en']}")
+
+
+def seed_cazas():
+	"""Seed 26 Districts (Cazas) with HASC codes"""
+	cazas = [
+		# Akkar Governorate
+		{"caza_name_en": "Akkar", "caza_name_ar": "عكار", "mohafaza": "Akkar", "hasc_code": "LB.AA.AK", "capital": "Halba", "area_km2": 776, "population": 330000},
+		# Baalbek-Hermel Governorate
+		{"caza_name_en": "Baalbek", "caza_name_ar": "بعلبك", "mohafaza": "Baalbek-Hermel", "hasc_code": "LB.BH.BB", "capital": "Baalbek", "area_km2": 2278, "population": 333000},
+		{"caza_name_en": "Hermel", "caza_name_ar": "الهرمل", "mohafaza": "Baalbek-Hermel", "hasc_code": "LB.BH.HE", "capital": "Hermel", "area_km2": 731, "population": 48000},
+		# Beirut Governorate
+		{"caza_name_en": "Beirut", "caza_name_ar": "بيروت", "mohafaza": "Beirut", "hasc_code": "LB.BA.BA", "capital": "Beirut", "area_km2": 18, "population": 390503},
+		# Beqaa Governorate
+		{"caza_name_en": "Rachaya", "caza_name_ar": "راشيا", "mohafaza": "Beqaa", "hasc_code": "LB.BQ.RA", "capital": "Rachaya", "area_km2": 545, "population": 26000},
+		{"caza_name_en": "Western Beqaa", "caza_name_ar": "البقاع الغربي", "mohafaza": "Beqaa", "hasc_code": "LB.BQ.BW", "capital": "Jeb Jennine", "area_km2": 470, "population": 104000},
+		{"caza_name_en": "Zahle", "caza_name_ar": "زحلة", "mohafaza": "Beqaa", "hasc_code": "LB.BQ.ZA", "capital": "Zahleh", "area_km2": 418, "population": 178000},
+		# Keserwan-Jbeil Governorate
+		{"caza_name_en": "Byblos", "caza_name_ar": "جبيل", "mohafaza": "Keserwan-Jbeil", "hasc_code": "LB.KJ.JB", "capital": "Byblos", "area_km2": 380, "population": 89000},
+		{"caza_name_en": "Keserwan", "caza_name_ar": "كسروان", "mohafaza": "Keserwan-Jbeil", "hasc_code": "LB.KJ.KE", "capital": "Jounieh", "area_km2": 342, "population": 174660},
+		# Mount Lebanon Governorate
+		{"caza_name_en": "Aley", "caza_name_ar": "عاليه", "mohafaza": "Mount Lebanon", "hasc_code": "LB.JL.AL", "capital": "Aley", "area_km2": 263, "population": 136320},
+		{"caza_name_en": "Baabda", "caza_name_ar": "بعبدا", "mohafaza": "Mount Lebanon", "hasc_code": "LB.JL.BD", "capital": "Baabda", "area_km2": 194, "population": 511200},
+		{"caza_name_en": "Chouf", "caza_name_ar": "الشوف", "mohafaza": "Mount Lebanon", "hasc_code": "LB.JL.CH", "capital": "Beiteddine", "area_km2": 495, "population": 166140},
+		{"caza_name_en": "Matn", "caza_name_ar": "المتن", "mohafaza": "Mount Lebanon", "hasc_code": "LB.JL.MT", "capital": "Jdeideh", "area_km2": 265, "population": 511200},
+		# Nabatieh Governorate
+		{"caza_name_en": "Bint Jbeil", "caza_name_ar": "بنت جبيل", "mohafaza": "Nabatieh", "hasc_code": "LB.NA.BJ", "capital": "Bint Jbeil", "area_km2": 260, "population": 58300},
+		{"caza_name_en": "Hasbaya", "caza_name_ar": "حاصبيا", "mohafaza": "Nabatieh", "hasc_code": "LB.NA.HA", "capital": "Hasbaya", "area_km2": 220, "population": 30000},
+		{"caza_name_en": "Marjeyoun", "caza_name_ar": "مرجعيون", "mohafaza": "Nabatieh", "hasc_code": "LB.NA.MJ", "capital": "Marjeyoun", "area_km2": 313, "population": 45300},
+		{"caza_name_en": "Nabatieh", "caza_name_ar": "النبطية", "mohafaza": "Nabatieh", "hasc_code": "LB.NA.NA", "capital": "Nabatiye", "area_km2": 265, "population": 91000},
+		# North Lebanon Governorate
+		{"caza_name_en": "Batroun", "caza_name_ar": "البترون", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.BT", "capital": "Batroun", "area_km2": 278, "population": 51120},
+		{"caza_name_en": "Bsharri", "caza_name_ar": "بشري", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.BC", "capital": "Bsharri", "area_km2": 156, "population": 32000},
+		{"caza_name_en": "Koura", "caza_name_ar": "الكورة", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.KO", "capital": "Amioun", "area_km2": 190, "population": 68160},
+		{"caza_name_en": "Miniyeh-Danniyeh", "caza_name_ar": "المنية - الضنية", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.MD", "capital": "Minyeh", "area_km2": 362, "population": 92142},
+		{"caza_name_en": "Tripoli", "caza_name_ar": "طرابلس", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.TR", "capital": "Tripoli", "area_km2": 24, "population": 310980},
+		{"caza_name_en": "Zgharta", "caza_name_ar": "زغرتا", "mohafaza": "North Lebanon", "hasc_code": "LB.NL.ZG", "capital": "Zgharta", "area_km2": 210, "population": 91000},
+		# South Lebanon Governorate
+		{"caza_name_en": "Jezzine", "caza_name_ar": "جزين", "mohafaza": "South Lebanon", "hasc_code": "LB.JA.JE", "capital": "Jezzine", "area_km2": 250, "population": 20500},
+		{"caza_name_en": "Sidon", "caza_name_ar": "صيدا", "mohafaza": "South Lebanon", "hasc_code": "LB.JA.SA", "capital": "Sidon", "area_km2": 275, "population": 207500},
+		{"caza_name_en": "Tyre", "caza_name_ar": "صور", "mohafaza": "South Lebanon", "hasc_code": "LB.JA.SU", "capital": "Tyre", "area_km2": 418, "population": 178920},
+	]
+
+	for c in cazas:
+		if not frappe.db.exists("LB Caza", c["caza_name_en"]):
+			doc = frappe.new_doc("LB Caza")
+			doc.update(c)
+			doc.enabled = 1
+			doc.insert(ignore_permissions=True)
+			frappe.logger().info(f"Created LB Caza: {c['caza_name_en']}")
+
+
+def seed_cities():
+	"""Seed municipalities/cities organized by governorate and caza"""
+	# Structure: (caza_name, mohafaza_name, [list of city names])
+	cities_data = [
+		# ── Akkar Governorate ──
+		("Akkar", "Akkar", [
+			"Abboudieh", "Aidamoun", "Akkar al-Atika", "Andket", "Ayat",
+			"Bayno", "Bazbina", "Bebnine", "Beit Mallat", "Berkayel",
+			"Bireh", "Bkerezla", "Bourj el Arab", "Bourj",
+			"Chadra", "Charbila", "Cheikh Mohammad", "Cheikh Taba",
+			"Deir Jennine", "Fnaydek", "Halba", "Hayssa",
+			"Jebrayel", "Kobayat", "Koucha",
+			"Mashha", "Mechmech", "Minyara", "Nfaiseh",
+			"Rahbeh", "Saysouk", "Telbireh", "Zawarib",
+		]),
+		# ── Baalbek-Hermel Governorate ──
+		("Baalbek", "Baalbek-Hermel", [
+			"Ain", "Ainata", "Al Nabi Sheet", "Baalbek", "Bechwat",
+			"Bednayel", "Brital", "Bodai", "Chaat", "Shmustar",
+			"Deir el Ahmar", "Douris", "Fakiha", "Flaoui",
+			"Hadath Baalbek", "Harbata", "Hizzine", "Hlabta",
+			"Hosh Barada", "Hosh el Rafika", "Hosh Snid", "Hosh Tal Safiya",
+			"Iaat", "Kfar Dane", "Khraibeh", "Ksarnaba", "Labweh",
+			"Majdloun", "Makneh", "Nabi Othman", "Qaa", "Ras Baalbeck",
+			"Saayde", "Seriine el Fawka", "Seriine el Tahta",
+			"Talya", "Taraya", "Tayba", "Temnin el Fawka", "Temnin el Tahta",
+			"Yammouneh", "Younine",
+		]),
+		("Hermel", "Baalbek-Hermel", [
+			"Hermel", "Kasser",
+		]),
+		# ── Beirut Governorate ──
+		("Beirut", "Beirut", [
+			"Beirut",
+		]),
+		# ── Beqaa Governorate ──
+		("Rachaya", "Beqaa", [
+			"Ain Ata", "Ain Harcha", "Akabeh", "Ayha", "Ayta el Fekhar",
+			"Bakifa", "Bakka", "Beit Lahya", "Bireh",
+			"Daher el Ahmar", "Deir el Achayer", "Helwa",
+			"Kfar Danis", "Kfarfouk", "Kfarmechki", "Kherbet Rouha",
+			"Majdel Balhiss", "Mdoukha", "Mhaydseh", "Rachaya",
+			"Tannoura", "Yanta",
+		]),
+		("Western Beqaa", "Beqaa", [
+			"Ain Zebdeh", "Ammik", "Ana", "Aytanit", "Baaloul", "Bab Mareh",
+			"Ghaza", "Jeb Jennine", "Kamed el Laouz", "Karaoun",
+			"Kefraya", "Kherbet Kanafar", "Lala", "Lebbaya",
+			"Machghara", "Manara", "Marej", "Meidoun",
+			"Saghbine", "Sohmor", "Souairy", "Sultan Yaakoub", "Yehmor",
+		]),
+		("Zahle", "Beqaa", [
+			"Ablah", "Ain Kfarzabad", "Ali el Nahri", "Anjar", "Bar Elias",
+			"Bouarej", "Chtaura", "Deir el Ghazal", "Ferzol",
+			"Jdita", "Kaah el Rim", "Kab Elias", "Kfarzabad",
+			"Majdel Anjar", "Mekssi", "Nabi Ayla", "Niha Bekaa",
+			"Riyak", "Saadnayel", "Taalabaya", "Taanayel", "Terbol", "Zahle",
+		]),
+		# ── Keserwan-Jbeil Governorate ──
+		("Byblos", "Keserwan-Jbeil", [
+			"Afqa", "Ain el-Ghouaybeh", "Aqoura", "Amsheet",
+			"Kfar Baal", "Bejjeh", "Berbara", "Blat", "Byblos",
+			"Eddeh", "Ehmej", "Fatreh", "Halat", "Hjoula",
+			"Hosrayel", "Hsoun", "Jaj", "Laqlouq", "Lassa", "Lehfed",
+			"Mayfouq", "Mazraat es-Siyad", "Mechmech", "Mejdel",
+			"Mghayreh", "Mounsef", "Qartaba", "Ras Osta", "Tartej", "Yanouh",
+		]),
+		("Keserwan", "Keserwan-Jbeil", [
+			"Aintoura", "Ajaltoun", "Ballouneh", "Batha",
+			"Chnaniir", "Daraya", "Dlebta", "Faraya", "Fatqa",
+			"Feytroun", "Ghazir", "Ghbaleh", "Ghosta", "Hosein",
+			"Hrajel", "Jeita", "Jounieh", "Jouret Termos",
+			"Kfardebiane", "Kfartay", "Kfour", "Kleiat",
+			"Mayrouba", "Rayfoun", "Safra", "Shayle",
+			"Tabarja", "Yahchouch", "Zouk Mikael", "Zouk Mosbeh",
+		]),
+		# ── Mount Lebanon Governorate ──
+		("Aley", "Mount Lebanon", [
+			"Abey", "Aghmid", "Ain Dara", "Ain Ksour", "Ain Onoub",
+			"Ainab", "Aley", "Aramoun", "Baawerta",
+			"Bassatine", "Bayssour", "Bchamoun", "Bdadoun", "Bennay",
+			"Bmakkine", "Bmahray", "Bsouss",
+			"Charoun", "Chemlan", "Choueifat",
+			"Houmal", "Kehaleh", "Keyfoun", "Kfar Matta", "Kommatyeh",
+			"Ramlieh", "Rechmaya", "Remhala", "Saoufar", "Souk el Ghareb",
+		]),
+		("Baabda", "Mount Lebanon", [
+			"Abadiyeh", "Baabda", "Bmaryam", "Bourj el-Barajneh",
+			"Bzebdine", "Chiyah", "Falougha", "Ghbeireh",
+			"Hadath", "Hammana", "Haret Hreik", "Hazmieh",
+			"Kfarchima", "Kfarselwan", "Kornayel", "Krayeh",
+			"Ras el Metn", "Salima", "Wadi Chahrour",
+		]),
+		("Chouf", "Mount Lebanon", [
+			"Ain Wzein", "Ain Zhalta", "Ainbal", "Amatour",
+			"Baakline", "Baatharan", "Barja", "Barouk",
+			"Batloun", "Beiteddine", "Bsaba El Chouf", "Chehim",
+			"Daher el Mghara", "Damour", "Daraya", "Debbieh",
+			"Deir el Kamar", "Dmit", "Fouara", "Gharife",
+			"Haret Jandal", "Jahlieh", "Jdeidet el Chouf", "Jiyeh", "Joun",
+			"Kahlounie", "Kfarfakoud", "Kfar Nabrakh",
+			"Majdel Meouch", "Mazraat el Chouf", "Mazraat el Daher",
+			"Mokhtara", "Niha Chouf", "Semkanieh", "Serjbeil", "Zaarourieh",
+		]),
+		("Matn", "Mount Lebanon", [
+			"Ain Saade", "Antelias", "Baabdat", "Baskinta",
+			"Beit Chabab", "Bikfaya", "Bourj Hammoud", "Broummana",
+			"Bsalim", "Bteghrine", "Choueir",
+			"Dbayeh", "Dekwaneh", "Dik El Mehdi", "Douar", "Fanar",
+			"Jal el Dib", "Jdeideh", "Kaakour", "Kfarakab", "Kfertay",
+			"Kornet Chehwan", "Mansourieh", "Marjaba", "Mazraat Yachouh",
+			"Mrouj", "Nabay", "Ouyoun", "Rabieh", "Roumieh",
+			"Sin el Fil", "Zalka", "Zarooun",
+		]),
+		# ── Nabatieh Governorate ──
+		("Bint Jbeil", "Nabatieh", [
+			"Ain Ebel", "Aynata", "Ayta el Chaeb", "Ayta el Jabal",
+			"Aytaroun", "Beit Lif", "Beit Yahoun", "Bint Jbeil",
+			"Braachit", "Debel", "Deir Antar", "Froun",
+			"Ghandouriyeh", "Hanine", "Hariss", "Haddatha",
+			"Kafra", "Kfardounine", "Khirbet Selm", "Kounine",
+			"Maroun el Ras", "Ramyah", "Rchaf", "Rmeich",
+			"Tibnin", "Tiri", "Yaroun", "Yater",
+		]),
+		("Hasbaya", "Nabatieh", [
+			"Ain Kanya", "Chebaa", "Chwayya", "Fardiss",
+			"Hasbaya", "Hbariyeh", "Kawkaba", "Kfarchouba",
+			"Kfarhamam", "Kfeir", "Khalwat", "Mimass", "Rachaya el Fokhar",
+		]),
+		("Marjeyoun", "Nabatieh", [
+			"Adayseh", "Adchit", "Bani Hayann", "Blatt", "Blida",
+			"Debbine", "Deir Mimass", "Deir Syriane", "Ebel el Saky",
+			"Houla", "Kabrikha", "Kfarkila", "Khiam",
+			"Klayaa", "Majdel Selem", "Markaba", "Mays el Jabal",
+			"Rab Thalathine", "Tallousseh", "Taybeh",
+		]),
+		("Nabatieh", "Nabatieh", [
+			"Ain Kana", "Ansar", "Arabsalim", "Arnoun",
+			"Charkiyeh", "Doueir", "Ebba", "Habbouch", "Harouf",
+			"Jarjouh", "Jbaah", "Jebchit", "Kaakaiyet el Jisr",
+			"Kfarfila", "Kfarremane", "Kfarsir", "Kfartebnit",
+			"Kossaybeh", "Mayfadoun", "Nabatieh el Fawka", "Nabatieh el Tahta",
+			"Namiriyeh", "Sir el Gharbiyeh", "Yehmor el Chekif",
+			"Zawtar el Charkiyeh", "Zefta",
+		]),
+		# ── North Lebanon Governorate ──
+		("Batroun", "North Lebanon", [
+			"Batroun", "Bcheeleh", "Bkesmaya", "Chekka",
+			"Douma", "Hamat", "Hardine", "Kfarabida",
+			"Selaata", "Tannourine",
+		]),
+		("Bsharri", "North Lebanon", [
+			"Bsharri", "Bkaakafra", "Bkerkacha",
+			"Hadath el Jobbeh", "Hadchit", "Hasroun", "Tourza",
+		]),
+		("Koura", "North Lebanon", [
+			"Afsaddik", "Ain Ekrine", "Amioun", "Anfeh",
+			"Barsa", "Batroumine", "Bdebba", "Bishmizzine",
+			"Bkeftine", "Bsarma", "Bterram", "Btouratij", "Bziza",
+			"Dar Beechtar", "Dar Chmezzine", "Deddeh",
+			"Kaftoun", "Kelhat", "Kfarakka", "Kfarhata", "Kfarhazir",
+			"Kfarkahel", "Kfarsaroun", "Kosba", "Mejdel", "Nakhleh",
+			"Rasmaska", "Rechdebbine",
+		]),
+		("Miniyeh-Danniyeh", "North Lebanon", [
+			"Asoun", "Bakhoun", "Beddawi", "Beit el Fokss",
+			"Bekaasafrine", "Kfarhabou", "Minyeh", "Mrah Sraj",
+			"Sfireh", "Tarane",
+		]),
+		("Tripoli", "North Lebanon", [
+			"Al-Qalamoun", "Mina", "Tripoli",
+		]),
+		("Zgharta", "North Lebanon", [
+			"Achache", "Aintourine", "Alma", "Arabet Kozhaya",
+			"Arde", "Arjess", "Ayto", "Basloukit", "Bnachee",
+			"Daraya", "Haret el Fouar", "Iaal", "Karem Saddeh",
+			"Kfard Lakouss", "Kfaresghab", "Kfarfou", "Kfarhata",
+			"Kfaryachit", "Kfarzayna", "Korah Bach",
+			"Mazraat el Teffah", "Mejdlaya", "Mezyara",
+			"Miryata", "Rachiine", "Raskifa", "Sebhel", "Serhel",
+			"Toula", "Zgharta",
+		]),
+		# ── South Lebanon Governorate ──
+		("Jezzine", "South Lebanon", [
+			"Aaray", "Aramta", "Aychieh", "Azour", "Benweteh",
+			"Bkassine", "Bteddine el Lekech", "Jarmak", "Jernaya",
+			"Jezzine", "Karkha", "Kfarfalous", "Kfarhouna", "Kfarjarrah",
+			"Lebaa", "Machmouche", "Mlikh", "Rihane",
+			"Roum", "Sfaray", "Snaya", "Sojod", "Wadi Jezzine", "Zhalta",
+		]),
+		("Sidon", "South Lebanon", [
+			"Abra", "Adloun", "Ain el Deleb", "Ankoun", "Bablieh",
+			"Erkay", "Ghazieh", "Ghessanieh", "Insariat",
+			"Kaakaiyat el Snaoubar", "Kfar Hatta", "Kfar Melki",
+			"Khartoum", "Loubieh", "Maghdouche", "Majdelyoun",
+			"Mieh Mieh", "Sarafand", "Sidon", "Tanbourit",
+			"Zeita", "Zrariyeh",
+		]),
+		("Tyre", "South Lebanon", [
+			"Aaytit", "Abbassieh", "Ain Baal", "Alma el Chaab",
+			"Arzoun", "Baflay", "Bazourieh", "Bedyass",
+			"Borj el Chamali", "Borj Rahal", "Boustane",
+			"Chehour", "Chihine", "Debaal", "Deir Amess",
+			"Deir Kanoun", "Derdghaya", "Halloussieh", "Hanawey",
+			"Jebbine", "Jwaya", "Qana", "Kolayleh",
+			"Maarake", "Maaroub", "Mahroune", "Majadel", "Mansouri",
+			"Marwahine", "Nakoura", "Rechknanay", "Selaa",
+			"Siddikine", "Srifa", "Tayr Debba", "Tayr Falsay",
+			"Tayr Harfa", "Toura", "Tyre", "Yanouh", "Yarine", "Zebkine",
+		]),
+	]
+
+	for caza_name, mohafaza_name, city_list in cities_data:
+		for city_name in city_list:
+			doc_name = f"{city_name} - {caza_name}"
+			if not frappe.db.exists("LB City", doc_name):
+				doc = frappe.new_doc("LB City")
+				doc.city_name_en = city_name
+				doc.caza = caza_name
+				doc.mohafaza = mohafaza_name
+				doc.enabled = 1
+				doc.insert(ignore_permissions=True)
+
+	frappe.logger().info("Finished seeding LB City records")

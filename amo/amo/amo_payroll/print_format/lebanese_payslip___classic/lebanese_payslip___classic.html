@@ -1,0 +1,405 @@
+{%- set company = frappe.get_doc("Company", doc.company) -%}
+{%- set currency = doc.currency or "LBP" -%}
+{%- set emp = frappe.get_doc("Employee", doc.employee) -%}
+{%- set month_label = frappe.utils.formatdate(doc.start_date, "MMMM yyyy") -%}
+<style>
+  /* ═══════════════════════════════════════════════════
+     CLASSIC — Traditional corporate payslip
+     Double-ruled borders, serif headings, formal layout
+     ═══════════════════════════════════════════════════ */
+  .cl {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    color: #222;
+    font-size: 10.5px;
+    line-height: 1.45;
+    border: 3px double #1a2744;
+  }
+  .cl *, .cl *::before, .cl *::after { box-sizing: border-box; }
+
+  /* Header band */
+  .cl-hdr {
+    background: #1a2744;
+    color: #fff;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cl-hdr-left { display: flex; align-items: center; gap: 14px; }
+  .cl-logo {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    object-fit: contain;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: #fff;
+  }
+  .cl-logo-ph {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; letter-spacing: 1px;
+    font-family: 'Georgia', serif;
+  }
+  .cl-company { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+  .cl-addr { margin: 2px 0 0; font-size: 9px; opacity: 0.7; font-family: sans-serif; }
+  .cl-hdr-right { text-align: right; }
+  .cl-title { font-size: 20px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+  .cl-title-ar { font-size: 18px; direction: rtl; opacity: 0.8; margin-top: 2px; }
+  .cl-period-lbl { font-size: 10px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; font-family: sans-serif; }
+  .cl-period-val { font-size: 13px; font-weight: 600; margin-top: 1px; }
+
+  /* Reference strip */
+  .cl-ref-strip {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 24px;
+    background: #f5f0e8;
+    border-bottom: 1px solid #d4c9b4;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    color: #666;
+  }
+
+  /* Employee table */
+  .cl-emp {
+    margin: 14px 20px;
+    border: 1px solid #c8c0b0;
+    border-collapse: collapse;
+    width: calc(100% - 40px);
+  }
+  .cl-emp td {
+    padding: 6px 12px;
+    border: 1px solid #d8d0c0;
+    font-size: 10.5px;
+  }
+  .cl-emp .lbl {
+    background: #f8f5f0;
+    color: #666;
+    font-size: 8.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+    width: 15%;
+    vertical-align: top;
+  }
+  .cl-emp .val {
+    font-weight: 600;
+    color: #1a2744;
+    width: 18%;
+  }
+
+  /* Section title */
+  .cl-sec-title {
+    margin: 16px 20px 0;
+    padding: 0 0 4px;
+    border-bottom: 2px solid #1a2744;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a2744;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .cl-sec-title .ar { direction: rtl; font-size: 13px; }
+
+  /* Earnings & Deductions side by side */
+  .cl-body {
+    display: flex;
+    gap: 0;
+    padding: 0 20px;
+    margin-top: 8px;
+  }
+  .cl-col { flex: 1; }
+  .cl-col:first-child { border-right: 1px solid #d8d0c0; padding-right: 16px; }
+  .cl-col:last-child { padding-left: 16px; }
+
+  .cl-col-hdr {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 2px solid #1a2744;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a2744;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .cl-col-hdr .ar { font-size: 12px; direction: rtl; letter-spacing: 0; }
+
+  .cl-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dotted #d8d0c0;
+    font-size: 10.5px;
+  }
+  .cl-item:last-of-type { border-bottom: none; }
+  .cl-item-name { color: #444; }
+  .cl-item-amt {
+    font-weight: 600;
+    color: #222;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .cl-subtotal {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0 6px;
+    border-top: 2px solid #1a2744;
+    margin-top: 4px;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .cl-subtotal .earn-total { color: #1a6030; }
+  .cl-subtotal .ded-total { color: #8b1a1a; }
+
+  /* Summary boxes */
+  .cl-summary {
+    display: flex;
+    margin: 14px 20px 0;
+    border: 1px solid #c8c0b0;
+  }
+  .cl-sum-box {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    border-right: 1px solid #c8c0b0;
+  }
+  .cl-sum-box:last-child { border-right: none; }
+  .cl-sum-lbl {
+    font-size: 7.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #888;
+    font-family: sans-serif;
+    font-weight: 600;
+  }
+  .cl-sum-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a2744;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cl-sum-box.gross .cl-sum-val { color: #1a6030; }
+  .cl-sum-box.ded .cl-sum-val { color: #8b1a1a; }
+
+  /* Net pay */
+  .cl-net {
+    margin: 12px 20px 0;
+    border: 3px double #1a2744;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #1a2744;
+    color: #fff;
+  }
+  .cl-net-lbl { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+  .cl-net-lbl-ar { font-size: 14px; direction: rtl; opacity: 0.8; margin-top: 2px; }
+  .cl-net-amt {
+    font-size: 22px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+  }
+
+  .cl-words {
+    margin: 0 20px;
+    padding: 6px 16px;
+    background: #f8f5f0;
+    border: 1px solid #d4c9b4;
+    border-top: none;
+    font-size: 9.5px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  /* Footer */
+  .cl-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 28px 40px 0;
+  }
+  .cl-sig { text-align: center; width: 180px; }
+  .cl-sig-line {
+    border-top: 1.5px solid #1a2744;
+    margin-top: 45px;
+    padding-top: 5px;
+    font-size: 9.5px;
+    color: #555;
+  }
+  .cl-sig-ar { font-size: 9.5px; color: #888; direction: rtl; margin-top: 1px; }
+
+  .cl-disc {
+    text-align: center;
+    font-size: 7.5px;
+    color: #bbb;
+    padding: 14px 20px 12px;
+    border-top: 1px solid #e8e0d4;
+    margin-top: 16px;
+    font-family: sans-serif;
+    line-height: 1.6;
+  }
+
+  @media print {
+    .cl-hdr, .cl-net, .cl-sum-box, .cl-emp .lbl, .cl-ref-strip {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+
+<div class="cl">
+  <!-- Header -->
+  <div class="cl-hdr">
+    <div class="cl-hdr-left">
+      {% if company.company_logo %}
+        <img class="cl-logo" src="{{ company.company_logo }}" alt="">
+      {% else %}
+        <div class="cl-logo-ph">{{ doc.company[:2]|upper }}</div>
+      {% endif %}
+      <div>
+        <h2 class="cl-company">{{ doc.company }}</h2>
+        {% if company.address %}<p class="cl-addr">{{ company.address }}</p>{% endif %}
+        {% if company.phone_no %}<p class="cl-addr">{{ company.phone_no }}{{ " | " + company.email if company.email else "" }}</p>{% endif %}
+      </div>
+    </div>
+    <div class="cl-hdr-right">
+      <div class="cl-title">Payslip</div>
+      <div class="cl-title-ar">بيان الراتب</div>
+      <div class="cl-period-lbl">Pay Period</div>
+      <div class="cl-period-val">{{ month_label }}</div>
+    </div>
+  </div>
+
+  <!-- Reference Strip -->
+  <div class="cl-ref-strip">
+    <span>Ref: {{ doc.name }}</span>
+    <span>Posted: {{ frappe.utils.formatdate(doc.posting_date, "dd MMM yyyy") }}</span>
+    <span>Structure: {{ doc.salary_structure or "-" }}</span>
+  </div>
+
+  <!-- Employee Details -->
+  <table class="cl-emp">
+    <tr>
+      <td class="lbl">Employee ID<br/>رقم الموظف</td>
+      <td class="val">{{ doc.employee }}</td>
+      <td class="lbl">Full Name<br/>الاسم الكامل</td>
+      <td class="val">{{ doc.employee_name }}</td>
+      <td class="lbl">Department<br/>القسم</td>
+      <td class="val">{{ doc.department or "-" }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">Designation<br/>المسمى الوظيفي</td>
+      <td class="val">{{ doc.designation or "-" }}</td>
+      <td class="lbl">Date of Joining<br/>تاريخ الالتحاق</td>
+      <td class="val">{{ frappe.utils.formatdate(emp.date_of_joining, "dd MMM yyyy") if emp.date_of_joining else "-" }}</td>
+      <td class="lbl">Payment Mode<br/>طريقة الدفع</td>
+      <td class="val">{{ doc.mode_of_payment or "Bank Transfer" }}</td>
+    </tr>
+    <tr>
+      <td class="lbl">CNSS No.<br/>رقم الضمان</td>
+      <td class="val">{{ emp.ctc or "-" }}</td>
+      <td class="lbl">Bank Account<br/>الحساب المصرفي</td>
+      <td class="val">{{ doc.bank_account_no or doc.bank_name or "-" }}</td>
+      <td class="lbl">Working Days<br/>أيام العمل</td>
+      <td class="val">{{ doc.total_working_days or 0 }} (Absent: {{ doc.absent_days or 0 }})</td>
+    </tr>
+  </table>
+
+  <!-- Earnings & Deductions -->
+  <div class="cl-body">
+    <div class="cl-col">
+      <div class="cl-col-hdr">
+        <span>Earnings</span>
+        <span class="ar">المداخيل</span>
+      </div>
+      {% for e in doc.earnings %}
+      <div class="cl-item">
+        <span class="cl-item-name">{{ e.salary_component }}</span>
+        <span class="cl-item-amt">{{ frappe.utils.fmt_money(e.amount, currency=currency) }}</span>
+      </div>
+      {% endfor %}
+      <div class="cl-subtotal">
+        <span>Total Earnings</span>
+        <span class="earn-total">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</span>
+      </div>
+    </div>
+    <div class="cl-col">
+      <div class="cl-col-hdr">
+        <span>Deductions</span>
+        <span class="ar">الاقتطاعات</span>
+      </div>
+      {% for d in doc.deductions %}
+      <div class="cl-item">
+        <span class="cl-item-name">{{ d.salary_component }}</span>
+        <span class="cl-item-amt">{{ frappe.utils.fmt_money(d.amount, currency=currency) }}</span>
+      </div>
+      {% endfor %}
+      <div class="cl-subtotal">
+        <span>Total Deductions</span>
+        <span class="ded-total">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="cl-summary">
+    <div class="cl-sum-box gross">
+      <div class="cl-sum-lbl">Gross Pay / الراتب الإجمالي</div>
+      <div class="cl-sum-val">{{ frappe.utils.fmt_money(doc.gross_pay, currency=currency) }}</div>
+    </div>
+    <div class="cl-sum-box ded">
+      <div class="cl-sum-lbl">Total Deductions / الاقتطاعات</div>
+      <div class="cl-sum-val">{{ frappe.utils.fmt_money(doc.total_deduction, currency=currency) }}</div>
+    </div>
+    <div class="cl-sum-box">
+      <div class="cl-sum-lbl">Loan / قرض</div>
+      <div class="cl-sum-val">{{ frappe.utils.fmt_money(doc.total_loan_repayment or 0, currency=currency) }}</div>
+    </div>
+    <div class="cl-sum-box">
+      <div class="cl-sum-lbl">Year to Date / منذ بداية السنة</div>
+      <div class="cl-sum-val">{{ frappe.utils.fmt_money(doc.year_to_date or 0, currency=currency) }}</div>
+    </div>
+  </div>
+
+  <!-- Net Pay -->
+  <div class="cl-net">
+    <div>
+      <div class="cl-net-lbl">NET PAY</div>
+      <div class="cl-net-lbl-ar">صافي الراتب</div>
+    </div>
+    <div class="cl-net-amt">{{ frappe.utils.fmt_money(doc.net_pay, currency=currency) }}</div>
+  </div>
+  {% if doc.total_in_words %}
+  <div class="cl-words">{{ doc.total_in_words }}</div>
+  {% endif %}
+
+  <!-- Signatures -->
+  <div class="cl-footer">
+    <div class="cl-sig">
+      <div class="cl-sig-line">Employer Signature</div>
+      <div class="cl-sig-ar">توقيع صاحب العمل</div>
+    </div>
+    <div class="cl-sig">
+      <div class="cl-sig-line">Employee Signature</div>
+      <div class="cl-sig-ar">توقيع الموظف</div>
+    </div>
+  </div>
+
+  <div class="cl-disc">
+    This is a computer-generated payslip and does not require a physical signature for internal records.<br/>
+    .هذا بيان راتب صادر آلياً ولا يتطلب توقيعاً فعلياً للسجلات الداخلية
+  </div>
+</div>

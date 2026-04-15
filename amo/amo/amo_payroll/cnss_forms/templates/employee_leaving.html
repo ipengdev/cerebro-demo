@@ -1,0 +1,98 @@
+{% from "base_style.html" import base_style %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8">{{ base_style() }}</head>
+<body>
+{% for emp in employees %}
+{% if not loop.first %}<div class="page-break"></div>{% endif %}
+
+<!-- ══════════════════════════════════════════════════════════
+     إشعار ترك العمل — CNSS Employee Leaving Notice
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- Header -->
+<div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:8px;">
+	<div style="text-align:right; width:35%;">
+		<div style="margin-bottom:6px;">
+			<span class="field-label">رقم المؤسسة في الصندوق</span><br>
+			<span class="field-value">{{ tax_id }}</span>
+		</div>
+		<div>
+			<span class="field-label">رقم الأجير في الصندوق</span><br>
+			<span class="field-value">{{ emp.cnss_number or '' }}</span>
+		</div>
+	</div>
+	<div style="text-align:center; flex:1;">
+		<div style="font-size:12pt; font-weight:bold;">الصندوق الوطني للضمان الإجتماعي</div>
+		<div style="font-size:9pt;">بيروت - لبنان</div>
+		<div style="font-size:14pt; font-weight:bold; margin:8px 0; text-decoration:underline;">إشعار ترك العمل</div>
+	</div>
+	<div style="width:15%;"></div>
+</div>
+
+<!-- Employer declaration -->
+<div style="margin-bottom:10px; font-size:9pt; line-height:2;">
+	<div>
+		أن رب العمل الموقع أدناه المسؤول عن مؤسسة :
+		<span class="field-value" style="min-width:250px;">{{ company_name }}</span>
+	</div>
+	<div>
+		الكائنة في :
+		<span class="field-value" style="min-width:300px;">{{ address }}</span>
+	</div>
+</div>
+
+<!-- Employee info -->
+<div style="margin-bottom:8px; font-size:9pt; line-height:2;">
+	<div>
+		يشعر الصندوق الوطني للضمان الإجتماعي بأن الأجير / المستخدم :
+		<span class="field-value" style="min-width:250px;">{{ emp.employee_name }}</span>
+	</div>
+</div>
+
+<!-- Details section -->
+<div class="section-title">بيانات الأجير</div>
+<div class="info-grid" style="font-size:9pt;">
+	<div class="info-item"><span class="label">القسم :</span> <span class="value">{{ emp.department }}</span></div>
+	<div class="info-item"><span class="label">المسمّى الوظيفي :</span> <span class="value">{{ emp.designation }}</span></div>
+	<div class="info-item"><span class="label">تاريخ الإلتحاق بالعمل :</span> <span class="value">{{ emp.date_of_joining | fmt_date }}</span></div>
+	<div class="info-item"><span class="label">تاريخ ترك العمل :</span> <span class="value">{{ emp.relieving_date | fmt_date }}</span></div>
+	<div class="info-item"><span class="label">مدة الخدمة :</span> <span class="value">{{ emp.years_of_service }} سنة</span></div>
+	<div class="info-item"><span class="label">سبب ترك العمل :</span> <span class="value">{{ emp.reason_for_leaving or '' }}</span></div>
+</div>
+
+<!-- Financial details -->
+<div class="section-title">البيانات المالية</div>
+<div class="info-grid" style="font-size:9pt;">
+	<div class="info-item"><span class="label">آخر أجر شهري :</span> <span class="value">{{ emp.last_salary | fmt_number }} ل.ل.</span></div>
+	<div class="info-item"><span class="label">تعويض نهاية الخدمة المستحق :</span> <span class="value">{{ emp.eos_due | fmt_number }} ل.ل.</span></div>
+</div>
+
+<!-- Legal notice -->
+<div style="margin-top:15px; padding:8px; border:1px solid #000; font-size:8pt;">
+	<b>ملاحظة هامة:</b> يجب إبلاغ الصندوق الوطني للضمان الإجتماعي بترك الأجير للعمل خلال مهلة أقصاها خمسة عشر يوماً من تاريخ ترك العمل.
+</div>
+
+<!-- Declaration -->
+<div style="margin-top:12px; font-size:8.5pt; line-height:1.8;">
+	إن رب العمل الموقع أدناه يشهد على مسؤوليته أن المعلومات المصرح بها أعلاه هي مطابقة للحقيقة والواقع
+</div>
+
+<!-- Signatures -->
+<div style="display:flex; justify-content:space-between; margin-top:20px; font-size:8pt;">
+	<div style="text-align:center; width:30%;">
+		<div style="margin-bottom:35px;">توقيع الأجير</div>
+		<div>___________________________</div>
+	</div>
+	<div style="text-align:center; width:30%;">
+		<div style="margin-bottom:35px;">ختم المؤسسة وتوقيع رب العمل</div>
+		<div>___________________________</div>
+	</div>
+	<div style="width:25%; text-align:left;">
+		<div>التاريخ: ___/___/ 20____</div>
+	</div>
+</div>
+
+{% endfor %}
+</body>
+</html>

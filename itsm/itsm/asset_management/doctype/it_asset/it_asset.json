@@ -1,0 +1,561 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_basic",
+    "asset_name",
+    "asset_tag",
+    "category",
+    "asset_type",
+    "status",
+    "column_break_basic",
+    "serial_number",
+    "model",
+    "manufacturer",
+    "part_number",
+    "image",
+    "section_assignment",
+    "assigned_to",
+    "department",
+    "company",
+    "column_break_assign",
+    "location",
+    "custodian",
+    "cost_center",
+    "section_hardware",
+    "hostname",
+    "ip_address",
+    "mac_address",
+    "operating_system",
+    "os_version",
+    "column_break_hw",
+    "processor",
+    "ram_gb",
+    "storage_gb",
+    "storage_type",
+    "section_network",
+    "fqdn",
+    "domain",
+    "dns_name",
+    "column_break_net",
+    "subnet",
+    "gateway",
+    "vlan",
+    "section_purchase",
+    "purchase_date",
+    "purchase_order",
+    "purchase_cost",
+    "currency",
+    "column_break_purch",
+    "vendor",
+    "invoice_number",
+    "warranty_expiry",
+    "section_lifecycle",
+    "installation_date",
+    "last_audit_date",
+    "next_audit_date",
+    "column_break_life",
+    "end_of_life",
+    "disposal_date",
+    "disposal_method",
+    "section_discovery",
+    "discovery_source",
+    "last_seen",
+    "is_online",
+    "column_break_disc",
+    "agent_version",
+    "last_heartbeat",
+    "snmp_community",
+    "section_components",
+    "components",
+    "section_notes",
+    "notes",
+    "section_amended",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_basic",
+      "fieldtype": "Section Break",
+      "label": "Basic Information"
+    },
+    {
+      "fieldname": "asset_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Asset Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "asset_tag",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Asset Tag",
+      "unique": 1
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Category",
+      "options": "IT Asset Category",
+      "reqd": 1
+    },
+    {
+      "fieldname": "asset_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Asset Type",
+      "options": "Hardware\nSoftware\nNetwork Device\nServer\nVirtual Machine\nCloud Resource\nMobile Device\nPrinter\nPeripheral\nOther",
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Active\nIn Stock\nDeployed\nIn Maintenance\nRetired\nDisposed\nLost\nStolen",
+      "default": "In Stock",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_basic",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Serial Number"
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "label": "Model"
+    },
+    {
+      "fieldname": "manufacturer",
+      "fieldtype": "Data",
+      "label": "Manufacturer"
+    },
+    {
+      "fieldname": "part_number",
+      "fieldtype": "Data",
+      "label": "Part Number"
+    },
+    {
+      "fieldname": "image",
+      "fieldtype": "Attach Image",
+      "label": "Image"
+    },
+    {
+      "fieldname": "section_assignment",
+      "fieldtype": "Section Break",
+      "label": "Assignment"
+    },
+    {
+      "fieldname": "assigned_to",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Assigned To",
+      "options": "Employee"
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Department",
+      "options": "Department"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Company",
+      "options": "Company"
+    },
+    {
+      "fieldname": "column_break_assign",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "location",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Location",
+      "options": "IT Asset Location"
+    },
+    {
+      "fieldname": "custodian",
+      "fieldtype": "Data",
+      "label": "Custodian"
+    },
+    {
+      "fieldname": "cost_center",
+      "fieldtype": "Link",
+      "label": "Cost Center",
+      "options": "Cost Center"
+    },
+    {
+      "fieldname": "section_hardware",
+      "fieldtype": "Section Break",
+      "label": "Hardware / OS Details",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "hostname",
+      "fieldtype": "Data",
+      "label": "Hostname"
+    },
+    {
+      "fieldname": "ip_address",
+      "fieldtype": "Data",
+      "label": "IP Address"
+    },
+    {
+      "fieldname": "mac_address",
+      "fieldtype": "Data",
+      "label": "MAC Address"
+    },
+    {
+      "fieldname": "operating_system",
+      "fieldtype": "Data",
+      "label": "Operating System"
+    },
+    {
+      "fieldname": "os_version",
+      "fieldtype": "Data",
+      "label": "OS Version"
+    },
+    {
+      "fieldname": "column_break_hw",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "processor",
+      "fieldtype": "Data",
+      "label": "Processor"
+    },
+    {
+      "fieldname": "ram_gb",
+      "fieldtype": "Float",
+      "label": "RAM (GB)"
+    },
+    {
+      "fieldname": "storage_gb",
+      "fieldtype": "Float",
+      "label": "Storage (GB)"
+    },
+    {
+      "fieldname": "storage_type",
+      "fieldtype": "Select",
+      "label": "Storage Type",
+      "options": "\nSSD\nHDD\nNVMe\nSAN\nNAS\nCloud"
+    },
+    {
+      "fieldname": "section_network",
+      "fieldtype": "Section Break",
+      "label": "Network Details",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "fqdn",
+      "fieldtype": "Data",
+      "label": "FQDN"
+    },
+    {
+      "fieldname": "domain",
+      "fieldtype": "Data",
+      "label": "Domain"
+    },
+    {
+      "fieldname": "dns_name",
+      "fieldtype": "Data",
+      "label": "DNS Name"
+    },
+    {
+      "fieldname": "column_break_net",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "subnet",
+      "fieldtype": "Data",
+      "label": "Subnet"
+    },
+    {
+      "fieldname": "gateway",
+      "fieldtype": "Data",
+      "label": "Gateway"
+    },
+    {
+      "fieldname": "vlan",
+      "fieldtype": "Data",
+      "label": "VLAN"
+    },
+    {
+      "fieldname": "section_purchase",
+      "fieldtype": "Section Break",
+      "label": "Purchase & Warranty"
+    },
+    {
+      "fieldname": "purchase_date",
+      "fieldtype": "Date",
+      "label": "Purchase Date"
+    },
+    {
+      "fieldname": "purchase_order",
+      "fieldtype": "Data",
+      "label": "Purchase Order"
+    },
+    {
+      "fieldname": "purchase_cost",
+      "fieldtype": "Currency",
+      "label": "Purchase Cost"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "default": "USD"
+    },
+    {
+      "fieldname": "column_break_purch",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "vendor",
+      "fieldtype": "Link",
+      "label": "Vendor",
+      "options": "Vendor"
+    },
+    {
+      "fieldname": "invoice_number",
+      "fieldtype": "Data",
+      "label": "Invoice Number"
+    },
+    {
+      "fieldname": "warranty_expiry",
+      "fieldtype": "Date",
+      "label": "Warranty Expiry"
+    },
+    {
+      "fieldname": "section_lifecycle",
+      "fieldtype": "Section Break",
+      "label": "Lifecycle",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "installation_date",
+      "fieldtype": "Date",
+      "label": "Installation Date"
+    },
+    {
+      "fieldname": "last_audit_date",
+      "fieldtype": "Date",
+      "label": "Last Audit Date"
+    },
+    {
+      "fieldname": "next_audit_date",
+      "fieldtype": "Date",
+      "label": "Next Audit Date"
+    },
+    {
+      "fieldname": "column_break_life",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "end_of_life",
+      "fieldtype": "Date",
+      "label": "End of Life"
+    },
+    {
+      "fieldname": "disposal_date",
+      "fieldtype": "Date",
+      "label": "Disposal Date"
+    },
+    {
+      "fieldname": "disposal_method",
+      "fieldtype": "Select",
+      "label": "Disposal Method",
+      "options": "\nRecycled\nDonated\nSold\nDestroyed\nReturned to Vendor"
+    },
+    {
+      "fieldname": "section_discovery",
+      "fieldtype": "Section Break",
+      "label": "Discovery & Monitoring",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "discovery_source",
+      "fieldtype": "Select",
+      "label": "Discovery Source",
+      "options": "\nManual\nNetwork Scan\nSNMP\nAgent\nAPI Import\nCSV Import"
+    },
+    {
+      "fieldname": "last_seen",
+      "fieldtype": "Datetime",
+      "label": "Last Seen",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_online",
+      "fieldtype": "Check",
+      "label": "Is Online",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_disc",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "agent_version",
+      "fieldtype": "Data",
+      "label": "Agent Version",
+      "read_only": 1
+    },
+    {
+      "fieldname": "last_heartbeat",
+      "fieldtype": "Datetime",
+      "label": "Last Heartbeat",
+      "read_only": 1
+    },
+    {
+      "fieldname": "snmp_community",
+      "fieldtype": "Password",
+      "label": "SNMP Community"
+    },
+    {
+      "fieldname": "section_components",
+      "fieldtype": "Section Break",
+      "label": "Components",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "components",
+      "fieldtype": "Table",
+      "label": "Components",
+      "options": "IT Asset Component"
+    },
+    {
+      "fieldname": "section_notes",
+      "fieldtype": "Section Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "section_amended",
+      "fieldtype": "Section Break",
+      "hidden": 1
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "IT Asset",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [
+    {
+      "group": "Service",
+      "link_doctype": "Service Ticket",
+      "link_fieldname": "asset"
+    },
+    {
+      "group": "CMDB",
+      "link_doctype": "CI Relationship",
+      "link_fieldname": "source_asset"
+    },
+    {
+      "group": "Contracts",
+      "link_doctype": "IT Contract",
+      "link_fieldname": "primary_asset"
+    }
+  ],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Management",
+  "name": "IT Asset",
+  "naming_rule": "Expression",
+  "autoname": "ITA-.#####",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "IT Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT User",
+      "write": 1
+    }
+  ],
+  "search_fields": "asset_name,serial_number,hostname,ip_address,asset_tag",
+  "show_name_in_global_search": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [
+    {
+      "title": "Active",
+      "color": "green"
+    },
+    {
+      "title": "In Stock",
+      "color": "blue"
+    },
+    {
+      "title": "Deployed",
+      "color": "green"
+    },
+    {
+      "title": "In Maintenance",
+      "color": "orange"
+    },
+    {
+      "title": "Retired",
+      "color": "gray"
+    },
+    {
+      "title": "Disposed",
+      "color": "red"
+    }
+  ],
+  "title_field": "asset_name",
+  "track_changes": 1
+}

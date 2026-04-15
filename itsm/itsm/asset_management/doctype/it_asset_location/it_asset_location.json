@@ -1,0 +1,164 @@
+{
+  "actions": [],
+  "creation": "2026-04-08 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "location_name",
+    "location_type",
+    "parent_location",
+    "column_break_1",
+    "address",
+    "city",
+    "country",
+    "section_break_contact",
+    "contact_person",
+    "contact_email",
+    "contact_phone",
+    "section_break_geo",
+    "latitude",
+    "longitude",
+    "floor",
+    "room",
+    "rack",
+    "rack_unit"
+  ],
+  "fields": [
+    {
+      "fieldname": "location_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Location Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "location_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Location Type",
+      "options": "Building\nData Center\nFloor\nRoom\nRack\nWarehouse\nRemote Site\nCloud Region",
+      "reqd": 1
+    },
+    {
+      "fieldname": "parent_location",
+      "fieldtype": "Link",
+      "label": "Parent Location",
+      "options": "IT Asset Location"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "address",
+      "fieldtype": "Small Text",
+      "label": "Address"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Data",
+      "label": "City"
+    },
+    {
+      "fieldname": "country",
+      "fieldtype": "Link",
+      "label": "Country",
+      "options": "Country"
+    },
+    {
+      "fieldname": "section_break_contact",
+      "fieldtype": "Section Break",
+      "label": "Contact Information"
+    },
+    {
+      "fieldname": "contact_person",
+      "fieldtype": "Data",
+      "label": "Contact Person"
+    },
+    {
+      "fieldname": "contact_email",
+      "fieldtype": "Data",
+      "label": "Contact Email",
+      "options": "Email"
+    },
+    {
+      "fieldname": "contact_phone",
+      "fieldtype": "Data",
+      "label": "Contact Phone",
+      "options": "Phone"
+    },
+    {
+      "fieldname": "section_break_geo",
+      "fieldtype": "Section Break",
+      "label": "Physical Position"
+    },
+    {
+      "fieldname": "latitude",
+      "fieldtype": "Float",
+      "label": "Latitude"
+    },
+    {
+      "fieldname": "longitude",
+      "fieldtype": "Float",
+      "label": "Longitude"
+    },
+    {
+      "fieldname": "floor",
+      "fieldtype": "Data",
+      "label": "Floor"
+    },
+    {
+      "fieldname": "room",
+      "fieldtype": "Data",
+      "label": "Room"
+    },
+    {
+      "fieldname": "rack",
+      "fieldtype": "Data",
+      "label": "Rack"
+    },
+    {
+      "fieldname": "rack_unit",
+      "fieldtype": "Data",
+      "label": "Rack Unit"
+    }
+  ],
+  "index_web_pages_for_search": 0,
+  "links": [],
+  "modified": "2026-04-08 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Asset Management",
+  "name": "IT Asset Location",
+  "naming_rule": "By fieldname",
+  "autoname": "field:location_name",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "IT Manager",
+      "write": 1
+    },
+    {
+      "read": 1,
+      "role": "IT User"
+    }
+  ],
+  "sort_field": "location_name",
+  "sort_order": "ASC",
+  "states": [],
+  "track_changes": 1
+}
